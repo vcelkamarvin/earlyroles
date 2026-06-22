@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Dashboard — EarlyRoles</title>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<nav>
+  <div class="wrap nav">
+    <a href="index.html" class="brand"><span class="mk">E</span> EarlyRoles</a>
+    <div class="navlinks">
+      <a href="jobs.html">Browse jobs</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="profile.html">Profile</a>
+      <a href="index.html#pricing">Pricing</a>
+    </div>
+    <div class="navr"></div>
+  </div>
+</nav>
+
+<div class="dash">
+  <div class="wrap">
+    <div class="dhead">
+      <div>
+        <h1 id="hello">Your search</h1>
+        <p id="hellosub">Here's everything you're tracking.</p>
+      </div>
+      <a href="jobs.html" class="btn btn-accent">Find more roles →</a>
+    </div>
+
+    <div class="dgrid">
+      <div class="dstat"><div class="n" id="s-saved">0</div><div class="l">Saved roles</div></div>
+      <div class="dstat"><div class="n" id="s-applied">0</div><div class="l">Applied</div></div>
+      <div class="dstat"><div class="n" id="s-interview">0</div><div class="l">Interviewing</div></div>
+      <div class="dstat"><div class="n" id="s-plan" style="font-size:20px;padding-top:8px">Free</div><div class="l">Current plan</div></div>
+    </div>
+
+    <div class="dcols">
+      <div class="dcard">
+        <h3>Application tracker</h3>
+        <div class="h-sub">Every role you've saved or applied to. Update the status as you go.</div>
+        <div id="tracker"></div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:18px">
+        <div class="dcard">
+          <h3>Your plan</h3>
+          <div class="h-sub">Manage your subscription.</div>
+          <div id="planBox"></div>
+        </div>
+
+        <div class="dcard">
+          <h3>Job alerts</h3>
+          <div class="h-sub">Saved searches we'll watch for you.</div>
+          <div id="alerts"></div>
+        </div>
+
+        <div class="dcard">
+          <h3>Auto-Apply</h3>
+          <div class="h-sub">Let the AI apply to matching roles for you.</div>
+          <div class="toggle"><span class="switch" id="aaSwitch"></span><span id="aaLabel">Off</span></div>
+          <p style="font-size:13px;color:var(--faint);margin-top:12px" id="aaNote"></p>
+        </div>
+
+        <div class="dcard" id="cover">
+          <h3>Cover letter generator</h3>
+          <div class="h-sub">Draft a tailored letter for any role.</div>
+          <div class="term-form" style="margin-top:4px">
+            <input id="t-name" type="text" placeholder="Your name" />
+            <input id="t-role" type="text" placeholder="Target role" />
+            <input id="t-company" type="text" placeholder="Company" />
+            <button class="btn btn-ink btn-block" id="t-gen" style="margin-top:6px">Generate</button>
+          </div>
+          <div class="terminal" style="min-height:200px;margin-top:14px">
+            <div class="term-bar"><span class="d d1"></span><span class="d d2"></span><span class="d d3"></span><span class="t mono">cover-letter</span></div>
+            <div class="term-body mono" id="term-out" style="font-size:12px"><span class="pr">earlyroles@careers</span> <span class="dim">~ %</span> ready <span class="cursor"></span></div>
+          </div>
+        </div>
+
+        <div class="dcard">
+          <h3>Your profile</h3>
+          <div class="h-sub" id="profSub">Add your resume details so the AI can tailor applications.</div>
+          <a href="profile.html" class="btn btn-out btn-block">Edit profile &amp; resume</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <a href="index.html" class="brand"><span class="mk">E</span> EarlyRoles</a>
+      <div class="footlinks"><a href="jobs.html">Browse jobs</a><a href="profile.html">Profile</a><a href="index.html#pricing">Pricing</a></div>
+    </div>
+    <p class="note">Demo dashboard. Account, saved roles, applications, alerts, profile and plan are stored locally in your browser only — there is no server. Listings and stats are illustrative samples.</p>
+  </div>
+</footer>
+
+<script src="app.js"></script>
+<script>
+(function(){ if(!Auth.get()){ location.href='login.html'; } })();
+
+(function(){
+  const u=Auth.get(); if(!u) return;
+  document.getElementById('hello').textContent='Hi, '+u.name.split(' ')[0]+' 👋';
+  document.getElementById('hellosub').textContent=u.email;
+
+  /* ----- Application tracker ----- */
+  function statusOf(id){ const a=Auth.applications(); return a[id]||'Saved'; }
+  function renderTracker(){
+    const ids=[...new Set([...Auth.saved(), ...Object.keys(Auth.applications()).map(Number)])];
+    const rows=JOBS.filter(j=>ids.includes(j.id));
+    const apps=Auth.applications();
+    document.getElementById('s-saved').textContent=Auth.saved().length;
+    document.getElementById('s-applied').textContent=Object.values(apps).filter(s=>s&&s!=='Saved').length;
+    document.getElementById('s-interview').textContent=Object.values(apps).filter(s=>s==='Interviewing').length;
+    const el=document.getElementById('tracker');
+    el.innerHTML = rows.length? rows.map(j=>`
+      <div class="trow" data-id="${j.id}">
+        ${logoImg(j.co,j.domain)}
+        <div class="tmain"><div class="ttitle">${j.title}</div><div class="tmeta">${j.co} · ${j.sal}</div></div>
+        <select class="tstatus" data-id="${j.id}">${APP_STATUSES.map(s=>`<option ${statusOf(j.id)===s?'selected':''}>${s}</option>`).join('')}</select>
+        <button class="trm" data-id="${j.id}" title="Remove">×</button>
+      </div>`).join('') : '<div class="empty">Nothing tracked yet. <a href="jobs.html" style="color:var(--accent);font-weight:600">Browse jobs →</a></div>';
+  }
+  document.getElementById('tracker').addEventListener('change',e=>{
+    const s=e.target.closest('.tstatus'); if(!s)return;
+    const id=Number(s.dataset.id);
+    if(s.value==='Saved'){ Auth.removeApplication(id); if(!Auth.saved().includes(id)) Auth.toggleSave(id); }
+    else { Auth.setApplication(id,s.value); if(!Auth.saved().includes(id)) Auth.toggleSave(id); }
+    renderTracker();
+  });
+  document.getElementById('tracker').addEventListener('click',e=>{
+    const b=e.target.closest('.trm'); if(!b)return;
+    const id=Number(b.dataset.id);
+    Auth.removeApplication(id); if(Auth.saved().includes(id)) Auth.toggleSave(id);
+    renderTracker();
+  });
+  renderTracker();
+
+  /* ----- Plan ----- */
+  function renderPlan(){
+    const p=Auth.plan();
+    const map={'Monthly':['Monthly · $24.99/mo','paid'],'Annual':['Annual · $109/yr','paid'],'Auto-Apply':['AI Auto-Apply · $62/mo','gold']};
+    const m=map[p]||['Free','free'];
+    document.getElementById('s-plan').textContent=p||'Free';
+    document.getElementById('planBox').innerHTML=
+      `<div class="arow"><span class="at">Current: <span class="badge ${m[1]}">${m[0]}</span></span></div>
+       <a href="index.html#pricing" class="btn btn-out btn-block" style="margin-top:12px">${p?'Change plan':'Choose a plan'}</a>`;
+  }
+  renderPlan();
+
+  /* ----- Alerts ----- */
+  function renderAlerts(){
+    const list=Auth.alerts();
+    const el=document.getElementById('alerts');
+    el.innerHTML = list.length? list.map((a,i)=>`<div class="arow"><span class="at">🔔 ${a.label}</span><button class="trm" data-i="${i}" title="Remove">×</button></div>`).join('')
+      : '<div class="empty" style="padding:14px">No alerts yet. <a href="jobs.html" style="color:var(--accent);font-weight:600">Save a search →</a></div>';
+  }
+  document.getElementById('alerts').addEventListener('click',e=>{
+    const b=e.target.closest('.trm'); if(!b)return; Auth.removeAlert(Number(b.dataset.i)); renderAlerts();
+  });
+  renderAlerts();
+
+  /* ----- Auto-Apply toggle ----- */
+  const sw=document.getElementById('aaSwitch'), lbl=document.getElementById('aaLabel'), note=document.getElementById('aaNote');
+  function paintAA(){const on=Auth.autoApply();sw.classList.toggle('on',on);lbl.textContent=on?'On':'Off';note.textContent=on?'On — the AI will apply to new US matches with a tailored resume + cover letter.':'Turn on to auto-apply to new US matches with a tailored resume + cover letter.';}
+  sw.addEventListener('click',()=>{Auth.setAutoApply(!Auth.autoApply());paintAA();});
+  paintAA();
+
+  /* ----- Profile summary + cover letter prefill ----- */
+  const prof=Auth.profile();
+  if(prof.fullName||prof.headline){
+    document.getElementById('profSub').textContent='Saved: '+[prof.headline,prof.location].filter(Boolean).join(' · ');
+  }
+  document.getElementById('t-name').value=prof.fullName||u.name;
+  document.getElementById('t-role').value=prof.headline||'';
+
+  /* ----- Mini cover letter terminal ----- */
+  const out=document.getElementById('term-out'), btn=document.getElementById('t-gen'); let busy=false;
+  const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  function buildLetter(name,role,company){ return window.buildCoverLetter({name,role,company,skills:prof.skills}); }
+  function line(h){const s=document.createElement('span');s.innerHTML=h+"\n";out.appendChild(s);out.scrollTop=out.scrollHeight;}
+  function type(t,cb){const s=document.createElement('span');out.appendChild(s);let i=0;(function k(){if(i<=t.length){s.innerHTML=esc(t.slice(0,i))+'<span class="cursor"></span>';out.scrollTop=out.scrollHeight;i+=2;setTimeout(k,7);}else{s.innerHTML=esc(t)+"\n";cb&&cb();}})();}
+  btn.addEventListener('click',()=>{if(busy)return;busy=true;const v=id=>document.getElementById(id).value.trim();out.innerHTML='';
+    line('<span class="pr">earlyroles@careers</span> <span class="dim">~ %</span> generate');
+    setTimeout(()=>{line('<span class="ok">✓ draft ready</span>');line('');type(buildLetter(v('t-name'),v('t-role'),v('t-company')),()=>{busy=false;});},450);
+  });
+})();
+</script>
+</body>
+</html>

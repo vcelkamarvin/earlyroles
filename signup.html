@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Get started — EarlyRoles</title>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<nav>
+  <div class="wrap nav">
+    <a href="index.html" class="brand"><span class="mk">E</span> EarlyRoles</a>
+    <div class="navlinks">
+      <a href="jobs.html">Browse jobs</a>
+      <a href="index.html#pricing">Pricing</a>
+    </div>
+    <div class="navr"></div>
+  </div>
+</nav>
+
+<div class="authwrap">
+  <div class="authpanel">
+    <div class="authcard">
+      <h1>Start finding hidden roles.</h1>
+      <p class="psub">Create your free account — browse, save and track US jobs in minutes.</p>
+      <div id="gbtn" style="margin-top:22px"></div>
+      <div class="divider"><span>or sign up with email</span></div>
+      <form id="signupForm" novalidate>
+        <div class="field"><label for="name">Full name</label><input id="name" type="text" placeholder="Alex Morgan" autocomplete="name" /></div>
+        <div class="field"><label for="email">Email</label><input id="email" type="email" placeholder="you@email.com" autocomplete="email" /></div>
+        <div class="field"><label for="password">Password</label><input id="password" type="password" placeholder="At least 6 characters" autocomplete="new-password" /></div>
+        <div class="formerr" id="err"></div>
+        <button type="submit" class="btn btn-accent btn-block">Create free account</button>
+      </form>
+      <p class="authalt">Already have an account? <a href="login.html">Sign in →</a></p>
+    </div>
+  </div>
+  <div class="authside">
+    <h2>The best US roles go to whoever shows up first.</h2>
+    <p>Get early access to openings before they hit the big boards — and let AI tailor and submit your applications.</p>
+    <ul>
+      <li><span class="c">✓</span> Free to browse &amp; save roles</li>
+      <li><span class="c">✓</span> AI resume &amp; cover-letter tools</li>
+      <li><span class="c">✓</span> Upgrade to Auto-Apply anytime</li>
+    </ul>
+  </div>
+</div>
+
+<script src="https://accounts.google.com/gsi/client" async></script>
+<script src="app.js"></script>
+<script>
+window.addEventListener('load',function(){ renderGoogleButton('gbtn'); });
+document.getElementById('signupForm').addEventListener('submit',function(e){
+  e.preventDefault();
+  const name=document.getElementById('name').value.trim();
+  const email=document.getElementById('email').value.trim();
+  const pw=document.getElementById('password').value;
+  const err=document.getElementById('err');
+  if(name.length<2){err.textContent='Please enter your name.';return;}
+  if(!/^\S+@\S+\.\S+$/.test(email)){err.textContent='Please enter a valid email address.';return;}
+  if(pw.length<6){err.textContent='Password must be at least 6 characters.';return;}
+  Auth.signup(name,email);
+  location.href='dashboard.html';
+});
+</script>
+</body>
+</html>

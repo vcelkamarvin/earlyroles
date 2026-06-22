@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Browse jobs — EarlyRoles</title>
+<meta name="description" content="Browse US remote jobs sourced straight from company hiring systems." />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<nav>
+  <div class="wrap nav">
+    <a href="index.html" class="brand"><span class="mk">E</span> EarlyRoles</a>
+    <div class="navlinks">
+      <a href="jobs.html">Browse jobs</a>
+      <a href="index.html#auto">Auto-Apply</a>
+      <a href="index.html#terminal">Cover letters</a>
+      <a href="index.html#pricing">Pricing</a>
+    </div>
+    <div class="navr"></div>
+  </div>
+</nav>
+
+<section style="padding-top:48px">
+  <div class="wrap">
+    <div class="eyebrow" style="text-align:left">🇺🇸 US remote jobs</div>
+    <h2 class="sec" style="text-align:left;margin-left:0">Browse openings before they go public.</h2>
+    <p style="color:var(--muted);margin-top:12px;max-width:60ch">Sourced hourly from 18,000+ US company hiring systems. Save roles to your dashboard, or let Auto-Apply handle them for you.</p>
+
+    <div class="filters">
+      <input id="q" type="text" placeholder="Search role, company or keyword…" />
+      <select id="dept">
+        <option value="">All departments</option>
+        <option>Engineering</option><option>Data & AI</option><option>Design</option>
+        <option>Sales</option><option>Marketing</option><option>Operations</option><option>Finance</option>
+      </select>
+      <select id="lvl">
+        <option value="">All levels</option>
+        <option value="Mid">Mid · 3–5 yrs</option>
+        <option value="Senior">Senior · 6–10 yrs</option>
+        <option value="Lead">Lead · 10+ yrs</option>
+      </select>
+      <button id="alertBtn" class="btn btn-out btn-sm" type="button">🔔 Save this search</button>
+      <span class="fcount" id="count"></span>
+    </div>
+
+    <div class="joblist" id="board" style="margin-top:18px"></div>
+  </div>
+</section>
+
+<section class="final">
+  <div class="wrap">
+    <h2 class="sec">Want these applied for automatically?</h2>
+    <p class="lead">Turn on Auto-Apply and our AI matches, tailors and submits — you just review.</p>
+    <div class="cta-row"><a href="signup.html" class="btn btn-gold">Get AI Auto-Apply — $62/mo</a></div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <a href="index.html" class="brand"><span class="mk">E</span> EarlyRoles</a>
+      <div class="footlinks"><a href="jobs.html">Browse jobs</a><a href="index.html#pricing">Pricing</a><a href="login.html">Sign in</a><a href="signup.html">Get started</a></div>
+    </div>
+    <p class="note">Listings shown are illustrative samples, not live data. Company names and logos are used for demonstration only and do not imply endorsement.</p>
+  </div>
+</footer>
+
+<script src="app.js"></script>
+<script>
+(function(){
+  const board=document.getElementById('board'), q=document.getElementById('q'),
+        dept=document.getElementById('dept'), lvl=document.getElementById('lvl'), count=document.getElementById('count');
+  function render(){
+    const saved=Auth.saved();
+    const term=q.value.toLowerCase(), d=dept.value, l=lvl.value;
+    const rows=JOBS.filter(j=>{
+      const m=(j.title+' '+j.co+' '+j.tags.join(' ')).toLowerCase().includes(term);
+      return m && (!d||j.dept===d) && (!l||j.lvl.startsWith(l));
+    });
+    count.textContent=rows.length+' of '+JOBS.length+' roles';
+    board.innerHTML = rows.length? rows.map(j=>`
+      <div class="jrow" data-id="${j.id}">
+        ${logoImg(j.co,j.domain)}
+        <div class="jmain">
+          <div class="jtitle">${j.title} <span class="new">New</span></div>
+          <div class="jmeta"><span>${j.co}</span><span>·</span><span>${j.loc}</span><span>·</span><span>${j.lvl}</span><span>·</span><span>${j.dept}</span></div>
+          <div class="jtags">${j.tags.map(t=>`<span class="jchip">${t}</span>`).join('')}</div>
+        </div>
+        <div class="jside">
+          <div class="jsal">${j.sal}</div><div class="jago">${j.ago}</div>
+          <div class="jbtns"><button class="jsave ${saved.includes(j.id)?'saved':''}" data-id="${j.id}">${saved.includes(j.id)?'✓ Saved':'Save'}</button><button class="japply" type="button">View &amp; apply →</button></div>
+        </div>
+      </div>`).join('') : '<div class="empty">No roles match your filters. Try widening your search.</div>';
+  }
+  board.addEventListener('click',e=>{
+    const b=e.target.closest('.jsave'); if(!b)return;
+    const s=Auth.toggleSave(b.dataset.id); const on=s.includes(Number(b.dataset.id));
+    b.classList.toggle('saved',on); b.textContent=on?'✓ Saved':'Save';
+  });
+  wireJobRows(board);
+  document.getElementById('alertBtn').addEventListener('click',function(){
+    const label = (q.value.trim()||'All roles') + (dept.value?(' · '+dept.value):'') + (lvl.value?(' · '+lvl.value):'');
+    Auth.addAlert({label, q:q.value.trim(), dept:dept.value, lvl:lvl.value, when:Date.now()});
+    if(window.gtag) gtag('event','create_alert',{label});
+    showToast(Auth.get() ? '🔔 Search saved — find it on your dashboard.' : '🔔 Saved. Sign up to get alerts by email.');
+  });
+  [q,dept,lvl].forEach(el=>el.addEventListener('input',render));
+  render();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>EarlyRoles — Jobs you won't find on LinkedIn or Indeed</title>
+<meta name="description" content="EarlyRoles surfaces US remote jobs straight from company hiring systems — and our AI applies for you." />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<nav>
+  <div class="wrap nav">
+    <a href="index.html" class="brand"><span class="mk">E</span> EarlyRoles</a>
+    <div class="navlinks">
+      <a href="#match">Match me</a>
+      <a href="roast.html">🔥 Roast</a>
+      <a href="jobs.html">Browse jobs</a>
+      <a href="#auto">Auto-Apply</a>
+      <a href="#terminal">Cover letters</a>
+      <a href="#pricing">Pricing</a>
+    </div>
+    <div class="navr"></div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="wrap">
+    <div class="flag"><span class="livedot"></span> Live · US remote roles sourced straight from company hiring systems</div>
+    <h1 class="hero-h1">Jobs you won't find on <em>LinkedIn or Indeed.</em></h1>
+    <p class="sub">We scan thousands of US company career pages to uncover hidden openings before they hit the big boards — then our AI tailors your resume, writes your cover letter, and applies for you.</p>
+    <div class="cta-row">
+      <a href="#match" class="btn btn-accent">✨ Paste your LinkedIn — match me</a>
+      <a href="jobs.html" class="btn btn-out">Browse jobs →</a>
+    </div>
+    <p class="micro">Free to try · No sign-up to match · Secured by Stripe</p>
+    <div class="strip">
+      <span>🇺🇸 <b>US-only</b> remote roles</span><span class="sep">·</span>
+      <span><b>18,000+</b> companies tracked</span><span class="sep">·</span>
+      <span><b>102,000+</b> live openings</span><span class="sep">·</span>
+      <span>Refreshed <b>hourly</b></span>
+    </div>
+  </div>
+</header>
+
+<!-- LIVE ACTIVITY TICKER -->
+<div class="tickerwrap"><div id="ticker"></div></div>
+
+<!-- LINKEDIN MATCHER -->
+<section id="match" style="padding-top:48px">
+  <div class="wrap">
+    <div class="eyebrow">AI match</div>
+    <h2 class="sec">Paste your LinkedIn or drop your CV.</h2>
+    <p class="lead">Our AI ranks live US openings against your profile in seconds. No sign-up to try.</p>
+    <div class="matchcard">
+      <textarea id="liInput" placeholder="Paste your LinkedIn headline / skills — or upload your CV below…"></textarea>
+      <div class="matchrow">
+        <label class="uploadbtn">📄 Upload CV<input id="liFile" type="file" accept=".txt,.pdf,.docx" hidden></label>
+        <span class="hint">🔒 Runs in your browser. We don't scrape LinkedIn or store anything.</span>
+        <button id="liBtn" class="btn btn-accent">✨ Find my best roles</button>
+      </div>
+    </div>
+    <div class="matchresults" id="liResults"></div>
+    <div class="matchcta" id="liCta">
+      <a href="signup.html" class="btn btn-ink">Save matches &amp; turn on Auto-Apply →</a>
+      <a href="jobs.html" class="btn btn-out">Browse all roles</a>
+    </div>
+  </div>
+</section>
+
+<!-- LOGO WALL -->
+<div class="logos">
+  <div class="wrap">
+    <div class="cap">Roles sourced from companies like</div>
+    <div class="logorow" id="logowall"></div>
+  </div>
+</div>
+
+<!-- HOW -->
+<section style="padding-top:54px">
+  <div class="wrap">
+    <div class="eyebrow">How it works</div>
+    <h2 class="sec">Find it first. Apply in one click.</h2>
+    <div class="steps">
+      <div class="step"><div class="k">01</div><h3>We scan career pages hourly</h3><p>Our crawlers read 18,000+ US company hiring systems, surfacing new roles before they reach the big job boards.</p></div>
+      <div class="step"><div class="k">02</div><h3>Filter to exactly your role</h3><p>Slice by title, salary, seniority, department and timezone. Save a search and get alerted the moment a match goes live.</p></div>
+      <div class="step"><div class="k">03</div><h3>Let the AI apply</h3><p>Tailored resume, generated cover letter, application pre-filled on the real career page. You review, it sends.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- LATEST (LIST VIEW) -->
+<section id="jobs" class="alt">
+  <div class="wrap">
+    <div class="eyebrow">Latest openings</div>
+    <h2 class="sec">Fresh US roles, updated hourly.</h2>
+    <div class="joblist" id="latest"></div>
+    <div class="center" style="margin-top:28px"><a href="jobs.html" class="btn btn-ink">Browse all 102,724 jobs →</a></div>
+  </div>
+</section>
+
+<!-- AUTO-APPLY -->
+<section id="auto">
+  <div class="wrap">
+    <div class="feature">
+      <div>
+        <div class="tagk">★ AI · Done-for-you</div>
+        <h3>Stop applying. Let the AI do it.</h3>
+        <p>AI Auto-Apply matches you to live US roles, rewrites your CV for every posting, writes a tailored cover letter, and submits on the real career page — up to 100 applications a day. You just review and approve.</p>
+        <div class="price-in"><span class="n serif">$62</span><span class="u">/month · cancel anytime</span></div>
+        <a href="signup.html" class="btn btn-light">Get AI Auto-Apply</a>
+      </div>
+      <div class="panel">
+        <div class="row"><span class="chk">✓</span> Up to 100 applications a day <span class="meta">AI</span></div>
+        <div class="row"><span class="chk">✓</span> CV optimized for every role <span class="meta">AI</span></div>
+        <div class="row"><span class="chk">✓</span> Cover letter written per job <span class="meta">AI</span></div>
+        <div class="row"><span class="chk">✓</span> Submitted on the real career page <span class="meta">auto</span></div>
+        <div class="row"><span class="chk">✓</span> You just review &amp; approve <span class="meta">1-click</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COVER LETTER TERMINAL -->
+<section id="terminal" class="alt">
+  <div class="wrap">
+    <div class="eyebrow">AI cover letters</div>
+    <h2 class="sec">An outstanding cover letter in seconds.</h2>
+    <p class="lead">Type the role, company and one highlight — get a ready-to-send letter, live.</p>
+    <div class="termwrap">
+      <div class="term-side">
+        <h3>One command. <br>A cover letter that fits.</h3>
+        <p>No blank-page paralysis. Our generator drafts a focused, professional letter you can copy, tweak and send — the same engine that powers Auto-Apply.</p>
+        <div class="term-form">
+          <label for="t-name">Your name</label><input id="t-name" type="text" placeholder="Alex Morgan" />
+          <label for="t-role">Target role</label><input id="t-role" type="text" placeholder="Senior Product Manager" />
+          <label for="t-company">Company</label><input id="t-company" type="text" placeholder="Reddit" />
+          <label for="t-highlight">One highlight (optional)</label><input id="t-highlight" type="text" placeholder="scaled a 0→1 product to 1M users" />
+          <button class="btn btn-ink" id="t-gen" style="margin-top:8px">⌘ Generate cover letter</button>
+        </div>
+      </div>
+      <div class="terminal">
+        <div class="term-bar"><span class="d d1"></span><span class="d d2"></span><span class="d d3"></span><span class="t mono">unlisted — cover-letter</span></div>
+        <div class="term-body mono" id="term-out"><span class="pr">earlyroles@careers</span> <span class="dim">~ %</span> fill in the form and hit generate <span class="cursor"></span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing">
+  <div class="wrap">
+    <div class="eyebrow">Pricing</div>
+    <h2 class="sec">Pick your pace. Land the role.</h2>
+    <p class="lead">Two simple plans for finding the job yourself — or let our AI do the applying for you. Every plan unlocks the full US job feed, alerts, tracker and AI resume + cover-letter tools.</p>
+    <div class="prices">
+      <div class="plan popular">
+        <span class="ptag">Most popular</span>
+        <div class="pname">Monthly</div><div class="pdesc">Room for a full search cycle to your dream job.</div>
+        <div class="amt"><sup>$</sup>24.99</div><div class="per">/month · billed monthly</div><div class="eqv">Cancel anytime</div>
+        <ul><li><span class="t">✓</span> Full US remote job feed</li><li><span class="t">✓</span> Unlimited saved-search alerts</li><li><span class="t">✓</span> Application tracker</li><li><span class="t">✓</span> AI resume + cover letters</li><li><span class="t">✓</span> Early access to new roles</li></ul>
+        <a href="signup.html" data-plan="Monthly" class="btn btn-accent btn-block">Start Monthly</a>
+      </div>
+      <div class="plan">
+        <div class="pname">Annual</div><div class="pdesc">Best price for a relaxed, long-term search.</div>
+        <div class="amt"><sup>$</sup>109</div><div class="per">/year · billed yearly</div><div class="eqv">≈ $9.08/month — save 64%</div>
+        <ul><li><span class="t">✓</span> Everything in Monthly</li><li><span class="t">✓</span> Lowest effective price</li><li><span class="t">✓</span> One simple yearly charge</li><li><span class="t">✓</span> Career radar for passive search</li><li><span class="t">✓</span> Priority support</li></ul>
+        <a href="signup.html" data-plan="Annual" class="btn btn-out btn-block">Go annual</a>
+      </div>
+      <div class="plan dark">
+        <span class="ptag" style="background:#fff;color:#111317">★ AI does it for you</span>
+        <div class="pname">Auto-Apply with AI</div><div class="pdesc">Done-for-you. The AI finds, writes and applies.</div>
+        <div class="amt"><sup>$</sup>62</div><div class="per">/month · cancel anytime</div><div class="eqv">Up to 100 applications/day</div>
+        <ul><li><span class="t">✓</span> Everything in Monthly</li><li><span class="t">✓</span> Up to 100 tailored applies a day</li><li><span class="t">✓</span> AI rewrites your CV for every role</li><li><span class="t">✓</span> AI cover letter per application</li><li><span class="t">✓</span> You just review &amp; approve</li></ul>
+        <a href="signup.html" data-plan="Auto-Apply" class="btn btn-light btn-block">Get AI Auto-Apply</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY -->
+<section id="why" class="alt">
+  <div class="wrap">
+    <div class="eyebrow">Why EarlyRoles</div>
+    <h2 class="sec">The big boards bury you. We put you first.</h2>
+    <div class="vs">
+      <div class="vscol bad"><h4>LinkedIn · Indeed</h4><ul>
+        <li><span class="mk-x">✕</span> 200+ applicants before you apply</li>
+        <li><span class="mk-x">✕</span> Ghosted after applying, no reply</li>
+        <li><span class="mk-x">✕</span> Recycled, stale or fake listings</li>
+        <li><span class="mk-x">✕</span> Recruiter middlemen and black holes</li>
+        <li><span class="mk-x">✕</span> You do every application by hand</li></ul></div>
+      <div class="vscol"><h4>EarlyRoles</h4><ul>
+        <li><span class="mk-c">✓</span> Apply before the crowd finds it</li>
+        <li><span class="mk-c">✓</span> Real US hiring teams, real replies</li>
+        <li><span class="mk-c">✓</span> Live roles pulled hourly from the source</li>
+        <li><span class="mk-c">✓</span> Apply direct — no agency middleman</li>
+        <li><span class="mk-c">✓</span> AI writes &amp; submits for you</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="wrap">
+    <div class="eyebrow">FAQ</div>
+    <h2 class="sec">Good questions</h2>
+    <div class="faq">
+      <details open><summary>How is this different from LinkedIn or Indeed?</summary><p>Most tools re-list jobs after they've gone public — so you're applicant #243. EarlyRoles reads roles straight from the hiring systems companies post with, so you see and apply while the posting is still fresh. Then our AI does the tailoring and applying.</p></details>
+      <details><summary>How does the cover-letter terminal work?</summary><p>Enter the role, company and a highlight, and our generator drafts a focused, professional cover letter instantly — the same engine behind Auto-Apply. Copy it, tweak it, send it.</p></details>
+      <details><summary>Are these really US-only jobs?</summary><p>Yes. EarlyRoles focuses exclusively on US remote roles, sourced directly from company hiring systems — current, real, and linking straight to the source.</p></details>
+      <details><summary>How is Auto-Apply different from the other plans?</summary><p>Monthly and Annual give you the full feed plus AI resume + cover-letter tools — you still hit apply. Auto-Apply ($49/mo) does the applying for you: it matches, tailors, writes the letter and submits. You just approve.</p></details>
+      <details><summary>Can I cancel anytime?</summary><p>Anytime, in two clicks. No lock-in, no hidden fees. Billing is handled securely by Stripe.</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL -->
+<section class="final">
+  <div class="wrap">
+    <h2 class="sec">The best US roles go to whoever shows up first.</h2>
+    <p class="lead">Start your search today, set your alerts, and let EarlyRoles bring the jobs to you — before everyone else even knows they exist.</p>
+    <div class="cta-row"><a href="signup.html" class="btn btn-accent">Get started free</a></div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <a href="index.html" class="brand"><span class="mk">E</span> EarlyRoles</a>
+      <div class="footlinks"><a href="jobs.html">Browse jobs</a><a href="#auto">Auto-Apply</a><a href="#terminal">Cover letters</a><a href="#pricing">Pricing</a><a href="login.html">Sign in</a></div>
+    </div>
+    <p class="note">Concept site. "EarlyRoles" is a working name/placeholder — verify domain &amp; trademark before launch. Company names, logos, listings, stats and reply times shown are illustrative samples, not live data or endorsements. Logins are a client-side demo (no real account is created or stored on a server). Live listings are intended to be sourced from official US hiring systems and public career pages; no personal data is scraped or sold.</p>
+  </div>
+</footer>
+
+<script src="app.js"></script>
+<script>
+/* logo wall */
+(function(){
+  const wall=document.getElementById('logowall');
+  const list=["reddit.com","konghq.com","stripe.com","notion.so","figma.com","coinbase.com","kaseya.com","bridgebio.com"];
+  const imgs=list.map(d=>`<img src="${logoURL(d)}" alt="${d}" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'wm',textContent:this.alt.split('.')[0]}))">`).join('');
+  wall.innerHTML=imgs+imgs;
+})();
+
+/* latest jobs — list view (first 6) */
+(function(){
+  const el=document.getElementById('latest');
+  const saved=Auth.saved();
+  el.innerHTML=JOBS.slice(0,6).map(j=>`
+    <div class="jrow" data-id="${j.id}">
+      ${logoImg(j.co,j.domain)}
+      <div class="jmain">
+        <div class="jtitle">${j.title} <span class="new">New</span></div>
+        <div class="jmeta"><span>${j.co}</span><span>·</span><span>${j.loc}</span><span>·</span><span>${j.lvl}</span></div>
+        <div class="jtags">${j.tags.map(t=>`<span class="jchip">${t}</span>`).join('')}</div>
+      </div>
+      <div class="jside">
+        <div class="jsal">${j.sal}</div><div class="jago">${j.ago}</div>
+        <div class="jbtns"><button class="jsave ${saved.includes(j.id)?'saved':''}" data-id="${j.id}">${saved.includes(j.id)?'✓ Saved':'Save'}</button><button class="japply" type="button">View &amp; apply →</button></div>
+      </div>
+    </div>`).join('');
+  el.addEventListener('click',e=>{
+    const b=e.target.closest('.jsave'); if(!b)return;
+    const s=Auth.toggleSave(b.dataset.id); const on=s.includes(Number(b.dataset.id));
+    b.classList.toggle('saved',on); b.textContent=on?'✓ Saved':'Save';
+  });
+  wireJobRows(el);
+})();
+
+/* LinkedIn matcher + CV upload */
+initMatcher('liInput','liBtn','liResults','liCta');
+initCvUpload('liFile','liInput','liBtn');
+
+/* pricing → remember chosen plan, then go sign up */
+(function(){
+  document.querySelectorAll('[data-plan]').forEach(a=>{
+    a.addEventListener('click',function(e){
+      e.preventDefault();
+      Auth.setPlan(this.getAttribute('data-plan'));
+      if(window.gtag) gtag('event','select_plan',{plan:this.getAttribute('data-plan')});
+      location.href='signup.html';
+    });
+  });
+})();
+
+/* cover letter terminal */
+(function(){
+  const out=document.getElementById('term-out'), btn=document.getElementById('t-gen'); let busy=false;
+  const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  function buildLetter(name,role,company,hl){ return window.buildCoverLetter({name,role,company,highlight:hl}); }
+  function line(html){const s=document.createElement('span');s.innerHTML=html+"\n";out.appendChild(s);out.scrollTop=out.scrollHeight;}
+  function type(text,cb){const s=document.createElement('span');out.appendChild(s);let i=0;(function tick(){if(i<=text.length){s.innerHTML=esc(text.slice(0,i))+'<span class="cursor"></span>';out.scrollTop=out.scrollHeight;i+=2;setTimeout(tick,8);}else{s.innerHTML=esc(text)+"\n";cb&&cb();}})();}
+  function gen(){
+    if(busy)return;busy=true;
+    const v=id=>document.getElementById(id).value.trim();
+    const name=v('t-name'),role=v('t-role'),company=v('t-company'),hl=v('t-highlight');
+    out.innerHTML='';
+    line('<span class="pr">earlyroles@careers</span> <span class="dim">~ %</span> unlisted generate --role "'+esc(role||'Senior Product Manager')+'" --company "'+esc(company||'company')+'"');
+    line('<span class="dim">› matching tone to job description…</span>');
+    setTimeout(()=>{line('<span class="ok">✓ draft ready — '+new Date().toLocaleTimeString()+'</span>');line('');type(buildLetter(name,role,company,hl),()=>{line('');line('<span class="ok">✓ done.</span> <span class="dim">copy it, tweak it, or let Auto-Apply send it.</span>');busy=false;});},650);
+  }
+  btn.addEventListener('click',gen);
+})();
+</script>
+</body>
+</html>

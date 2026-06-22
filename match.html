@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Match me — paste your LinkedIn | EarlyRoles</title>
+<meta name="description" content="Paste your LinkedIn profile and instantly see the US remote roles that fit you best — before they hit the big boards." />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<nav>
+  <div class="wrap nav">
+    <a href="index.html" class="brand"><span class="mk">E</span> EarlyRoles</a>
+    <div class="navlinks">
+      <a href="match.html">Match me</a>
+      <a href="jobs.html">Browse jobs</a>
+      <a href="index.html#pricing">Pricing</a>
+    </div>
+    <div class="navr"></div>
+  </div>
+</nav>
+
+<header class="hero" style="padding-bottom:14px">
+  <div class="wrap">
+    <div class="flag">🇺🇸 Instant match · No sign-up to try</div>
+    <h1 class="hero-h1">Paste your LinkedIn or <em>drop your CV.</em></h1>
+    <p class="sub">Our AI ranks live US remote openings against your profile in seconds — then tailors your CV, writes the cover letter, and applies for you.</p>
+  </div>
+</header>
+
+<section style="padding-top:18px">
+  <div class="wrap">
+    <div class="matchcard">
+      <textarea id="liInput" placeholder="Paste your LinkedIn headline / skills — or upload your CV below…"></textarea>
+      <div class="matchrow">
+        <label class="uploadbtn">📄 Upload CV<input id="liFile" type="file" accept=".txt,.pdf,.docx" hidden></label>
+        <span class="hint">🔒 Runs in your browser. We don't scrape LinkedIn or store anything.</span>
+        <button id="liBtn" class="btn btn-accent">✨ Find my best roles</button>
+      </div>
+    </div>
+    <div class="matchresults" id="liResults"></div>
+    <div class="matchcta" id="liCta">
+      <a href="signup.html" class="btn btn-ink">Save matches &amp; turn on Auto-Apply →</a>
+      <a href="jobs.html" class="btn btn-out">Browse all roles</a>
+    </div>
+  </div>
+</section>
+
+<section class="alt">
+  <div class="wrap">
+    <div class="eyebrow">How matching works</div>
+    <h2 class="sec">From profile to interview, faster.</h2>
+    <div class="steps">
+      <div class="step"><div class="k">01</div><h3>Paste once</h3><p>Your headline, skills or About section is enough. Nothing is uploaded to a server — it stays in your browser.</p></div>
+      <div class="step"><div class="k">02</div><h3>Get ranked matches</h3><p>We score every live US opening against your profile and surface the best fits, with the reasons they matched.</p></div>
+      <div class="step"><div class="k">03</div><h3>Apply on autopilot</h3><p>Save your matches, then let Auto-Apply tailor your resume, write the cover letter and submit — you just approve.</p></div>
+    </div>
+    <div class="center" style="margin-top:30px"><a href="signup.html" class="btn btn-accent">Get started free</a></div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <a href="index.html" class="brand"><span class="mk">E</span> EarlyRoles</a>
+      <div class="footlinks"><a href="match.html">Match me</a><a href="jobs.html">Browse jobs</a><a href="index.html#pricing">Pricing</a><a href="login.html">Sign in</a></div>
+    </div>
+    <p class="note">Matching runs entirely in your browser on the text you paste — EarlyRoles does not scrape LinkedIn or store your profile on a server. Listings and match scores are illustrative samples for this demo.</p>
+  </div>
+</footer>
+
+<script src="app.js"></script>
+<script>initMatcher('liInput','liBtn','liResults','liCta');initCvUpload('liFile','liInput','liBtn');</script>
+</body>
+</html>

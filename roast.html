@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Roast My LinkedIn 🔥 — free | EarlyRoles</title>
+<meta name="description" content="Paste your LinkedIn and get instantly roasted — then a free glow-up to make your profile actually convert. Share your Cringe-o-meter score." />
+<meta property="og:title" content="Roast My LinkedIn 🔥" />
+<meta property="og:description" content="Get your LinkedIn roasted free, then a glow-up that actually converts. What's your Cringe-o-meter score?" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<nav>
+  <div class="wrap nav">
+    <a href="index.html" class="brand"><span class="mk">E</span> EarlyRoles</a>
+    <div class="navlinks">
+      <a href="roast.html">🔥 Roast</a>
+      <a href="match.html">Match me</a>
+      <a href="jobs.html">Browse jobs</a>
+      <a href="index.html#pricing">Pricing</a>
+    </div>
+    <div class="navr"></div>
+  </div>
+</nav>
+
+<header class="hero" style="padding-bottom:14px">
+  <div class="wrap">
+    <div class="flag"><span class="livedot"></span> Free · No sign-up · Fix your profile in minutes</div>
+    <h1 class="hero-h1">Fix my <em>LinkedIn.</em> 🔥</h1>
+    <p class="sub">Paste your LinkedIn profile link and we'll show you exactly what's holding it back — then how to fix it so recruiters actually reply. Free, instant, and brutally helpful.</p>
+  </div>
+</header>
+
+<section style="padding-top:18px">
+  <div class="wrap">
+    <div class="matchcard">
+      <input id="roastInput" type="url" inputmode="url" placeholder="https://www.linkedin.com/in/your-name" />
+      <div class="matchrow">
+        <span class="hint">🔒 Just your public profile link — nothing else. Runs in your browser.</span>
+        <button id="roastBtn" class="btn btn-accent">🔥 Roast my profile</button>
+      </div>
+    </div>
+    <div class="matchresults" id="roastResults"></div>
+  </div>
+</section>
+
+<section class="alt">
+  <div class="wrap">
+    <div class="eyebrow">What you get</div>
+    <h2 class="sec">A free profile fix that gets you replies.</h2>
+    <div class="steps">
+      <div class="step"><div class="k">01</div><h3>Paste your link</h3><p>Just drop your LinkedIn profile URL — no copy-pasting your whole profile, no sign-up.</p></div>
+      <div class="step"><div class="k">02</div><h3>See what's weak</h3><p>We flag the exact things recruiters quietly skip over: a weak headline, no metrics, buzzword fluff.</p></div>
+      <div class="step"><div class="k">03</div><h3>Fix it &amp; get matched</h3><p>Apply the specific fixes, then run the matcher to see the US roles you now qualify for — and let AI apply.</p></div>
+    </div>
+    <div class="center" style="margin-top:30px"><a href="match.html" class="btn btn-accent">Find my best roles →</a></div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <a href="index.html" class="brand"><span class="mk">E</span> EarlyRoles</a>
+      <div class="footlinks"><a href="roast.html">🔥 Roast</a><a href="match.html">Match me</a><a href="jobs.html">Browse jobs</a><a href="index.html#pricing">Pricing</a></div>
+    </div>
+    <p class="note">For fun + genuinely useful. The roast runs entirely in your browser on the text you paste — EarlyRoles does not scrape LinkedIn or store your profile. Keep it kind when you share. 💛</p>
+  </div>
+</footer>
+
+<script src="app.js"></script>
+<script>initRoast('roastInput','roastBtn','roastResults');</script>
+</body>
+</html>

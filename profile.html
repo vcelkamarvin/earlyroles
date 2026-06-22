@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Profile &amp; resume — EarlyRoles</title>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<nav>
+  <div class="wrap nav">
+    <a href="index.html" class="brand"><span class="mk">E</span> EarlyRoles</a>
+    <div class="navlinks">
+      <a href="jobs.html">Browse jobs</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="profile.html">Profile</a>
+      <a href="index.html#pricing">Pricing</a>
+    </div>
+    <div class="navr"></div>
+  </div>
+</nav>
+
+<div class="dash">
+  <div class="wrap" style="max-width:760px">
+    <div class="dhead">
+      <div>
+        <h1>Profile &amp; resume</h1>
+        <p>The AI uses this to tailor your resume, cover letters and Auto-Apply submissions.</p>
+      </div>
+      <a href="dashboard.html" class="btn btn-out">← Dashboard</a>
+    </div>
+
+    <div class="dcard" style="margin-top:24px">
+      <form class="pform" id="profForm" novalidate>
+        <div class="prow2">
+          <div class="field2"><label for="fullName">Full name</label><input id="fullName" type="text" placeholder="Alex Morgan" /></div>
+          <div class="field2"><label for="headline">Headline / target role</label><input id="headline" type="text" placeholder="Senior Product Manager" /></div>
+        </div>
+        <div class="prow2">
+          <div class="field2"><label for="location">Location / timezone</label><input id="location" type="text" placeholder="Remote · US (ET)" /></div>
+          <div class="field2"><label for="email2">Contact email</label><input id="email2" type="email" placeholder="you@email.com" /></div>
+        </div>
+        <div class="field2"><label for="summary">Professional summary</label><textarea id="summary" placeholder="2–3 sentences on who you are and what you do best."></textarea></div>
+        <div class="field2"><label for="skills">Key skills (comma separated)</label><input id="skills" type="text" placeholder="product strategy, SQL, growth experiments, leadership" /></div>
+        <div class="field2"><label for="experience">Experience highlights</label><textarea id="experience" placeholder="• Scaled a 0→1 product to 1M users&#10;• Led a team of 6 across product and design"></textarea></div>
+        <div class="formerr" id="perr" style="color:var(--green)"></div>
+        <button type="submit" class="btn btn-accent">Save profile</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+<script>
+(function(){ if(!Auth.get()){ location.href='login.html'; } })();
+(function(){
+  const u=Auth.get(); if(!u) return;
+  const p=Auth.profile();
+  const set=(id,v)=>{ const el=document.getElementById(id); if(el) el.value=v||''; };
+  set('fullName', p.fullName||u.name);
+  set('headline', p.headline);
+  set('location', p.location);
+  set('email2', p.email||u.email);
+  set('summary', p.summary);
+  set('skills', p.skills);
+  set('experience', p.experience);
+
+  document.getElementById('profForm').addEventListener('submit',function(e){
+    e.preventDefault();
+    const g=id=>document.getElementById(id).value.trim();
+    const profile={fullName:g('fullName'),headline:g('headline'),location:g('location'),email:g('email2'),summary:g('summary'),skills:g('skills'),experience:g('experience')};
+    Auth.setProfile(profile);
+    // keep the account name in sync
+    const cur=Auth.get()||{}; cur.name=profile.fullName||cur.name; if(profile.email) cur.email=profile.email;
+    localStorage.setItem(Auth.key, JSON.stringify(cur));
+    if(window.gtag) gtag('event','save_profile');
+    document.getElementById('perr').textContent='✓ Saved.';
+    showToast('✓ Profile saved');
+    setTimeout(()=>location.href='dashboard.html', 900);
+  });
+})();
+</script>
+</body>
+</html>
