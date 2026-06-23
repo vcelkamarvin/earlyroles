@@ -41,6 +41,13 @@
         <option value="Senior">Senior · 6–10 yrs</option>
         <option value="Lead">Lead · 10+ yrs</option>
       </select>
+      <select id="locFilter">
+        <option value="">All locations</option>
+        <option value="usa">🇺🇸 USA</option>
+        <option value="americas">Americas</option>
+        <option value="europe">Europe / EMEA</option>
+        <option value="worldwide">Worldwide / Anywhere</option>
+      </select>
       <button id="alertBtn" class="btn btn-out btn-sm" type="button">🔔 Save this search</button>
       <span class="fcount" id="count"></span>
     </div>
@@ -63,7 +70,7 @@
       <a href="index.html" class="brand"><span class="mk">E</span> EarlyRoles</a>
       <div class="footlinks"><a href="jobs.html">Browse jobs</a><a href="index.html#pricing">Pricing</a><a href="login.html">Sign in</a><a href="signup.html">Get started</a></div>
     </div>
-    <p class="note">Listings shown are illustrative samples, not live data. Company names and logos are used for demonstration only and do not imply endorsement.</p>
+    <p class="note">Listings are pulled live from third-party remote-job feeds and link to the original posting. Company names and logos belong to their owners and do not imply endorsement.</p>
   </div>
 </footer>
 
@@ -71,7 +78,9 @@
 <script>
 (function(){
   const board=document.getElementById('board'), q=document.getElementById('q'),
-        dept=document.getElementById('dept'), lvl=document.getElementById('lvl'), count=document.getElementById('count');
+        dept=document.getElementById('dept'), lvl=document.getElementById('lvl'),
+        locFilter=document.getElementById('locFilter'), count=document.getElementById('count');
+  const LOC_RX={usa:/usa|united states|u\.s|u\.s\.a/i, americas:/americas|north america|usa|united states|canada|latam|brazil|mexico|argentina/i, europe:/europe|emea|united kingdom|uk|germany|france|spain|portugal|poland|netherlands|ireland/i, worldwide:/worldwide|anywhere|global/i};
   let ALL=[];
   function rowHTML(j){
     const saved=Auth.saved();
@@ -90,10 +99,10 @@
       </div>`;
   }
   function render(){
-    const term=q.value.toLowerCase(), d=dept.value.toLowerCase(), l=lvl.value.toLowerCase();
+    const term=q.value.toLowerCase(), d=dept.value.toLowerCase(), l=lvl.value.toLowerCase(), lf=locFilter.value;
     const rows=ALL.filter(j=>{
       const hay=(j.title+' '+j.co+' '+(j.dept||'')+' '+(j.tags||[]).join(' ')).toLowerCase();
-      return hay.includes(term) && (!d||hay.includes(d)) && (!l||j.title.toLowerCase().includes(l));
+      return hay.includes(term) && (!d||hay.includes(d)) && (!l||j.title.toLowerCase().includes(l)) && (!lf||LOC_RX[lf].test(j.loc||''));
     });
     count.textContent=rows.length+' of '+ALL.length+' live roles';
     board.innerHTML = rows.length? rows.map(rowHTML).join('') : '<div class="empty">No roles match your filters. Try widening your search.</div>';
@@ -109,7 +118,7 @@
     if(window.gtag) gtag('event','create_alert',{label});
     showToast(Auth.get() ? '🔔 Search saved — find it on your dashboard.' : '🔔 Saved. Sign up to get alerts by email.');
   });
-  [q,dept,lvl].forEach(el=>el.addEventListener('input',render));
+  [q,dept,lvl,locFilter].forEach(el=>el.addEventListener('input',render));
   function fallback(){ return JOBS.map(j=>({id:j.id,title:j.title,co:j.co,logo:'',initials:j.co.slice(0,2).toUpperCase(),loc:j.loc,dept:j.dept,type:j.lvl,tags:j.tags,sal:j.sal,ago:j.ago,url:'signup.html'})); }
   board.innerHTML='<div class="empty">Loading live US remote roles…</div>';
   fetchRealJobs().then(list=>{ ALL=(list&&list.length)?list:fallback(); render(); }).catch(()=>{ ALL=fallback(); render(); });
