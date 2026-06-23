@@ -45,7 +45,7 @@ const JOBS = [
 ];
 
 /* Logo URL via Clearbit; falls back to initials on error */
-function logoURL(domain){ return "https://logo.clearbit.com/" + domain + "?size=64"; }
+function logoURL(domain){ return "https://www.google.com/s2/favicons?domain=" + domain + "&sz=64"; }
 function logoImg(co, domain){
   const initials = co.replace(/[^A-Za-z0-9 ]/g,'').split(' ').filter(Boolean).slice(0,2).map(w=>w[0]).join('').toUpperCase();
   return `<span class="jlogo" data-i="${initials}"><img src="${logoURL(domain)}" alt="${co}" loading="lazy" onerror="this.parentNode.textContent=this.parentNode.dataset.i"></span>`;
@@ -109,7 +109,13 @@ function renderGoogleButton(containerId){
     return;
   }
   el.innerHTML = '<button type="button" class="btn btn-out btn-block gbtn-fallback">'+googleSvg()+' Continue with Google</button>';
-  el.querySelector('button').addEventListener('click', function(){
+  el.querySelector('button').addEventListener('click', async function(){
+    const sb = await getSupabase();
+    if(sb){
+      const { error } = await sb.auth.signInWithOAuth({ provider:'google', options:{ redirectTo: location.origin + '/dashboard.html' } });
+      if(error) showToast('Google sign-in needs enabling in Supabase first');
+      return;
+    }
     Auth.signup('Alex Morgan','alex.morgan@gmail.com');
     if(window.gtag) gtag('event','login',{method:'Google (demo)'});
     location.href = 'dashboard.html';

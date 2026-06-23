@@ -31,16 +31,25 @@
 </nav>
 
 <!-- HERO -->
-<header class="hero">
+<header class="hero" id="match">
   <div class="wrap">
-    <div class="flag"><span class="livedot"></span> Live · US remote roles sourced straight from company hiring systems</div>
+    <div class="flag"><span class="livedot"></span> Live US remote roles · AI matches &amp; applies for you</div>
     <h1 class="hero-h1">Jobs you won't find on <em>LinkedIn or Indeed.</em></h1>
-    <p class="sub">We scan thousands of US company career pages to uncover hidden openings before they hit the big boards — then our AI tailors your resume, writes your cover letter, and applies for you.</p>
-    <div class="cta-row">
-      <a href="#match" class="btn btn-accent">✨ Paste your LinkedIn — match me</a>
-      <a href="jobs.html" class="btn btn-out">Browse jobs →</a>
+    <p class="sub">Paste your LinkedIn or drop your CV — our AI finds your best-matched US roles in seconds.</p>
+    <div class="matchcard" id="finder" style="max-width:660px;margin:24px auto 0;text-align:left">
+      <textarea id="liInput" placeholder="Paste your LinkedIn headline / skills here — or upload your CV → get matched in seconds"></textarea>
+      <div class="matchrow">
+        <label class="uploadbtn">📄 Upload CV<input id="liFile" type="file" accept=".txt,.pdf,.docx" hidden></label>
+        <span class="hint">🔒 Free · no sign-up to try</span>
+        <button id="liBtn" class="btn btn-accent">✨ Find my roles</button>
+      </div>
     </div>
-    <p class="micro">Free to try · No sign-up to match · Secured by Stripe</p>
+    <div class="matchresults" id="liResults"></div>
+    <div class="matchcta" id="liCta">
+      <a href="signup.html" class="btn btn-ink">Save matches &amp; turn on Auto-Apply →</a>
+      <a href="jobs.html" class="btn btn-out">Browse all roles</a>
+    </div>
+    <p class="micro">Or <a href="jobs.html" style="text-decoration:underline;text-underline-offset:3px">browse all live roles</a> · <a href="roast.html" style="text-decoration:underline;text-underline-offset:3px">roast my LinkedIn 🔥</a></p>
     <div class="strip">
       <span>🇺🇸 <b>US</b> remote roles</span><span class="sep">·</span>
       <span>From <b>live</b> hiring feeds</span><span class="sep">·</span>
@@ -52,28 +61,6 @@
 
 <!-- LIVE ACTIVITY TICKER -->
 <div class="tickerwrap"><div id="ticker"></div></div>
-
-<!-- LINKEDIN MATCHER -->
-<section id="match" style="padding-top:48px">
-  <div class="wrap">
-    <div class="eyebrow">AI match</div>
-    <h2 class="sec">Paste your LinkedIn or drop your CV.</h2>
-    <p class="lead">Our AI ranks live US openings against your profile in seconds. No sign-up to try.</p>
-    <div class="matchcard">
-      <textarea id="liInput" placeholder="Paste your LinkedIn headline / skills — or upload your CV below…"></textarea>
-      <div class="matchrow">
-        <label class="uploadbtn">📄 Upload CV<input id="liFile" type="file" accept=".txt,.pdf,.docx" hidden></label>
-        <span class="hint">🔒 Runs in your browser. We don't scrape LinkedIn or store anything.</span>
-        <button id="liBtn" class="btn btn-accent">✨ Find my best roles</button>
-      </div>
-    </div>
-    <div class="matchresults" id="liResults"></div>
-    <div class="matchcta" id="liCta">
-      <a href="signup.html" class="btn btn-ink">Save matches &amp; turn on Auto-Apply →</a>
-      <a href="jobs.html" class="btn btn-out">Browse all roles</a>
-    </div>
-  </div>
-</section>
 
 <!-- LOGO WALL -->
 <div class="logos">

@@ -61,7 +61,12 @@ document.getElementById('signupForm').addEventListener('submit',async function(e
   if(!/^\S+@\S+\.\S+$/.test(email)){err.textContent='Please enter a valid email address.';return;}
   if(pw.length<6){err.textContent='Password must be at least 6 characters.';return;}
   const sb=await getSupabase();
-  if(sb){ const r=await sb.auth.signUp({email,password:pw,options:{data:{name}}}); if(r.error){err.textContent=r.error.message;return;} }
+  if(sb){
+    const su=await sb.auth.signUp({email,password:pw,options:{data:{name}}});
+    if(su.error && !/already|registered|exists/i.test(su.error.message)){ err.textContent=su.error.message; return; }
+    const si=await sb.auth.signInWithPassword({email,password:pw});
+    if(si.error){ err.textContent='Account created — please sign in.'; setTimeout(function(){location.href='login.html';},900); return; }
+  }
   Auth.signup(name,email);
   location.href='dashboard.html';
 });
