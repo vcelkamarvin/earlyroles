@@ -99,7 +99,7 @@
       </div>`;
   }
   function render(){
-    const term=q.value.toLowerCase(), d=dept.value.toLowerCase(), l=lvl.value.toLowerCase(), lf=locFilter.value;
+    const raw=q.value.toLowerCase(); const term=(raw===(initialQ||'').toLowerCase())?'':raw; const d=dept.value.toLowerCase(), l=lvl.value.toLowerCase(), lf=locFilter.value;
     const rows=ALL.filter(j=>{
       const hay=(j.title+' '+j.co+' '+(j.dept||'')+' '+(j.tags||[]).join(' ')).toLowerCase();
       return hay.includes(term) && (!d||hay.includes(d)) && (!l||j.title.toLowerCase().includes(l)) && (!lf||LOC_RX[lf].test(j.loc||''));
