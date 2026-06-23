@@ -45,7 +45,7 @@ const JOBS = [
 ];
 
 /* Logo URL via Clearbit; falls back to initials on error */
-function logoURL(domain){ return "https://icons.duckduckgo.com/ip3/" + domain + ".ico"; }
+function logoURL(domain){ return "https://www.google.com/s2/favicons?domain=" + domain + "&sz=64"; }
 function logoImg(co, domain){
   const initials = co.replace(/[^A-Za-z0-9 ]/g,'').split(' ').filter(Boolean).slice(0,2).map(w=>w[0]).join('').toUpperCase();
   return `<span class="jlogo" data-i="${initials}"><img src="${logoURL(domain)}" alt="${co}" loading="lazy" onerror="this.parentNode.textContent=this.parentNode.dataset.i"></span>`;

@@ -31,25 +31,18 @@
 </nav>
 
 <!-- HERO -->
-<header class="hero" id="match">
+<header class="hero" id="hero">
   <div class="wrap">
     <div class="flag"><span class="livedot"></span> Live US remote roles · AI matches &amp; applies for you</div>
     <h1 class="hero-h1">Jobs you won't find on <em>LinkedIn or Indeed.</em></h1>
-    <p class="sub">Paste your LinkedIn or drop your CV — our AI finds your best-matched US roles in seconds.</p>
-    <div class="matchcard" id="finder" style="max-width:660px;margin:24px auto 0;text-align:left">
-      <textarea id="liInput" placeholder="Paste your LinkedIn headline / skills here — or upload your CV → get matched in seconds"></textarea>
-      <div class="matchrow">
-        <label class="uploadbtn">📄 Upload CV<input id="liFile" type="file" accept=".txt,.pdf,.docx" hidden></label>
-        <span class="hint">🔒 Free · no sign-up to try</span>
-        <button id="liBtn" class="btn btn-accent">✨ Find my roles</button>
-      </div>
-    </div>
-    <div class="matchresults" id="liResults"></div>
-    <div class="matchcta" id="liCta">
-      <a href="signup.html" class="btn btn-ink">Save matches &amp; turn on Auto-Apply →</a>
-      <a href="jobs.html" class="btn btn-out">Browse all roles</a>
-    </div>
-    <p class="micro">Or <a href="jobs.html" style="text-decoration:underline;text-underline-offset:3px">browse all live roles</a> · <a href="roast.html" style="text-decoration:underline;text-underline-offset:3px">roast my LinkedIn 🔥</a></p>
+    <p class="sub">Find your next US remote role — before it hits LinkedIn or Indeed.</p>
+    <form class="finder" id="heroFinder">
+      <span class="finder-ic" aria-hidden="true">🔎</span>
+      <input id="heroQ" type="text" aria-label="Search jobs" placeholder="Search live roles — product, react, sales, design…" />
+      <button class="btn btn-accent" type="submit">Search</button>
+    </form>
+    <div class="finder-chips"><span>Trending:</span><a href="jobs.html?q=engineer">Engineering</a><a href="jobs.html?q=product%20manager">Product</a><a href="jobs.html?q=sales">Sales</a><a href="jobs.html?q=designer">Design</a><a href="jobs.html?q=marketing">Marketing</a></div>
+    <p class="micro" style="margin-top:16px">Or <a href="#match" style="color:var(--accent);font-weight:600">paste your LinkedIn / CV to get matched</a> · <a href="roast.html" style="color:var(--accent);font-weight:600">roast my LinkedIn 🔥</a></p>
     <div class="strip">
       <span>🇺🇸 <b>US</b> remote roles</span><span class="sep">·</span>
       <span>From <b>live</b> hiring feeds</span><span class="sep">·</span>
@@ -61,6 +54,28 @@
 
 <!-- LIVE ACTIVITY TICKER -->
 <div class="tickerwrap"><div id="ticker"></div></div>
+
+<!-- AI MATCHER -->
+<section id="match" class="alt" style="padding:48px 0">
+  <div class="wrap">
+    <div class="eyebrow">AI match</div>
+    <h2 class="sec">Paste your LinkedIn or drop your CV.</h2>
+    <p class="lead">Our AI ranks live US roles against your profile in seconds — no sign-up to try.</p>
+    <div class="matchcard" id="finder" style="max-width:660px;margin:22px auto 0;text-align:left">
+      <textarea id="liInput" placeholder="Paste your LinkedIn headline / skills — or upload your CV below…"></textarea>
+      <div class="matchrow">
+        <label class="uploadbtn">📄 Upload CV<input id="liFile" type="file" accept=".txt,.pdf,.docx" hidden></label>
+        <span class="hint">🔒 Free · no sign-up to try</span>
+        <button id="liBtn" class="btn btn-accent">✨ Find my roles</button>
+      </div>
+    </div>
+    <div class="matchresults" id="liResults"></div>
+    <div class="matchcta" id="liCta">
+      <a href="signup.html" class="btn btn-ink">Save matches &amp; turn on Auto-Apply →</a>
+      <a href="jobs.html" class="btn btn-out">Browse all roles</a>
+    </div>
+  </div>
+</section>
 
 <!-- LOGO WALL -->
 <div class="logos">
@@ -266,6 +281,7 @@
 /* LinkedIn matcher + CV upload */
 initMatcher('liInput','liBtn','liResults','liCta');
 initCvUpload('liFile','liInput','liBtn');
+(function(){ var hf=document.getElementById('heroFinder'); if(!hf) return; hf.addEventListener('submit',function(e){ e.preventDefault(); var q=(document.getElementById('heroQ').value||'').trim(); if(window.gtag) gtag('event','hero_search',{q:q}); location.href='jobs.html'+(q?('?q='+encodeURIComponent(q)):''); }); })();
 
 /* pricing → remember chosen plan, then go sign up */
 (function(){

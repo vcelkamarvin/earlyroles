@@ -120,8 +120,11 @@
   });
   [q,dept,lvl,locFilter].forEach(el=>el.addEventListener('input',render));
   function fallback(){ return JOBS.map(j=>({id:j.id,title:j.title,co:j.co,logo:'',initials:j.co.slice(0,2).toUpperCase(),loc:j.loc,dept:j.dept,type:j.lvl,tags:j.tags,sal:j.sal,ago:j.ago,url:'signup.html'})); }
+  const params=new URLSearchParams(location.search);
+  const initialQ=(params.get('q')||'').trim(); if(initialQ) q.value=initialQ;
+  const initialLoc=(params.get('loc')||'').trim(); if(initialLoc) locFilter.value=initialLoc;
   board.innerHTML='<div class="empty">Loading live US remote roles…</div>';
-  fetchRealJobs().then(list=>{ ALL=(list&&list.length)?list:fallback(); render(); }).catch(()=>{ ALL=fallback(); render(); });
+  fetchRealJobs(initialQ).then(list=>{ ALL=(list&&list.length)?list:fallback(); render(); }).catch(()=>{ ALL=fallback(); render(); });
 })();
 </script>
 </body>
