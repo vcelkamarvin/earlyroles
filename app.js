@@ -427,6 +427,50 @@ async function fetchRealJobs(query){
 }
 window.fetchRealJobs = fetchRealJobs;
 
+/* ---------- Real profile review (paste/CV → /api/review → AI or heuristic) ---------- */
+function renderReviewCard(r){
+  return `<div class="roastcard">
+    <div class="cringe"><div class="cringe-l">🔥 Cringe-o-meter</div><div class="cringe-bar"><span style="width:${r.score}%"></span></div><div class="cringe-n">${r.score}<small>/100</small></div></div>
+    <div class="verdict">${r.verdict||''}</div>
+    <h4 class="modal-h">What's holding your profile back</h4><ul class="roast-ul">${(r.roasts||[]).map(x=>`<li>${x}</li>`).join('')}</ul>
+    <h4 class="modal-h">Fix it — your glow-up ✨</h4><ul class="glow-ul">${(r.fixes||[]).map(x=>`<li>${x}</li>`).join('')}</ul>
+    <div class="roast-cta">
+      <button class="btn btn-out" id="roastShare">📋 Copy my fixes</button>
+      <a class="btn btn-out" id="roastTweet" target="_blank" rel="noopener">𝕏 Share my score</a>
+      <a class="btn btn-accent" href="match.html">Now find my best roles →</a>
+    </div>
+    <p class="privacy-note">${r.engine==='ai'?'Reviewed by AI':'Instant review'} · your text is used only to generate this result, never stored or sold.</p>
+  </div>`;
+}
+window.renderReviewCard = renderReviewCard;
+
+function initProfileReview(inputId, btnId, resultsId, consentId){
+  const inp=document.getElementById(inputId), btn=document.getElementById(btnId), res=document.getElementById(resultsId);
+  const consent=consentId?document.getElementById(consentId):null;
+  if(!btn||!inp||!res) return;
+  async function run(){
+    const text=(inp.value||'').trim();
+    if(text.length<20){ res.innerHTML='<div class="empty">Paste your headline + “About” section, or upload your CV, so we have something to review.</div>'; return; }
+    if(consent && !consent.checked){ res.innerHTML='<div class="empty">Please tick the box — EarlyRoles only reviews your own profile.</div>'; return; }
+    res.innerHTML='<div class="empty">Reviewing your profile…</div>';
+    let r=null;
+    try{
+      const resp=await fetch('/api/review',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text})});
+      if(resp.ok) r=await resp.json();
+    }catch(e){}
+    if(!r || typeof r.score!=='number'){ r = window.roastLinkedIn ? roastLinkedIn(text) : {score:60,verdict:'',roasts:[],fixes:[]}; r.engine='heuristic'; }
+    if(window.gtag) gtag('event','profile_review',{score:r.score, engine:r.engine});
+    res.innerHTML=renderReviewCard(r);
+    const share=location.href.split('#')[0];
+    const shareText=`My LinkedIn scored ${r.score}/100 on the Cringe-o-meter ${(r.verdict||'').split(' ')[0]} Review yours free:`;
+    const tw=document.getElementById('roastTweet'); if(tw) tw.href='https://twitter.com/intent/tweet?text='+encodeURIComponent(shareText)+'&url='+encodeURIComponent(share);
+    const sh=document.getElementById('roastShare'); if(sh) sh.addEventListener('click',function(){ try{ navigator.clipboard.writeText('My LinkedIn fixes:\n- '+(r.fixes||[]).join('\n- ')+'\n\n'+shareText+' '+share); showToast('Fixes copied'); }catch(e){ showToast('Copy not available here'); } });
+    res.scrollIntoView({behavior:'smooth',block:'nearest'});
+  }
+  btn.addEventListener('click', run);
+}
+window.initProfileReview = initProfileReview;
+
 /* ---------- Scroll reveal animations ---------- */
 (function revealInit(){
   if(!('IntersectionObserver' in window)) return;

@@ -28,18 +28,20 @@
   <div class="wrap">
     <div class="flag"><span class="livedot"></span> Free · No sign-up · Fix your profile in minutes</div>
     <h1 class="hero-h1">Fix my <em>LinkedIn.</em> 🔥</h1>
-    <p class="sub">Paste your LinkedIn profile link and we'll show you exactly what's holding it back — then how to fix it so recruiters actually reply. Free, instant, and brutally helpful.</p>
+    <p class="sub">Paste your headline + “About”, or upload your CV, and our AI shows exactly what's holding your profile back — then how to fix it so recruiters reply. Free and instant.</p>
   </div>
 </header>
 
 <section style="padding-top:18px">
   <div class="wrap">
     <div class="matchcard">
-      <input id="roastInput" type="url" inputmode="url" placeholder="https://www.linkedin.com/in/your-name" />
+      <textarea id="roastInput" placeholder="Paste your LinkedIn headline + “About” section here — or upload your CV below…"></textarea>
       <div class="matchrow">
-        <span class="hint">🔒 Just your public profile link — nothing else. Runs in your browser.</span>
-        <button id="roastBtn" class="btn btn-accent">🔥 Roast my profile</button>
+        <label class="uploadbtn">📄 Upload CV<input id="roastFile" type="file" accept=".txt,.pdf,.docx" hidden></label>
+        <span class="hint">🔒 Used only to review your profile — never stored or sold.</span>
+        <button id="roastBtn" class="btn btn-accent">🔥 Review my profile</button>
       </div>
+      <label class="consent"><input type="checkbox" id="roastConsent"> This is my own profile and I agree to the <a href="privacy.html" target="_blank">privacy terms</a>.</label>
     </div>
     <div class="matchresults" id="roastResults"></div>
   </div>
@@ -50,7 +52,7 @@
     <div class="eyebrow">What you get</div>
     <h2 class="sec">A free profile fix that gets you replies.</h2>
     <div class="steps">
-      <div class="step"><div class="k">01</div><h3>Paste your link</h3><p>Just drop your LinkedIn profile URL — no copy-pasting your whole profile, no sign-up.</p></div>
+      <div class="step"><div class="k">01</div><h3>Paste or upload</h3><p>Drop in your headline + About, or upload your CV. No sign-up, nothing stored.</p></div>
       <div class="step"><div class="k">02</div><h3>See what's weak</h3><p>We flag the exact things recruiters quietly skip over: a weak headline, no metrics, buzzword fluff.</p></div>
       <div class="step"><div class="k">03</div><h3>Fix it &amp; get matched</h3><p>Apply the specific fixes, then run the matcher to see the US roles you now qualify for — and let AI apply.</p></div>
     </div>
@@ -69,6 +71,6 @@
 </footer>
 
 <script src="app.js"></script>
-<script>initRoast('roastInput','roastBtn','roastResults');</script>
+<script>initCvUpload('roastFile','roastInput');initProfileReview('roastInput','roastBtn','roastResults','roastConsent');</script>
 </body>
 </html>
