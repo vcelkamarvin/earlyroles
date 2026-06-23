@@ -12,7 +12,7 @@
    Analytics stays off.
 =================================================================== */
 const CONFIG = {
-  GOOGLE_CLIENT_ID: "",      // e.g. "1234-abc.apps.googleusercontent.com"
+  GOOGLE_CLIENT_ID: "137415610392-istrpgfj4i13ma8cn7rhv14ttjo651cc.apps.googleusercontent.com",  // real Google sign-in
   GA_MEASUREMENT_ID: "",     // e.g. "G-XXXXXXXXXX"
   SUPABASE_URL: "https://ossyctgqycfkcdcncpgg.supabase.co",   // real login (Supabase)
   SUPABASE_ANON_KEY: "sb_publishable_GQGwqejtKqPBwUXOQe0E0w_d4iHupij"   // public key — safe in client
