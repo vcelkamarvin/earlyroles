@@ -248,9 +248,9 @@
 /* logo wall */
 (function(){
   const wall=document.getElementById('logowall');
-  const list=["reddit.com","konghq.com","stripe.com","notion.so","figma.com","coinbase.com","kaseya.com","bridgebio.com"];
-  const imgs=list.map(d=>`<img src="${logoURL(d)}" alt="${d}" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'wm',textContent:this.alt.split('.')[0]}))">`).join('');
-  wall.innerHTML=imgs+imgs;
+  const names=["Reddit","Stripe","Notion","Figma","Coinbase","Kong","Linear","Vercel","Brex","Kaseya"];
+  const one=names.map(n=>`<span class="wm">${n}</span>`).join('');
+  wall.innerHTML=one+one;
 })();
 
 /* latest jobs — list view (first 6) */
