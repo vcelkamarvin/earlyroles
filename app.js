@@ -14,8 +14,8 @@
 const CONFIG = {
   GOOGLE_CLIENT_ID: "",      // e.g. "1234-abc.apps.googleusercontent.com"
   GA_MEASUREMENT_ID: "",     // e.g. "G-XXXXXXXXXX"
-  SUPABASE_URL: "",          // e.g. "https://xxxx.supabase.co"  (real login when set)
-  SUPABASE_ANON_KEY: ""      // your Supabase anon/public key
+  SUPABASE_URL: "https://ossyctgqycfkcdcncpgg.supabase.co",   // real login (Supabase)
+  SUPABASE_ANON_KEY: "sb_publishable_GQGwqejtKqPBwUXOQe0E0w_d4iHupij"   // public key — safe in client
 };
 
 /* ---------- Google Analytics (GA4) loader ---------- */
