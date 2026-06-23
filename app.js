@@ -412,6 +412,21 @@ function initCvUpload(fileId, textareaId, runBtnId){
 }
 window.initCvUpload = initCvUpload;
 
+/* ---------- Real job search (live US remote roles via Remotive API) ---------- */
+async function fetchRealJobs(query){
+  const url='https://remotive.com/api/remote-jobs'+(query?('?search='+encodeURIComponent(query)):'');
+  const r=await fetch(url); if(!r.ok) throw new Error('feed'); const j=await r.json();
+  const usOk=/(usa|united states|u\.s|worldwide|anywhere|americas|north america)/i;
+  const initials=co=>(co||'?').replace(/[^A-Za-z0-9 ]/g,'').split(' ').filter(Boolean).slice(0,2).map(w=>w[0]).join('').toUpperCase();
+  const ago=d=>{ if(!d) return ''; const days=Math.floor((Date.now()-new Date(d))/86400000); return days<=0?'today':days===1?'1d ago':days<30?days+'d ago':Math.floor(days/30)+'mo ago'; };
+  return (j.jobs||[]).filter(x=>usOk.test(x.candidate_required_location||'')).slice(0,48).map(x=>({
+    id:x.id, title:x.title, co:x.company_name, logo:x.company_logo_url||'', initials:initials(x.company_name),
+    loc:x.candidate_required_location||'Remote', dept:x.category||'', type:(x.job_type||'').replace(/_/g,' '),
+    tags:[x.category,(x.job_type||'').replace(/_/g,' ')].filter(Boolean), sal:x.salary||'', url:x.url, ago:ago(x.publication_date)
+  }));
+}
+window.fetchRealJobs = fetchRealJobs;
+
 /* ---------- Scroll reveal animations ---------- */
 (function revealInit(){
   if(!('IntersectionObserver' in window)) return;

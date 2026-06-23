@@ -72,34 +72,37 @@
 (function(){
   const board=document.getElementById('board'), q=document.getElementById('q'),
         dept=document.getElementById('dept'), lvl=document.getElementById('lvl'), count=document.getElementById('count');
-  function render(){
+  let ALL=[];
+  function rowHTML(j){
     const saved=Auth.saved();
-    const term=q.value.toLowerCase(), d=dept.value, l=lvl.value;
-    const rows=JOBS.filter(j=>{
-      const m=(j.title+' '+j.co+' '+j.tags.join(' ')).toLowerCase().includes(term);
-      return m && (!d||j.dept===d) && (!l||j.lvl.startsWith(l));
-    });
-    count.textContent=rows.length+' of '+JOBS.length+' roles';
-    board.innerHTML = rows.length? rows.map(j=>`
-      <div class="jrow" data-id="${j.id}">
-        ${logoImg(j.co,j.domain)}
+    const logo=j.logo?`<span class="jlogo" data-i="${j.initials}"><img src="${j.logo}" alt="${j.co}" loading="lazy" onerror="this.parentNode.textContent=this.parentNode.dataset.i"></span>`:`<span class="jlogo">${j.initials||'•'}</span>`;
+    return `<div class="jrow">
+        ${logo}
         <div class="jmain">
           <div class="jtitle">${j.title} <span class="new">New</span></div>
-          <div class="jmeta"><span>${j.co}</span><span>·</span><span>${j.loc}</span><span>·</span><span>${j.lvl}</span><span>·</span><span>${j.dept}</span></div>
-          <div class="jtags">${j.tags.map(t=>`<span class="jchip">${t}</span>`).join('')}</div>
+          <div class="jmeta"><span>${j.co}</span><span>·</span><span>${j.loc}</span>${j.type?`<span>·</span><span>${j.type}</span>`:''}${j.dept?`<span>·</span><span>${j.dept}</span>`:''}</div>
+          <div class="jtags">${(j.tags||[]).map(t=>`<span class="jchip">${t}</span>`).join('')}</div>
         </div>
         <div class="jside">
-          <div class="jsal">${j.sal}</div><div class="jago">${j.ago}</div>
-          <div class="jbtns"><button class="jsave ${saved.includes(j.id)?'saved':''}" data-id="${j.id}">${saved.includes(j.id)?'✓ Saved':'Save'}</button><button class="japply" type="button">View &amp; apply →</button></div>
+          <div class="jsal">${j.sal||''}</div><div class="jago">${j.ago||''}</div>
+          <div class="jbtns"><button class="jsave ${saved.includes(j.id)?'saved':''}" data-id="${j.id}">${saved.includes(j.id)?'✓ Saved':'Save'}</button><a class="japply" href="${j.url}" target="_blank" rel="noopener">Apply →</a></div>
         </div>
-      </div>`).join('') : '<div class="empty">No roles match your filters. Try widening your search.</div>';
+      </div>`;
+  }
+  function render(){
+    const term=q.value.toLowerCase(), d=dept.value.toLowerCase(), l=lvl.value.toLowerCase();
+    const rows=ALL.filter(j=>{
+      const hay=(j.title+' '+j.co+' '+(j.dept||'')+' '+(j.tags||[]).join(' ')).toLowerCase();
+      return hay.includes(term) && (!d||hay.includes(d)) && (!l||j.title.toLowerCase().includes(l));
+    });
+    count.textContent=rows.length+' of '+ALL.length+' live roles';
+    board.innerHTML = rows.length? rows.map(rowHTML).join('') : '<div class="empty">No roles match your filters. Try widening your search.</div>';
   }
   board.addEventListener('click',e=>{
     const b=e.target.closest('.jsave'); if(!b)return;
     const s=Auth.toggleSave(b.dataset.id); const on=s.includes(Number(b.dataset.id));
     b.classList.toggle('saved',on); b.textContent=on?'✓ Saved':'Save';
   });
-  wireJobRows(board);
   document.getElementById('alertBtn').addEventListener('click',function(){
     const label = (q.value.trim()||'All roles') + (dept.value?(' · '+dept.value):'') + (lvl.value?(' · '+lvl.value):'');
     Auth.addAlert({label, q:q.value.trim(), dept:dept.value, lvl:lvl.value, when:Date.now()});
@@ -107,7 +110,9 @@
     showToast(Auth.get() ? '🔔 Search saved — find it on your dashboard.' : '🔔 Saved. Sign up to get alerts by email.');
   });
   [q,dept,lvl].forEach(el=>el.addEventListener('input',render));
-  render();
+  function fallback(){ return JOBS.map(j=>({id:j.id,title:j.title,co:j.co,logo:'',initials:j.co.slice(0,2).toUpperCase(),loc:j.loc,dept:j.dept,type:j.lvl,tags:j.tags,sal:j.sal,ago:j.ago,url:'signup.html'})); }
+  board.innerHTML='<div class="empty">Loading live US remote roles…</div>';
+  fetchRealJobs().then(list=>{ ALL=(list&&list.length)?list:fallback(); render(); }).catch(()=>{ ALL=fallback(); render(); });
 })();
 </script>
 </body>
