@@ -283,11 +283,13 @@ initCvUpload('liFile','liInput','liBtn');
 /* pricing → remember chosen plan, then go sign up */
 (function(){
   document.querySelectorAll('[data-plan]').forEach(a=>{
-    a.addEventListener('click',function(e){
+    a.addEventListener('click',async function(e){
       e.preventDefault();
-      Auth.setPlan(this.getAttribute('data-plan'));
-      if(window.gtag) gtag('event','select_plan',{plan:this.getAttribute('data-plan')});
-      location.href='signup.html';
+      const plan=this.getAttribute('data-plan');
+      Auth.setPlan(plan);
+      if(window.gtag) gtag('event','select_plan',{plan});
+      const ok = await startCheckout(plan);   // real Stripe Checkout when configured
+      if(!ok) location.href='signup.html';     // fallback until Stripe keys are set
     });
   });
 })();

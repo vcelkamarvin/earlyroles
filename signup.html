@@ -51,7 +51,7 @@
 <script src="app.js"></script>
 <script>
 window.addEventListener('load',function(){ renderGoogleButton('gbtn'); });
-document.getElementById('signupForm').addEventListener('submit',function(e){
+document.getElementById('signupForm').addEventListener('submit',async function(e){
   e.preventDefault();
   const name=document.getElementById('name').value.trim();
   const email=document.getElementById('email').value.trim();
@@ -60,6 +60,8 @@ document.getElementById('signupForm').addEventListener('submit',function(e){
   if(name.length<2){err.textContent='Please enter your name.';return;}
   if(!/^\S+@\S+\.\S+$/.test(email)){err.textContent='Please enter a valid email address.';return;}
   if(pw.length<6){err.textContent='Password must be at least 6 characters.';return;}
+  const sb=await getSupabase();
+  if(sb){ const r=await sb.auth.signUp({email,password:pw,options:{data:{name}}}); if(r.error){err.textContent=r.error.message;return;} }
   Auth.signup(name,email);
   location.href='dashboard.html';
 });

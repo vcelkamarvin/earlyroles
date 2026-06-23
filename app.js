@@ -13,7 +13,9 @@
 =================================================================== */
 const CONFIG = {
   GOOGLE_CLIENT_ID: "",      // e.g. "1234-abc.apps.googleusercontent.com"
-  GA_MEASUREMENT_ID: ""      // e.g. "G-XXXXXXXXXX"
+  GA_MEASUREMENT_ID: "",     // e.g. "G-XXXXXXXXXX"
+  SUPABASE_URL: "",          // e.g. "https://xxxx.supabase.co"  (real login when set)
+  SUPABASE_ANON_KEY: ""      // your Supabase anon/public key
 };
 
 /* ---------- Google Analytics (GA4) loader ---------- */
@@ -470,6 +472,28 @@ function initProfileReview(inputId, btnId, resultsId, consentId){
   btn.addEventListener('click', run);
 }
 window.initProfileReview = initProfileReview;
+
+/* ---------- Stripe checkout (real when STRIPE_* env vars are set on the server) ---------- */
+async function startCheckout(plan){
+  try{
+    const r=await fetch('/api/checkout',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({plan})});
+    const j=await r.json();
+    if(j && j.url){ location.href=j.url; return true; }   // real Stripe Checkout
+  }catch(e){}
+  return false;   // not configured yet → caller falls back to signup
+}
+window.startCheckout = startCheckout;
+
+/* ---------- Real auth (Supabase) — used when SUPABASE_URL + key are set, else demo ---------- */
+let _sb=null;
+async function getSupabase(){
+  if(!CONFIG.SUPABASE_URL || !CONFIG.SUPABASE_ANON_KEY) return null;
+  if(_sb) return _sb;
+  await loadScriptOnce('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js');
+  _sb = window.supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY);
+  return _sb;
+}
+window.getSupabase = getSupabase;
 
 /* ---------- Scroll reveal animations ---------- */
 (function revealInit(){
