@@ -75,21 +75,6 @@
           <p style="font-size:13px;color:var(--faint);margin-top:12px" id="aaNote"></p>
         </div>
 
-        <div class="dcard" id="cover">
-          <h3>Cover letter generator</h3>
-          <div class="h-sub">Draft a tailored letter for any role.</div>
-          <div class="term-form" style="margin-top:4px">
-            <input id="t-name" type="text" placeholder="Your name" />
-            <input id="t-role" type="text" placeholder="Target role" />
-            <input id="t-company" type="text" placeholder="Company" />
-            <button class="btn btn-ink btn-block" id="t-gen" style="margin-top:6px">Generate</button>
-          </div>
-          <div class="terminal" style="min-height:200px;margin-top:14px">
-            <div class="term-bar"><span class="d d1"></span><span class="d d2"></span><span class="d d3"></span><span class="t mono">cover-letter</span></div>
-            <div class="term-body mono" id="term-out" style="font-size:12px"><span class="pr">earlyroles@careers</span> <span class="dim">~ %</span> ready <span class="cursor"></span></div>
-          </div>
-        </div>
-
         <div class="dcard">
           <h3>Your profile</h3>
           <div class="h-sub" id="profSub">Add your resume details so the AI can tailor applications.</div>
@@ -188,28 +173,15 @@
 
   /* ----- Auto-Apply toggle ----- */
   const sw=document.getElementById('aaSwitch'), lbl=document.getElementById('aaLabel'), note=document.getElementById('aaNote');
-  function paintAA(){const on=Auth.autoApply();sw.classList.toggle('on',on);lbl.textContent=on?'On':'Off';note.textContent=on?'On — the AI will apply to new US matches with a tailored resume + cover letter.':'Turn on to auto-apply to new US matches with a tailored resume + cover letter.';}
+  function paintAA(){const on=Auth.autoApply();sw.classList.toggle('on',on);lbl.textContent=on?'On':'Off';note.textContent=on?'On — the AI will apply to new US matches with a tailored resume + application.':'Turn on to auto-apply to new US matches with a tailored resume + application.';}
   sw.addEventListener('click',()=>{Auth.setAutoApply(!Auth.autoApply());paintAA();});
   paintAA();
 
-  /* ----- Profile summary + cover letter prefill ----- */
+  /* ----- Profile summary ----- */
   const prof=Auth.profile();
   if(prof.fullName||prof.headline){
     document.getElementById('profSub').textContent='Saved: '+[prof.headline,prof.location].filter(Boolean).join(' · ');
   }
-  document.getElementById('t-name').value=prof.fullName||u.name;
-  document.getElementById('t-role').value=prof.headline||'';
-
-  /* ----- Mini cover letter terminal ----- */
-  const out=document.getElementById('term-out'), btn=document.getElementById('t-gen'); let busy=false;
-  const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-  function buildLetter(name,role,company){ return window.buildCoverLetter({name,role,company,skills:prof.skills}); }
-  function line(h){const s=document.createElement('span');s.innerHTML=h+"\n";out.appendChild(s);out.scrollTop=out.scrollHeight;}
-  function type(t,cb){const s=document.createElement('span');out.appendChild(s);let i=0;(function k(){if(i<=t.length){s.innerHTML=esc(t.slice(0,i))+'<span class="cursor"></span>';out.scrollTop=out.scrollHeight;i+=2;setTimeout(k,7);}else{s.innerHTML=esc(t)+"\n";cb&&cb();}})();}
-  btn.addEventListener('click',()=>{if(busy)return;busy=true;const v=id=>document.getElementById(id).value.trim();out.innerHTML='';
-    line('<span class="pr">earlyroles@careers</span> <span class="dim">~ %</span> generate');
-    setTimeout(()=>{line('<span class="ok">✓ draft ready</span>');line('');type(buildLetter(v('t-name'),v('t-role'),v('t-company')),()=>{busy=false;});},450);
-  });
 })();
 </script>
 </body>

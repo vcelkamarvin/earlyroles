@@ -17,7 +17,6 @@
     <div class="navlinks">
       <a href="jobs.html">Browse jobs</a>
       <a href="index.html#auto">Auto-Apply</a>
-      <a href="index.html#terminal">Cover letters</a>
       <a href="index.html#pricing">Pricing</a>
     </div>
     <div class="navr"></div>
@@ -156,7 +155,7 @@
         <button class="btn btn-out" id="d-save">${saved?'✓ Saved':'Save role'}</button>
         <button class="btn btn-accent" id="d-apply">Apply now</button>
       </div>
-      <p class="modal-note">Applying unlocks with any plan — includes tracker, alerts and AI resume + cover-letter tools.</p>
+      <p class="modal-note">Applying unlocks with any plan — includes tracker, alerts and AI resume + matchmaking tools.</p>
     </div>`;
     ov.style.display='flex';
     const close=()=>{ ov.style.display='none'; };
@@ -176,6 +175,8 @@
   const params=new URLSearchParams(location.search);
   const initialQ=(params.get('q')||'').trim(); if(initialQ) q.value=initialQ;
   const initialLoc=(params.get('loc')||'').trim(); if(initialLoc) locFilter.value=initialLoc;
+  const initialLvl=(params.get('lvl')||'').trim(); if(initialLvl) lvl.value=initialLvl;
+  const initialDept=(params.get('dept')||'').trim(); if(initialDept){ const o=[...dept.options].find(x=>x.value.toLowerCase()===initialDept.toLowerCase()||x.text.toLowerCase()===initialDept.toLowerCase()); if(o) dept.value=o.value; }
   board.innerHTML='<div class="empty">Loading live US remote roles…</div>';
   fetchRealJobs(initialQ).then(list=>{ ALL=(list&&list.length)?list:fallback(); render(); }).catch(()=>{ ALL=fallback(); render(); });
 })();

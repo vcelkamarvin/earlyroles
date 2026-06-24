@@ -33,6 +33,12 @@
   .hf-loc{flex:0 0 auto;min-width:175px}
   .hf-btn{flex:0 0 auto;border-radius:12px;padding-left:20px;padding-right:20px;white-space:nowrap}
   @media(max-width:560px){.heroform{flex-direction:column}.hf-field + .hf-field{border-left:0;border-top:1px solid #eef0f3}.hf-btn{width:100%}}
+  .prefcard{max-width:780px;margin:24px auto 0;text-align:left;background:#fff;border:1px solid #e6e8ec;border-radius:18px;padding:24px;box-shadow:0 14px 44px rgba(15,17,21,.06)}
+  .pf-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .pf-field{display:flex;flex-direction:column;gap:7px;font-size:12.5px;font-weight:700;color:var(--muted);letter-spacing:.01em}
+  .pf-field input,.pf-field select{font:inherit;font-size:15px;font-weight:500;color:var(--ink);padding:12px 13px;border:1px solid #e6e8ec;border-radius:11px;background:#fff;width:100%;box-sizing:border-box}
+  .pf-field input:focus,.pf-field select:focus{outline:2px solid var(--accent);outline-offset:-1px;border-color:var(--accent)}
+  @media(max-width:560px){.pf-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -41,11 +47,10 @@
   <div class="wrap nav">
     <a href="index.html" class="brand"><span class="mk">E</span> EarlyRoles</a>
     <div class="navlinks">
-      <a href="#match">Match me</a>
-      <a href="roast.html">🔥 Roast</a>
       <a href="jobs.html">Browse jobs</a>
+      <a href="roast.html">🔥 Roast</a>
+      <a href="#match">Match me</a>
       <a href="#auto">Auto-Apply</a>
-      <a href="#terminal">Cover letters</a>
       <a href="#pricing">Pricing</a>
     </div>
     <div class="navr"></div>
@@ -55,9 +60,9 @@
 <!-- HERO -->
 <header class="hero" id="hero">
   <div class="wrap">
-    <div class="flag"><span class="livedot"></span> Live US remote roles · AI matches &amp; applies for you</div>
+    <div class="flag"><span class="livedot"></span> AI matches you directly to live US roles — skip the LinkedIn queue</div>
     <h1 class="hero-h1">Jobs you won't find on <em>LinkedIn or Indeed.</em></h1>
-    <p class="sub">Find your next US remote role — before it hits LinkedIn or Indeed.</p>
+    <p class="sub">We use AI to match you <em>straight</em> to live US remote roles — so you're applicant #1, not #243 fighting the LinkedIn crowd.</p>
     <form class="heroform" id="heroFinder">
       <div class="hf-field"><span class="hf-ic" aria-hidden="true">🔎</span><input id="heroQ" type="text" aria-label="Job title or keyword" placeholder="Job title or keyword — product, react, sales…" /></div>
       <div class="hf-field hf-loc"><span class="hf-ic" aria-hidden="true">📍</span>
@@ -98,9 +103,9 @@
 <!-- AI MATCHER -->
 <section id="match" class="alt" style="padding:48px 0">
   <div class="wrap">
-    <div class="eyebrow">AI match</div>
-    <h2 class="sec">Paste your LinkedIn or drop your CV.</h2>
-    <p class="lead">Our AI ranks live US roles against your profile in seconds — no sign-up to try.</p>
+    <div class="eyebrow">AI matchmaking</div>
+    <h2 class="sec">Let our AI matchmake you to roles.</h2>
+    <p class="lead">Paste your LinkedIn or drop your CV — our AI matches you straight to live US roles in seconds, so you skip the LinkedIn crowd entirely. No sign-up to try.</p>
     <div class="matchcard" id="finder" style="max-width:660px;margin:22px auto 0;text-align:left">
       <textarea id="liInput" placeholder="Paste your LinkedIn headline / skills — or upload your CV below…"></textarea>
       <div class="matchrow">
@@ -133,7 +138,7 @@
     <div class="steps">
       <div class="step"><div class="k">01</div><h3>We scan career pages hourly</h3><p>Our crawlers read 18,000+ US company hiring systems, surfacing new roles before they reach the big job boards.</p></div>
       <div class="step"><div class="k">02</div><h3>Filter to exactly your role</h3><p>Slice by title, salary, seniority, department and timezone. Save a search and get alerted the moment a match goes live.</p></div>
-      <div class="step"><div class="k">03</div><h3>Let the AI apply</h3><p>Tailored resume, generated cover letter, application pre-filled on the real career page. You review, it sends.</p></div>
+      <div class="step"><div class="k">03</div><h3>Let the AI apply</h3><p>AI matches you, tailors your resume and pre-fills the application on the real career page. You review, it sends.</p></div>
     </div>
   </div>
 </section>
@@ -145,14 +150,14 @@
       <div>
         <div class="tagk">★ AI · Done-for-you</div>
         <h3>Stop applying. Let the AI do it.</h3>
-        <p>AI Auto-Apply matches you to live US roles, rewrites your CV for every posting, writes a tailored cover letter, and submits on the real career page — up to 100 applications a day. You just review and approve.</p>
+        <p>AI Auto-Apply matches you to live US roles, rewrites your CV for every posting, tailors each application, and submits on the real career page — up to 100 applications a day. You just review and approve.</p>
         <div class="price-in"><span class="n serif">$62</span><span class="u">/month · cancel anytime</span></div>
         <a href="https://buy.stripe.com/5kQ9AL8g7ced713beu63K05" class="btn btn-light">Get AI Auto-Apply</a>
       </div>
       <div class="panel">
         <div class="row"><span class="chk">✓</span> Up to 100 applications a day <span class="meta">AI</span></div>
         <div class="row"><span class="chk">✓</span> CV optimized for every role <span class="meta">AI</span></div>
-        <div class="row"><span class="chk">✓</span> Cover letter written per job <span class="meta">AI</span></div>
+        <div class="row"><span class="chk">✓</span> Every application tailored to the role <span class="meta">AI</span></div>
         <div class="row"><span class="chk">✓</span> Submitted on the real career page <span class="meta">auto</span></div>
         <div class="row"><span class="chk">✓</span> You just review &amp; approve <span class="meta">1-click</span></div>
       </div>
@@ -160,29 +165,32 @@
   </div>
 </section>
 
-<!-- COVER LETTER TERMINAL -->
-<section id="terminal" class="alt">
+<!-- WHAT ARE YOU LOOKING FOR -->
+<section id="prefs" class="alt">
   <div class="wrap">
-    <div class="eyebrow">AI cover letters</div>
-    <h2 class="sec">An outstanding cover letter in seconds.</h2>
-    <p class="lead">Type the role, company and one highlight — get a ready-to-send letter, live.</p>
-    <div class="termwrap">
-      <div class="term-side">
-        <h3>One command. <br>A cover letter that fits.</h3>
-        <p>No blank-page paralysis. Our generator drafts a focused, professional letter you can copy, tweak and send — the same engine that powers Auto-Apply.</p>
-        <div class="term-form">
-          <label for="t-name">Your name</label><input id="t-name" type="text" placeholder="Alex Morgan" />
-          <label for="t-role">Target role</label><input id="t-role" type="text" placeholder="Senior Product Manager" />
-          <label for="t-company">Company</label><input id="t-company" type="text" placeholder="Reddit" />
-          <label for="t-highlight">One highlight (optional)</label><input id="t-highlight" type="text" placeholder="scaled a 0→1 product to 1M users" />
-          <button class="btn btn-ink" id="t-gen" style="margin-top:8px">⌘ Generate cover letter</button>
-        </div>
+    <div class="eyebrow">Tell us what you want</div>
+    <h2 class="sec">What's your ideal role?</h2>
+    <p class="lead">Answer a few quick questions and our AI points you straight at the matching live US roles — no endless scrolling, no LinkedIn queue.</p>
+    <form class="prefcard" id="prefForm">
+      <div class="pf-grid">
+        <label class="pf-field"><span>Role or keyword</span><input id="pfRole" type="text" placeholder="e.g. product manager, react, sales" /></label>
+        <label class="pf-field"><span>Seniority</span>
+          <select id="pfLvl"><option value="">Any level</option><option value="Mid">Mid · 3–5 yrs</option><option value="Senior">Senior · 6–10 yrs</option><option value="Lead">Lead · 10+ yrs</option></select>
+        </label>
+        <label class="pf-field"><span>Category</span>
+          <select id="pfDept"><option value="">Any category</option><option>Engineering</option><option>Data &amp; AI</option><option>Design</option><option>Product</option><option>Sales</option><option>Marketing</option><option>Operations</option><option>Finance</option><option>Customer Support</option></select>
+        </label>
+        <label class="pf-field"><span>Location</span>
+          <select id="pfLoc"><option value="">All US locations</option><option value="usa">🇺🇸 USA</option><option value="americas">Americas</option><option value="worldwide">Worldwide / Anywhere</option></select>
+        </label>
+        <label class="pf-field"><span>Minimum salary</span>
+          <select id="pfSal"><option value="">No minimum</option><option>$60k+</option><option>$80k+</option><option>$100k+</option><option>$130k+</option><option>$160k+</option><option>$200k+</option></select>
+        </label>
+        <label class="pf-field"><span>Email for new matches (optional)</span><input id="pfEmail" type="email" placeholder="you@email.com" /></label>
       </div>
-      <div class="terminal">
-        <div class="term-bar"><span class="d d1"></span><span class="d d2"></span><span class="d d3"></span><span class="t mono">unlisted — cover-letter</span></div>
-        <div class="term-body mono" id="term-out"><span class="pr">earlyroles@careers</span> <span class="dim">~ %</span> fill in the form and hit generate <span class="cursor"></span></div>
-      </div>
-    </div>
+      <button type="submit" class="btn btn-accent" style="margin-top:18px">Show my matches →</button>
+      <p class="micro" style="margin-top:12px">We use this to match you — and, if you add your email, to alert you when fresh roles fit. No spam.</p>
+    </form>
   </div>
 </section>
 
@@ -191,13 +199,13 @@
   <div class="wrap">
     <div class="eyebrow">Pricing</div>
     <h2 class="sec">Pick your pace. Land the role.</h2>
-    <p class="lead">Two simple plans for finding the job yourself — or let our AI do the applying for you. Every plan unlocks the full US job feed, alerts, tracker and AI resume + cover-letter tools.</p>
+    <p class="lead">Two simple plans for finding the job yourself — or let our AI do the applying for you. Every plan unlocks the full US job feed, alerts, tracker and AI resume + matchmaking tools.</p>
     <div class="prices">
       <div class="plan popular">
         <span class="ptag">Most popular</span>
         <div class="pname">Monthly</div><div class="pdesc">Room for a full search cycle to your dream job.</div>
         <div class="amt"><sup>$</sup>24.99</div><div class="per">/month · billed monthly</div><div class="eqv">Cancel anytime</div>
-        <ul><li><span class="t">✓</span> Full US remote job feed</li><li><span class="t">✓</span> Unlimited saved-search alerts</li><li><span class="t">✓</span> Application tracker</li><li><span class="t">✓</span> AI resume + cover letters</li><li><span class="t">✓</span> Early access to new roles</li></ul>
+        <ul><li><span class="t">✓</span> Full US remote job feed</li><li><span class="t">✓</span> Unlimited saved-search alerts</li><li><span class="t">✓</span> Application tracker</li><li><span class="t">✓</span> AI resume + matchmaking</li><li><span class="t">✓</span> Early access to new roles</li></ul>
         <a href="signup.html" data-plan="Monthly" class="btn btn-accent btn-block">Start Monthly</a>
       </div>
       <div class="plan">
@@ -210,7 +218,7 @@
         <span class="ptag" style="background:#fff;color:#111317">★ AI does it for you</span>
         <div class="pname">Auto-Apply with AI</div><div class="pdesc">Done-for-you. The AI finds, writes and applies.</div>
         <div class="amt"><sup>$</sup>62</div><div class="per">/month · cancel anytime</div><div class="eqv">Up to 100 applications/day</div>
-        <ul><li><span class="t">✓</span> Everything in Monthly</li><li><span class="t">✓</span> Up to 100 tailored applies a day</li><li><span class="t">✓</span> AI rewrites your CV for every role</li><li><span class="t">✓</span> AI cover letter per application</li><li><span class="t">✓</span> You just review &amp; approve</li></ul>
+        <ul><li><span class="t">✓</span> Everything in Monthly</li><li><span class="t">✓</span> Up to 100 tailored applies a day</li><li><span class="t">✓</span> AI rewrites your CV for every role</li><li><span class="t">✓</span> Every application AI-tailored per role</li><li><span class="t">✓</span> You just review &amp; approve</li></ul>
         <a href="signup.html" data-plan="Auto-Apply" class="btn btn-light btn-block">Get AI Auto-Apply</a>
       </div>
     </div>
@@ -246,9 +254,8 @@
     <h2 class="sec">Good questions</h2>
     <div class="faq">
       <details open><summary>How is this different from LinkedIn or Indeed?</summary><p>Most tools re-list jobs after they've gone public — so you're applicant #243. EarlyRoles reads roles straight from the hiring systems companies post with, so you see and apply while the posting is still fresh. Then our AI does the tailoring and applying.</p></details>
-      <details><summary>How does the cover-letter terminal work?</summary><p>Enter the role, company and a highlight, and our generator drafts a focused, professional cover letter instantly — the same engine behind Auto-Apply. Copy it, tweak it, send it.</p></details>
       <details><summary>Are these really US-only jobs?</summary><p>Yes. EarlyRoles focuses exclusively on US remote roles, sourced directly from company hiring systems — current, real, and linking straight to the source.</p></details>
-      <details><summary>How is Auto-Apply different from the other plans?</summary><p>Monthly and Annual give you the full feed plus AI resume + cover-letter tools — you still hit apply. Auto-Apply ($62/mo) does the applying for you: it matches, tailors, writes the letter and submits. You just approve.</p></details>
+      <details><summary>How is Auto-Apply different from the other plans?</summary><p>Monthly and Annual give you the full feed plus AI resume + matchmaking tools — you still hit apply. Auto-Apply ($62/mo) does the applying for you: it matches, tailors and submits. You just approve.</p></details>
       <details><summary>Can I cancel anytime?</summary><p>Anytime, in two clicks. No lock-in, no hidden fees. Billing is handled securely by Stripe.</p></details>
     </div>
   </div>
@@ -347,23 +354,22 @@ initCvUpload('liFile','liInput','liBtn');
   });
 })();
 
-/* cover letter terminal */
+/* "What are you looking for?" preferences → match + route */
 (function(){
-  const out=document.getElementById('term-out'), btn=document.getElementById('t-gen'); let busy=false;
-  const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-  function buildLetter(name,role,company,hl){ return window.buildCoverLetter({name,role,company,highlight:hl}); }
-  function line(html){const s=document.createElement('span');s.innerHTML=html+"\n";out.appendChild(s);out.scrollTop=out.scrollHeight;}
-  function type(text,cb){const s=document.createElement('span');out.appendChild(s);let i=0;(function tick(){if(i<=text.length){s.innerHTML=esc(text.slice(0,i))+'<span class="cursor"></span>';out.scrollTop=out.scrollHeight;i+=2;setTimeout(tick,8);}else{s.innerHTML=esc(text)+"\n";cb&&cb();}})();}
-  function gen(){
-    if(busy)return;busy=true;
-    const v=id=>document.getElementById(id).value.trim();
-    const name=v('t-name'),role=v('t-role'),company=v('t-company'),hl=v('t-highlight');
-    out.innerHTML='';
-    line('<span class="pr">earlyroles@careers</span> <span class="dim">~ %</span> unlisted generate --role "'+esc(role||'Senior Product Manager')+'" --company "'+esc(company||'company')+'"');
-    line('<span class="dim">› matching tone to job description…</span>');
-    setTimeout(()=>{line('<span class="ok">✓ draft ready — '+new Date().toLocaleTimeString()+'</span>');line('');type(buildLetter(name,role,company,hl),()=>{line('');line('<span class="ok">✓ done.</span> <span class="dim">copy it, tweak it, or let Auto-Apply send it.</span>');busy=false;});},650);
-  }
-  btn.addEventListener('click',gen);
+  var f=document.getElementById('prefForm'); if(!f) return;
+  try{ var p=JSON.parse(localStorage.getItem('unlisted_prefs')||'{}');
+    var set=(id,v)=>{ var el=document.getElementById(id); if(el&&v) el.value=v; };
+    set('pfRole',p.role); set('pfLvl',p.lvl); set('pfDept',p.dept); set('pfLoc',p.loc); set('pfSal',p.sal); set('pfEmail',p.email);
+  }catch(e){}
+  f.addEventListener('submit',function(e){ e.preventDefault();
+    var g=id=>((document.getElementById(id)||{}).value||'').trim();
+    var prefs={role:g('pfRole'),lvl:g('pfLvl'),dept:g('pfDept'),loc:g('pfLoc'),sal:g('pfSal'),email:g('pfEmail'),ts:Date.now()};
+    localStorage.setItem('unlisted_prefs',JSON.stringify(prefs));
+    if(prefs.email) localStorage.setItem('unlisted_nl',prefs.email);
+    if(window.gtag) gtag('event','prefs_submit',{role:prefs.role,dept:prefs.dept,lvl:prefs.lvl});
+    var qs=[]; if(prefs.role)qs.push('q='+encodeURIComponent(prefs.role)); if(prefs.loc)qs.push('loc='+encodeURIComponent(prefs.loc)); if(prefs.lvl)qs.push('lvl='+encodeURIComponent(prefs.lvl)); if(prefs.dept)qs.push('dept='+encodeURIComponent(prefs.dept));
+    location.href='jobs.html'+(qs.length?('?'+qs.join('&')):'');
+  });
 })();
 </script>
 </body>
