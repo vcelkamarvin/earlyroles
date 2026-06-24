@@ -125,7 +125,7 @@
         <h3>Stop applying. Let the AI do it.</h3>
         <p>AI Auto-Apply matches you to live US roles, rewrites your CV for every posting, writes a tailored cover letter, and submits on the real career page — up to 100 applications a day. You just review and approve.</p>
         <div class="price-in"><span class="n serif">$62</span><span class="u">/month · cancel anytime</span></div>
-        <a href="signup.html" class="btn btn-light">Get AI Auto-Apply</a>
+        <a href="https://buy.stripe.com/5kQ9AL8g7ced713beu63K05" class="btn btn-light">Get AI Auto-Apply</a>
       </div>
       <div class="panel">
         <div class="row"><span class="chk">✓</span> Up to 100 applications a day <span class="meta">AI</span></div>
@@ -293,14 +293,18 @@ initCvUpload('liFile','liInput','liBtn');
 
 /* pricing → remember chosen plan, then go sign up */
 (function(){
+  const PAY={
+    'Monthly':'https://buy.stripe.com/5kQ7sD3ZR5PP99b5Ua63K03',
+    'Annual':'https://buy.stripe.com/fZu7sDfIzba9adfeqG63K04',
+    'Auto-Apply':'https://buy.stripe.com/5kQ9AL8g7ced713beu63K05'
+  };
   document.querySelectorAll('[data-plan]').forEach(a=>{
-    a.addEventListener('click',async function(e){
+    a.addEventListener('click',function(e){
       e.preventDefault();
       const plan=this.getAttribute('data-plan');
       Auth.setPlan(plan);
-      if(window.gtag) gtag('event','select_plan',{plan});
-      const ok = await startCheckout(plan);   // real Stripe Checkout when configured
-      if(!ok) location.href='signup.html';     // fallback until Stripe keys are set
+      if(window.gtag) gtag('event','begin_checkout',{plan});
+      location.href = PAY[plan] || 'signup.html';   // real Stripe Payment Link
     });
   });
 })();
