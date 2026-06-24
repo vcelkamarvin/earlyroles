@@ -96,7 +96,7 @@
         </div>
         <div class="jside">
           <div class="jsal">${j.sal||''}</div><div class="jago">${j.ago||''}</div>
-          <div class="jbtns"><button class="jsave ${saved.includes(j.id)?'saved':''}" data-id="${j.id}">${saved.includes(j.id)?'✓ Saved':'Save'}</button><a class="japply" href="${j.url}" target="_blank" rel="noopener">Apply →</a></div>
+          <div class="jbtns"><button class="jsave ${saved.includes(j.id)?'saved':''}" data-id="${j.id}">${saved.includes(j.id)?'✓ Saved':'Save'}</button><button class="japply" type="button" data-url="${j.url||''}" data-title="${(j.title||'').replace(/"/g,'&quot;')}">Apply →</button></div>
         </div>
       </div>`;
   }
@@ -110,6 +110,8 @@
     board.innerHTML = rows.length? rows.map(rowHTML).join('') : '<div class="empty">No roles match your filters. Try widening your search.</div>';
   }
   board.addEventListener('click',e=>{
+    const ap=e.target.closest('.japply');
+    if(ap){ e.preventDefault(); tryApply({title:ap.dataset.title,url:ap.dataset.url}); return; }
     const b=e.target.closest('.jsave'); if(!b)return;
     const s=Auth.toggleSave(b.dataset.id); const on=s.includes(Number(b.dataset.id));
     b.classList.toggle('saved',on); b.textContent=on?'✓ Saved':'Save';

@@ -177,7 +177,7 @@ function openJobModal(id){
   ov.querySelector('#m-save').onclick=function(){ const s=Auth.toggleSave(j.id); this.textContent=s.includes(j.id)?'✓ Saved':'Save role'; };
   ov.querySelector('#m-cover').onclick=function(){ location.href='dashboard.html#cover'; };
   ov.querySelector('#m-apply').onclick=function(){
-    if(!Auth.get()){ location.href='signup.html'; return; }
+    if(!isPaid()){ close(); showPaywall(j.title); return; }
     Auth.setApplication(j.id,'Applied'); if(!Auth.saved().includes(j.id)) Auth.toggleSave(j.id);
     if(window.gtag) gtag('event','apply',{job:j.title});
     this.textContent='✓ Applied';
@@ -199,6 +199,90 @@ function wireJobRows(listEl){
   });
 }
 window.wireJobRows = wireJobRows;
+
+/* ---------- Apply paywall (pricing popup on apply, like the best in class) ---------- */
+function isPaid(){ const p = (window.Auth && Auth.plan) ? Auth.plan() : ''; return p==='Monthly'||p==='Annual'||p==='Auto-Apply'; }
+window.isPaid = isPaid;
+const PAYWALL_PAY = {
+  'Monthly':'https://buy.stripe.com/5kQ7sD3ZR5PP99b5Ua63K03',
+  'Annual':'https://buy.stripe.com/fZu7sDfIzba9adfeqG63K04',
+  'Auto-Apply':'https://buy.stripe.com/5kQ9AL8g7ced713beu63K05'
+};
+function injectPaywallCSS(){
+  if(document.getElementById('pw-style')) return;
+  const s=document.createElement('style'); s.id='pw-style';
+  s.textContent=`
+  .pw-card{max-width:900px;width:calc(100% - 32px);text-align:center;padding:30px 28px 22px}
+  .pw-h{font-family:'Instrument Serif',Georgia,serif;font-size:clamp(26px,3.4vw,38px);line-height:1.05;margin:0 0 8px;color:var(--ink)}
+  .pw-h em{font-style:italic;color:var(--accent)}
+  .pw-sub{color:var(--muted);max-width:54ch;margin:0 auto 22px;font-size:15px}
+  .pw-plans{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;text-align:left}
+  .pw-plan{border:1px solid #e6e8ec;border-radius:16px;padding:18px 16px;display:flex;flex-direction:column;gap:6px;position:relative;background:#fff}
+  .pw-plan.pop{border-color:var(--ink);box-shadow:0 12px 34px rgba(15,17,21,.12)}
+  .pw-tag{position:absolute;top:-11px;left:16px;background:var(--ink);color:#fff;font-size:11px;font-weight:700;padding:3px 10px;border-radius:999px;letter-spacing:.02em}
+  .pw-tag.alt{background:#fff;color:var(--ink);border:1px solid #e6e8ec}
+  .pw-name{font-weight:800;font-size:16px;color:var(--ink)}
+  .pw-desc{color:var(--muted);font-size:13px;min-height:34px}
+  .pw-amt{font-family:'Instrument Serif',Georgia,serif;font-size:30px;color:var(--ink);margin:2px 0 10px}
+  .pw-amt span{font-family:'Inter Tight',Inter,sans-serif;font-size:13px;color:var(--faint);font-weight:600}
+  .pw-plan .btn{margin-top:auto}
+  .pw-foot{color:var(--faint);font-size:13px;margin:18px 0 0}
+  @media(max-width:680px){.pw-plans{grid-template-columns:1fr}.pw-plan.pop{order:-1}}
+  `;
+  document.head.appendChild(s);
+}
+function showPaywall(jobTitle){
+  injectPaywallCSS();
+  if(window.gtag) gtag('event','paywall_view',{job:jobTitle||''});
+  let ov=document.getElementById('paywall');
+  if(!ov){ ov=document.createElement('div'); ov.id='paywall'; ov.className='modal'; document.body.appendChild(ov); }
+  const esc=s=>String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const sub = jobTitle ? `Apply for <b>${esc(jobTitle)}</b> and thousands of other live US roles — before they hit the public boards.` : 'Apply to live US roles before they hit the public boards.';
+  ov.innerHTML = `<div class="modal-card pw-card">
+    <button class="modal-x" aria-label="Close">×</button>
+    <h3 class="pw-h">Jobs you won't find on <em>LinkedIn or Indeed.</em></h3>
+    <p class="pw-sub">${sub}</p>
+    <div class="pw-plans">
+      <div class="pw-plan">
+        <div class="pw-name">Monthly</div>
+        <div class="pw-desc">Full US job feed, alerts, tracker &amp; AI tools.</div>
+        <div class="pw-amt">$24.99<span> /mo</span></div>
+        <button class="btn btn-out btn-block" data-pw="Monthly">Continue — $24.99/mo</button>
+      </div>
+      <div class="pw-plan pop">
+        <span class="pw-tag">Most popular</span>
+        <div class="pw-name">Auto-Apply with AI</div>
+        <div class="pw-desc">The AI matches, tailors and applies for you.</div>
+        <div class="pw-amt">$62<span> /mo</span></div>
+        <button class="btn btn-accent btn-block" data-pw="Auto-Apply">Let AI apply — $62/mo</button>
+      </div>
+      <div class="pw-plan">
+        <span class="pw-tag alt">Best value</span>
+        <div class="pw-name">Annual</div>
+        <div class="pw-desc">Everything in Monthly, one yearly charge.</div>
+        <div class="pw-amt">$109<span> /yr</span></div>
+        <button class="btn btn-out btn-block" data-pw="Annual">Go annual — $109/yr</button>
+      </div>
+    </div>
+    <p class="pw-foot">Cancel anytime · No hidden fees · Secured by Stripe</p>
+  </div>`;
+  ov.style.display='flex';
+  const close=()=>{ ov.style.display='none'; };
+  ov.querySelector('.modal-x').onclick=close;
+  ov.onclick=e=>{ if(e.target===ov) close(); };
+  ov.querySelectorAll('[data-pw]').forEach(b=>b.addEventListener('click',function(){
+    const plan=this.getAttribute('data-pw'); if(window.Auth&&Auth.setPlan) Auth.setPlan(plan);
+    if(window.gtag) gtag('event','begin_checkout',{plan, from:'paywall'});
+    location.href = PAYWALL_PAY[plan] || 'signup.html';
+  }));
+}
+window.showPaywall = showPaywall;
+/* gate an apply click: paid users go to the real posting, everyone else sees the paywall */
+function tryApply(job){
+  if(isPaid()){ if(job && job.url && job.url!=='signup.html'){ window.open(job.url,'_blank','noopener'); } return true; }
+  showPaywall(job && job.title); return false;
+}
+window.tryApply = tryApply;
 
 /* ---------- Toast ---------- */
 function showToast(msg){
