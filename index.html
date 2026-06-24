@@ -49,7 +49,7 @@
     <div class="navlinks">
       <a href="jobs.html">Browse jobs</a>
       <a href="roast.html">🔥 Roast</a>
-      <a href="#match">Match me</a>
+      <a href="match.html">Match me</a>
       <a href="#auto">Auto-Apply</a>
       <a href="#pricing">Pricing</a>
     </div>
@@ -77,7 +77,7 @@
       <button class="btn btn-accent hf-btn" type="submit">Find my roles →</button>
     </form>
     <div class="finder-chips"><span>Trending:</span><a href="jobs.html?q=engineer">Engineering</a><a href="jobs.html?q=product%20manager">Product</a><a href="jobs.html?q=sales">Sales</a><a href="jobs.html?q=designer">Design</a><a href="jobs.html?q=marketing">Marketing</a></div>
-    <p class="micro" style="margin-top:16px">Or <a href="#match" style="color:var(--accent);font-weight:600">paste your LinkedIn / CV to get matched</a> · <a href="roast.html" style="color:var(--accent);font-weight:600">roast my LinkedIn 🔥</a></p>
+    <p class="micro" style="margin-top:16px">Or <a href="match.html" style="color:var(--accent);font-weight:600">paste your LinkedIn / CV to get matched</a> · <a href="roast.html" style="color:var(--accent);font-weight:600">roast my LinkedIn 🔥</a></p>
     <div class="strip">
       <span>🇺🇸 <b>US</b> remote roles</span><span class="sep">·</span>
       <span>From <b>live</b> hiring feeds</span><span class="sep">·</span>
@@ -97,28 +97,6 @@
     <h2 class="sec">Fresh US roles, updated hourly.</h2>
     <div class="joblist" id="latest"></div>
     <div class="center" style="margin-top:28px"><a href="jobs.html" class="btn btn-ink">Browse all live roles →</a></div>
-  </div>
-</section>
-
-<!-- AI MATCHER -->
-<section id="match" class="alt" style="padding:48px 0">
-  <div class="wrap">
-    <div class="eyebrow">AI matchmaking</div>
-    <h2 class="sec">Let our AI matchmake you to roles.</h2>
-    <p class="lead">Paste your LinkedIn or drop your CV — our AI matches you straight to live US roles in seconds, so you skip the LinkedIn crowd entirely. No sign-up to try.</p>
-    <div class="matchcard" id="finder" style="max-width:660px;margin:22px auto 0;text-align:left">
-      <textarea id="liInput" placeholder="Paste your LinkedIn headline / skills — or upload your CV below…"></textarea>
-      <div class="matchrow">
-        <label class="uploadbtn">📄 Upload CV<input id="liFile" type="file" accept=".txt,.pdf,.docx" hidden></label>
-        <span class="hint">🔒 Free · no sign-up to try</span>
-        <button id="liBtn" class="btn btn-accent">✨ Find my roles</button>
-      </div>
-    </div>
-    <div class="matchresults" id="liResults"></div>
-    <div class="matchcta" id="liCta">
-      <a href="signup.html" class="btn btn-ink">Save matches &amp; turn on Auto-Apply →</a>
-      <a href="jobs.html" class="btn btn-out">Browse all roles</a>
-    </div>
   </div>
 </section>
 
@@ -332,8 +310,6 @@
 })();
 
 /* LinkedIn matcher + CV upload */
-initMatcher('liInput','liBtn','liResults','liCta');
-initCvUpload('liFile','liInput','liBtn');
 (function(){ var hf=document.getElementById('heroFinder'); if(!hf) return; hf.addEventListener('submit',function(e){ e.preventDefault(); var q=(document.getElementById('heroQ').value||'').trim(); var locEl=document.getElementById('heroLoc'); var loc=locEl?locEl.value:''; if(window.gtag) gtag('event','hero_search',{q:q,loc:loc}); var p=[]; if(q)p.push('q='+encodeURIComponent(q)); if(loc)p.push('loc='+encodeURIComponent(loc)); location.href='jobs.html'+(p.length?('?'+p.join('&')):''); }); })();
 
 /* pricing → remember chosen plan, then go sign up */
