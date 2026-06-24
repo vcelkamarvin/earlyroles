@@ -117,25 +117,46 @@
     const row=e.target.closest('.jrow'); if(!row) return;
     const job=ALL.find(x=>String(x.id)===String(row.dataset.id)); if(job) openDetail(job);
   });
+  function injectJdCSS(){
+    if(document.getElementById('jd-style')) return;
+    const s=document.createElement('style'); s.id='jd-style';
+    s.textContent=`
+    .jd-facts{display:grid;grid-template-columns:repeat(3,1fr);gap:12px 16px;margin:14px 0 6px;padding:14px 16px;background:#f7f8fa;border:1px solid #eef0f3;border-radius:14px}
+    .jd-fact{display:flex;flex-direction:column;gap:3px;min-width:0}
+    .jd-fact .l{font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--faint);font-weight:700}
+    .jd-fact .v{font-size:14px;color:var(--ink);font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .jd-body{font-size:14.5px;line-height:1.62;color:var(--muted);max-height:40vh;overflow:auto;margin-top:4px;padding-right:8px}
+    .jd-body h2,.jd-body h3,.jd-body h4,.jd-body h5{font-size:14px;color:var(--ink);margin:16px 0 6px;font-weight:800;text-transform:none;letter-spacing:0;line-height:1.3}
+    .jd-body p{margin:0 0 10px}
+    .jd-body ul,.jd-body ol{margin:0 0 12px;padding-left:20px}
+    .jd-body li{margin:5px 0}
+    .jd-body strong,.jd-body b{color:var(--ink)}
+    @media(max-width:560px){.jd-facts{grid-template-columns:1fr 1fr}}
+    `;
+    document.head.appendChild(s);
+  }
   function openDetail(j){
+    injectJdCSS();
     let ov=document.getElementById('jobModal');
     if(!ov){ ov=document.createElement('div'); ov.id='jobModal'; ov.className='modal'; document.body.appendChild(ov); }
     const saved=Auth.saved().includes(Number(j.id));
-    const logo=j.logo?`<span class="jlogo" data-i="${j.initials}"><img src="${j.logo}" alt="${j.co}" onerror="this.parentNode.textContent=this.parentNode.dataset.i"></span>`:`<span class="jlogo">${j.initials||'•'}</span>`;
+    const logo=j.logo?`<span class="jlogo" data-i="${j.initials}"><img src="${j.logo}" alt="${escapeHtml(j.co)}" onerror="this.parentNode.textContent=this.parentNode.dataset.i"></span>`:`<span class="jlogo">${j.initials||'•'}</span>`;
     const meta=[j.co,j.loc,j.type,j.dept].filter(Boolean).join(' · ');
-    const desc=(j.desc||'').trim();
+    const facts=[['Company',j.co],['Location',j.loc],['Job type',j.type||'—'],['Category',j.dept||'—'],['Salary',j.sal||'Undisclosed'],['Posted',j.ago||'Recently']]
+      .map(f=>`<div class="jd-fact"><span class="l">${f[0]}</span><span class="v" title="${escapeHtml(f[1])}">${escapeHtml(f[1])}</span></div>`).join('');
+    let body = j.descHtml ? sanitizeJobHtml(j.descHtml) : '';
+    if(!body) body = j.desc ? ('<p>'+escapeHtml(j.desc)+'…</p>') : '<p>A live US remote role sourced straight from the company hiring feed.</p>';
     ov.innerHTML=`<div class="modal-card">
       <button class="modal-x" aria-label="Close">×</button>
-      <div class="modal-head">${logo}<div><div class="modal-title">${j.title}</div><div class="modal-meta">${meta}</div></div></div>
-      <div class="modal-sal">${j.sal||'Salary undisclosed'} <span class="jago">${j.ago?'· '+j.ago:''}</span></div>
-      <div class="jtags" style="margin:12px 0">${(j.tags||[]).map(t=>`<span class="jchip">${t}</span>`).join('')}</div>
+      <div class="modal-head">${logo}<div><div class="modal-title">${escapeHtml(j.title)}</div><div class="modal-meta">${escapeHtml(meta)}</div></div></div>
+      <div class="jd-facts">${facts}</div>
       <h4 class="modal-h">About the role</h4>
-      <p class="modal-p">${desc?(desc.replace(/</g,'&lt;')+'…'):'A live US remote role sourced straight from the company hiring feed.'}</p>
+      <div class="jd-body">${body}</div>
       <div class="modal-actions">
         <button class="btn btn-out" id="d-save">${saved?'✓ Saved':'Save role'}</button>
         <button class="btn btn-accent" id="d-apply">Apply now</button>
       </div>
-      <p class="modal-note">Applying unlocks with any plan — and includes your tracker, alerts and AI resume + cover-letter tools.</p>
+      <p class="modal-note">Applying unlocks with any plan — includes tracker, alerts and AI resume + cover-letter tools.</p>
     </div>`;
     ov.style.display='flex';
     const close=()=>{ ov.style.display='none'; };

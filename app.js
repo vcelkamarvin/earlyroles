@@ -515,10 +515,34 @@ async function fetchRealJobs(query){
     id:x.id, title:x.title, co:x.company_name, logo:x.company_logo_url||'', initials:initials(x.company_name),
     loc:x.candidate_required_location||'Remote', dept:x.category||'', type:(x.job_type||'').replace(/_/g,' '),
     tags:[x.category,(x.job_type||'').replace(/_/g,' ')].filter(Boolean), sal:x.salary||'', url:x.url, ago:ago(x.publication_date),
-    desc:(x.description||'').replace(/<[^>]+>/g,' ').replace(/&nbsp;/g,' ').replace(/&amp;/g,'&').replace(/\s+/g,' ').trim().slice(0,1100)
+    desc:(x.description||'').replace(/<[^>]+>/g,' ').replace(/&nbsp;/g,' ').replace(/&amp;/g,'&').replace(/\s+/g,' ').trim().slice(0,300),
+    descHtml:String(x.description||'').slice(0,5000)
   }));
 }
 window.fetchRealJobs = fetchRealJobs;
+
+/* Escape + sanitize a job description's HTML to a safe, structured subset */
+function escapeHtml(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+window.escapeHtml = escapeHtml;
+function sanitizeJobHtml(html){
+  const allowed={P:1,BR:1,UL:1,OL:1,LI:1,STRONG:1,B:1,EM:1,I:1,H2:1,H3:1,H4:1,H5:1,DIV:1,SPAN:1};
+  const tmp=document.createElement('div'); tmp.innerHTML=String(html||'');
+  (function walk(node){
+    [...node.childNodes].forEach(c=>{
+      if(c.nodeType===1){
+        const tag=c.tagName;
+        [...c.attributes].forEach(a=>c.removeAttribute(a.name));
+        if(tag==='SCRIPT'||tag==='STYLE'){ c.remove(); return; }
+        if(!allowed[tag]){ walk(c); while(c.firstChild) c.parentNode.insertBefore(c.firstChild,c); c.remove(); return; }
+        walk(c);
+      } else if(c.nodeType===8){ c.remove(); }
+    });
+  })(tmp);
+  // drop empty blocks
+  tmp.querySelectorAll('p,div,li,span').forEach(el=>{ if(!el.textContent.trim() && !el.querySelector('ul,ol,br')) el.remove(); });
+  return tmp.innerHTML.trim();
+}
+window.sanitizeJobHtml = sanitizeJobHtml;
 
 /* ---------- Real profile review (paste/CV → /api/review → AI or heuristic) ---------- */
 function renderReviewCard(r){
