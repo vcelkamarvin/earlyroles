@@ -6,6 +6,15 @@
 <title>Dashboard — EarlyRoles</title>
 <meta name="robots" content="noindex, follow" />
 <link rel="stylesheet" href="styles.css" />
+<style>
+  .crm-stage{margin-top:6px}
+  .crm-shead{display:flex;align-items:center;gap:8px;font-weight:800;font-size:11.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin:16px 2px 8px}
+  .crm-c{margin-left:4px;background:#eef0f3;color:var(--ink);border-radius:999px;padding:1px 9px;font-size:11px;font-weight:700}
+  .crm-dot{width:9px;height:9px;border-radius:50%;background:#9aa3af;flex:0 0 auto}
+  .st-saved{background:#9aa3af}.st-applied{background:#2563eb}.st-responded{background:#0ea5e9}.st-interviewing{background:#f59e0b}.st-offer{background:#16a34a}.st-rejected{background:#ef4444}
+  .tview{margin-left:8px;color:var(--faint);text-decoration:none;font-weight:700;font-size:15px}
+  .tview:hover{color:var(--accent)}
+</style>
 </head>
 <body>
 
@@ -33,7 +42,7 @@
     </div>
 
     <div class="dgrid">
-      <div class="dstat"><div class="n" id="s-saved">0</div><div class="l">Saved roles</div></div>
+      <div class="dstat"><div class="n" id="s-saved">0</div><div class="l">In pipeline</div></div>
       <div class="dstat"><div class="n" id="s-applied">0</div><div class="l">Applied</div></div>
       <div class="dstat"><div class="n" id="s-interview">0</div><div class="l">Interviewing</div></div>
       <div class="dstat"><div class="n" id="s-plan" style="font-size:20px;padding-top:8px">Free</div><div class="l">Current plan</div></div>
@@ -41,8 +50,8 @@
 
     <div class="dcols">
       <div class="dcard">
-        <h3>Application tracker</h3>
-        <div class="h-sub">Every role you've saved or applied to. Update the status as you go.</div>
+        <h3>Your job pipeline</h3>
+        <div class="h-sub">Your personal CRM — every saved role, organized by stage. Move each one from Saved → Applied → Responded → Interviewing → Offer (or Rejected) as you go.</div>
         <div id="tracker"></div>
       </div>
 
@@ -110,23 +119,33 @@
   document.getElementById('hello').textContent='Hi, '+u.name.split(' ')[0]+' 👋';
   document.getElementById('hellosub').textContent=u.email;
 
-  /* ----- Application tracker ----- */
+  /* ----- Application tracker (CRM pipeline) ----- */
   function statusOf(id){ const a=Auth.applications(); return a[id]||'Saved'; }
+  function logoFor(j){ return j.logo?`<span class="jlogo" data-i="${j.initials||''}"><img src="${j.logo}" alt="${j.co}" onerror="this.parentNode.textContent=this.parentNode.dataset.i"></span>`:`<span class="jlogo">${j.initials||(j.co||'?').slice(0,2).toUpperCase()}</span>`; }
   function renderTracker(){
     const ids=[...new Set([...Auth.saved(), ...Object.keys(Auth.applications()).map(Number)])];
-    const rows=JOBS.filter(j=>ids.includes(j.id));
+    const jobs=ids.map(id=>Auth.getJob(id)).filter(Boolean);
     const apps=Auth.applications();
-    document.getElementById('s-saved').textContent=Auth.saved().length;
+    document.getElementById('s-saved').textContent=ids.length;
     document.getElementById('s-applied').textContent=Object.values(apps).filter(s=>s&&s!=='Saved').length;
-    document.getElementById('s-interview').textContent=Object.values(apps).filter(s=>s==='Interviewing').length;
+    document.getElementById('s-interview').textContent=Object.values(apps).filter(s=>s==='Interviewing'||s==='Offer').length;
     const el=document.getElementById('tracker');
-    el.innerHTML = rows.length? rows.map(j=>`
-      <div class="trow" data-id="${j.id}">
-        ${logoImg(j.co,j.domain)}
-        <div class="tmain"><div class="ttitle">${j.title}</div><div class="tmeta">${j.co} · ${j.sal}</div></div>
-        <select class="tstatus" data-id="${j.id}">${APP_STATUSES.map(s=>`<option ${statusOf(j.id)===s?'selected':''}>${s}</option>`).join('')}</select>
-        <button class="trm" data-id="${j.id}" title="Remove">×</button>
-      </div>`).join('') : '<div class="empty">Nothing tracked yet. <a href="jobs.html" style="color:var(--accent);font-weight:600">Browse jobs →</a></div>';
+    if(!jobs.length){ el.innerHTML='<div class="empty">Nothing tracked yet. <a href="jobs.html" style="color:var(--accent);font-weight:600">Browse jobs →</a></div>'; return; }
+    const byStage={}; APP_STATUSES.forEach(s=>byStage[s]=[]);
+    jobs.forEach(j=>{ const st=statusOf(j.id); (byStage[st]||byStage['Saved']).push(j); });
+    el.innerHTML = APP_STATUSES.map(stage=>{
+      const list=byStage[stage]; if(!list.length) return '';
+      return `<div class="crm-stage">
+        <div class="crm-shead"><span class="crm-dot st-${stage.toLowerCase()}"></span>${stage}<span class="crm-c">${list.length}</span></div>
+        ${list.map(j=>`<div class="trow" data-id="${j.id}">
+          ${logoFor(j)}
+          <div class="tmain"><div class="ttitle">${j.title}</div><div class="tmeta">${j.co}${j.sal?(' · '+j.sal):''}${j.salEst?' (est.)':''}</div></div>
+          <select class="tstatus" data-id="${j.id}">${APP_STATUSES.map(s=>`<option ${statusOf(j.id)===s?'selected':''}>${s}</option>`).join('')}</select>
+          ${(j.url&&j.url!=='signup.html')?`<a class="tview" href="${j.url}" target="_blank" rel="noopener" title="Open posting">↗</a>`:''}
+          <button class="trm" data-id="${j.id}" title="Remove">×</button>
+        </div>`).join('')}
+      </div>`;
+    }).join('');
   }
   document.getElementById('tracker').addEventListener('change',e=>{
     const s=e.target.closest('.tstatus'); if(!s)return;

@@ -95,7 +95,7 @@
           <div class="jtags">${(j.tags||[]).map(t=>`<span class="jchip">${t}</span>`).join('')}</div>
         </div>
         <div class="jside">
-          <div class="jsal">${j.sal||''}</div><div class="jago">${j.ago||''}</div>
+          <div class="jsal">${j.sal||''}${j.salEst?' <span style="font-size:10px;color:var(--faint);font-weight:600;letter-spacing:.03em">est</span>':''}</div><div class="jago">${j.ago||''}</div>
           <div class="jbtns"><button class="jsave ${saved.includes(j.id)?'saved':''}" data-id="${j.id}">${saved.includes(j.id)?'✓ Saved':'Save'}</button><button class="japply" type="button" data-url="${j.url||''}" data-title="${(j.title||'').replace(/"/g,'&quot;')}">Apply →</button></div>
         </div>
       </div>`;
@@ -111,9 +111,9 @@
   }
   board.addEventListener('click',e=>{
     const ap=e.target.closest('.japply');
-    if(ap){ e.preventDefault(); tryApply({title:ap.dataset.title,url:ap.dataset.url}); return; }
+    if(ap){ e.preventDefault(); const r=ap.closest('.jrow'); const job=(r&&ALL.find(x=>String(x.id)===String(r.dataset.id)))||{title:ap.dataset.title,url:ap.dataset.url}; Auth.rememberJob(job); if(isPaid()&&job.id!=null){ Auth.setApplication(job.id,'Applied'); } tryApply(job); return; }
     const b=e.target.closest('.jsave');
-    if(b){ const s=Auth.toggleSave(b.dataset.id); const on=s.includes(Number(b.dataset.id)); b.classList.toggle('saved',on); b.textContent=on?'✓ Saved':'Save'; return; }
+    if(b){ const job=ALL.find(x=>String(x.id)===String(b.dataset.id)); if(job) Auth.rememberJob(job); const s=Auth.toggleSave(b.dataset.id); const on=s.includes(Number(b.dataset.id)); b.classList.toggle('saved',on); b.textContent=on?'✓ Saved':'Save'; return; }
     const row=e.target.closest('.jrow'); if(!row) return;
     const job=ALL.find(x=>String(x.id)===String(row.dataset.id)); if(job) openDetail(job);
   });
@@ -142,7 +142,7 @@
     const saved=Auth.saved().includes(Number(j.id));
     const logo=j.logo?`<span class="jlogo" data-i="${j.initials}"><img src="${j.logo}" alt="${escapeHtml(j.co)}" onerror="this.parentNode.textContent=this.parentNode.dataset.i"></span>`:`<span class="jlogo">${j.initials||'•'}</span>`;
     const meta=[j.co,j.loc,j.type,j.dept].filter(Boolean).join(' · ');
-    const facts=[['Company',j.co],['Location',j.loc],['Job type',j.type||'—'],['Category',j.dept||'—'],['Salary',j.sal||'Undisclosed'],['Posted',j.ago||'Recently']]
+    const facts=[['Company',j.co],['Location',j.loc],['Job type',j.type||'—'],['Category',j.dept||'—'],['Salary',(j.sal||'Undisclosed')+(j.salEst?' · est.':'')],['Posted',j.ago||'Recently']]
       .map(f=>`<div class="jd-fact"><span class="l">${f[0]}</span><span class="v" title="${escapeHtml(f[1])}">${escapeHtml(f[1])}</span></div>`).join('');
     let body = j.descHtml ? sanitizeJobHtml(j.descHtml) : '';
     if(!body) body = j.desc ? ('<p>'+escapeHtml(j.desc)+'…</p>') : '<p>A live US remote role sourced straight from the company hiring feed.</p>';
@@ -162,8 +162,8 @@
     const close=()=>{ ov.style.display='none'; };
     ov.querySelector('.modal-x').onclick=close;
     ov.onclick=ev=>{ if(ev.target===ov) close(); };
-    ov.querySelector('#d-save').onclick=function(){ const s=Auth.toggleSave(j.id); this.textContent=s.includes(Number(j.id))?'✓ Saved':'Save role'; render(); };
-    ov.querySelector('#d-apply').onclick=function(){ close(); tryApply({title:j.title,url:j.url}); };
+    ov.querySelector('#d-save').onclick=function(){ Auth.rememberJob(j); const s=Auth.toggleSave(j.id); this.textContent=s.includes(Number(j.id))?'✓ Saved':'Save role'; render(); };
+    ov.querySelector('#d-apply').onclick=function(){ Auth.rememberJob(j); if(isPaid()) Auth.setApplication(j.id,'Applied'); close(); tryApply(j); };
   }
   document.getElementById('alertBtn').addEventListener('click',function(){
     const label = (q.value.trim()||'All roles') + (dept.value?(' · '+dept.value):'') + (lvl.value?(' · '+lvl.value):'');

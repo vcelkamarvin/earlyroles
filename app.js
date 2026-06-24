@@ -150,10 +150,43 @@ Object.assign(Auth, {
   profile(){ try{return JSON.parse(localStorage.getItem(this.profileKey))||{}}catch(e){return {}} },
   setProfile(p){ localStorage.setItem(this.profileKey,JSON.stringify(p)); return p; },
   plan(){ return localStorage.getItem(this.planKey)||""; },
-  setPlan(p){ localStorage.setItem(this.planKey,p||""); }
+  setPlan(p){ localStorage.setItem(this.planKey,p||""); },
+  /* persist a snapshot of any job the user saves/applies to, so the CRM can show it */
+  jobsKey:"unlisted_jobsdata",
+  jobData(){ try{return JSON.parse(localStorage.getItem(this.jobsKey))||{}}catch(e){return {}} },
+  rememberJob(j){ if(!j||j.id==null) return; const m=this.jobData(); m[Number(j.id)]={id:Number(j.id),title:j.title,co:j.co,loc:j.loc||'',sal:j.sal||'',salEst:!!j.salEst,url:j.url||'',logo:j.logo||'',initials:j.initials||((j.co||'?').replace(/[^A-Za-z0-9 ]/g,'').split(' ').filter(Boolean).slice(0,2).map(w=>w[0]).join('').toUpperCase()),dept:j.dept||'',type:j.type||'',ago:j.ago||''}; localStorage.setItem(this.jobsKey,JSON.stringify(m)); },
+  getJob(id){ const m=this.jobData(); return m[Number(id)] || (typeof JOBS!=='undefined' ? JOBS.find(x=>x.id===Number(id)) : null) || null; }
 });
 
-const APP_STATUSES = ["Saved","Applied","Interviewing","Offer","Rejected"];
+const APP_STATUSES = ["Saved","Applied","Responded","Interviewing","Offer","Rejected"];
+
+/* ---------- Salary: show a real figure, or a sensible US-remote estimate ---------- */
+function estSalary(o){
+  if(o && o.sal && String(o.sal).trim()) return {text:String(o.sal).trim(), est:false};
+  const t=((o&&o.title)||'').toLowerCase();
+  const cat=(((o&&o.dept)||'')+' '+((o&&(o.tags||[]).join(' '))||'')+' '+t).toLowerCase();
+  let lvl=1;
+  if(/intern|internship/.test(t)) lvl=0.5;
+  else if(/(junior|jr\b|entry|associate|assistant)/.test(t)) lvl=0.72;
+  else if(/(principal|staff|lead|head of|director|vp|vice president|chief|architect)/.test(t)) lvl=1.55;
+  else if(/(senior|sr\b|manager)/.test(t)) lvl=1.25;
+  let base=92;
+  if(/engineer|developer|software|devops|sre|backend|frontend|full.?stack|programmer|data scien|machine learning|\bml\b|\bai\b/.test(cat)) base=145;
+  else if(/data|analyst|analytics/.test(cat)) base=118;
+  else if(/design|ux|ui/.test(cat)) base=120;
+  else if(/product manager|product owner|\bproduct\b/.test(cat)) base=138;
+  else if(/sales|account exec|business develop|revenue/.test(cat)) base=112;
+  else if(/marketing|growth|seo|content|social/.test(cat)) base=96;
+  else if(/finance|account|controller|fp&a|payroll/.test(cat)) base=110;
+  else if(/customer|support|success/.test(cat)) base=72;
+  else if(/operations|\bops\b|project manager|program manager|logistics/.test(cat)) base=105;
+  else if(/writer|writing|editor|copy/.test(cat)) base=72;
+  else if(/recruit|\bhr\b|people|talent/.test(cat)) base=92;
+  const mid=Math.round(base*lvl);
+  const lo=Math.round(mid*0.85/5)*5, hi=Math.round(mid*1.2/5)*5;
+  return {text:'~$'+lo+'k–$'+hi+'k', est:true};
+}
+window.estSalary = estSalary;
 
 /* ---------- Job detail content ---------- */
 function jobDescription(j){
@@ -528,10 +561,10 @@ async function fetchRealJobs(query){
   const ago=d=>{ const t=tsOf(d); if(!t) return 'recently'; const days=Math.floor((Date.now()-t)/86400000); return days<=0?'today':days===1?'1d ago':days<30?days+'d ago':Math.floor(days/30)+'mo ago'; };
   const clean=h=>String(h||'').replace(/<[^>]+>/g,' ').replace(/&nbsp;/g,' ').replace(/&amp;/g,'&').replace(/\s+/g,' ').trim();
   const hashId=s=>{ let h=0; s=String(s||''); for(let i=0;i<s.length;i++){ h=(h*31 + s.charCodeAt(i))|0; } return Math.abs(h)||1; };
-  const mk=o=>({ id:hashId(o.url||((o.title||'')+(o.co||''))), title:o.title, co:o.co, logo:o.logo||'', initials:initials(o.co),
+  const mk=o=>{ const s=estSalary({sal:o.sal,title:o.title,dept:o.dept,tags:o.tags}); return { id:hashId(o.url||((o.title||'')+(o.co||''))), title:o.title, co:o.co, logo:o.logo||'', initials:initials(o.co),
     loc:o.loc||'Remote', dept:o.dept||'', type:o.type||'', tags:(o.tags||[]).filter(Boolean).slice(0,4),
-    sal:o.sal||'', url:o.url, ago:ago(o.date), _ts:tsOf(o.date),
-    desc:clean(o.html).slice(0,300), descHtml:String(o.html||'').slice(0,5000) });
+    sal:s.text, salEst:s.est, url:o.url, ago:ago(o.date), _ts:tsOf(o.date),
+    desc:clean(o.html).slice(0,300), descHtml:String(o.html||'').slice(0,5000) }; };
   const safe=p=>p.then(x=>x).catch(()=>[]);
 
   const remotive=async()=>{ const j=await (await fetch('https://remotive.com/api/remote-jobs')).json();
