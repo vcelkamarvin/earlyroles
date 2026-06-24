@@ -514,7 +514,8 @@ async function fetchRealJobs(query){
   return (j.jobs||[]).filter(x=>usOk.test(x.candidate_required_location||'')).slice(0,48).map(x=>({
     id:x.id, title:x.title, co:x.company_name, logo:x.company_logo_url||'', initials:initials(x.company_name),
     loc:x.candidate_required_location||'Remote', dept:x.category||'', type:(x.job_type||'').replace(/_/g,' '),
-    tags:[x.category,(x.job_type||'').replace(/_/g,' ')].filter(Boolean), sal:x.salary||'', url:x.url, ago:ago(x.publication_date)
+    tags:[x.category,(x.job_type||'').replace(/_/g,' ')].filter(Boolean), sal:x.salary||'', url:x.url, ago:ago(x.publication_date),
+    desc:(x.description||'').replace(/<[^>]+>/g,' ').replace(/&nbsp;/g,' ').replace(/&amp;/g,'&').replace(/\s+/g,' ').trim().slice(0,1100)
   }));
 }
 window.fetchRealJobs = fetchRealJobs;

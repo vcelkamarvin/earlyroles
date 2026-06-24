@@ -87,7 +87,7 @@
   function rowHTML(j){
     const saved=Auth.saved();
     const logo=j.logo?`<span class="jlogo" data-i="${j.initials}"><img src="${j.logo}" alt="${j.co}" loading="lazy" onerror="this.parentNode.textContent=this.parentNode.dataset.i"></span>`:`<span class="jlogo">${j.initials||'•'}</span>`;
-    return `<div class="jrow">
+    return `<div class="jrow" data-id="${j.id}" style="cursor:pointer">
         ${logo}
         <div class="jmain">
           <div class="jtitle">${j.title} <span class="new">New</span></div>
@@ -112,10 +112,38 @@
   board.addEventListener('click',e=>{
     const ap=e.target.closest('.japply');
     if(ap){ e.preventDefault(); tryApply({title:ap.dataset.title,url:ap.dataset.url}); return; }
-    const b=e.target.closest('.jsave'); if(!b)return;
-    const s=Auth.toggleSave(b.dataset.id); const on=s.includes(Number(b.dataset.id));
-    b.classList.toggle('saved',on); b.textContent=on?'✓ Saved':'Save';
+    const b=e.target.closest('.jsave');
+    if(b){ const s=Auth.toggleSave(b.dataset.id); const on=s.includes(Number(b.dataset.id)); b.classList.toggle('saved',on); b.textContent=on?'✓ Saved':'Save'; return; }
+    const row=e.target.closest('.jrow'); if(!row) return;
+    const job=ALL.find(x=>String(x.id)===String(row.dataset.id)); if(job) openDetail(job);
   });
+  function openDetail(j){
+    let ov=document.getElementById('jobModal');
+    if(!ov){ ov=document.createElement('div'); ov.id='jobModal'; ov.className='modal'; document.body.appendChild(ov); }
+    const saved=Auth.saved().includes(Number(j.id));
+    const logo=j.logo?`<span class="jlogo" data-i="${j.initials}"><img src="${j.logo}" alt="${j.co}" onerror="this.parentNode.textContent=this.parentNode.dataset.i"></span>`:`<span class="jlogo">${j.initials||'•'}</span>`;
+    const meta=[j.co,j.loc,j.type,j.dept].filter(Boolean).join(' · ');
+    const desc=(j.desc||'').trim();
+    ov.innerHTML=`<div class="modal-card">
+      <button class="modal-x" aria-label="Close">×</button>
+      <div class="modal-head">${logo}<div><div class="modal-title">${j.title}</div><div class="modal-meta">${meta}</div></div></div>
+      <div class="modal-sal">${j.sal||'Salary undisclosed'} <span class="jago">${j.ago?'· '+j.ago:''}</span></div>
+      <div class="jtags" style="margin:12px 0">${(j.tags||[]).map(t=>`<span class="jchip">${t}</span>`).join('')}</div>
+      <h4 class="modal-h">About the role</h4>
+      <p class="modal-p">${desc?(desc.replace(/</g,'&lt;')+'…'):'A live US remote role sourced straight from the company hiring feed.'}</p>
+      <div class="modal-actions">
+        <button class="btn btn-out" id="d-save">${saved?'✓ Saved':'Save role'}</button>
+        <button class="btn btn-accent" id="d-apply">Apply now</button>
+      </div>
+      <p class="modal-note">Applying unlocks with any plan — and includes your tracker, alerts and AI resume + cover-letter tools.</p>
+    </div>`;
+    ov.style.display='flex';
+    const close=()=>{ ov.style.display='none'; };
+    ov.querySelector('.modal-x').onclick=close;
+    ov.onclick=ev=>{ if(ev.target===ov) close(); };
+    ov.querySelector('#d-save').onclick=function(){ const s=Auth.toggleSave(j.id); this.textContent=s.includes(Number(j.id))?'✓ Saved':'Save role'; render(); };
+    ov.querySelector('#d-apply').onclick=function(){ close(); tryApply({title:j.title,url:j.url}); };
+  }
   document.getElementById('alertBtn').addEventListener('click',function(){
     const label = (q.value.trim()||'All roles') + (dept.value?(' · '+dept.value):'') + (lvl.value?(' · '+lvl.value):'');
     Auth.addAlert({label, q:q.value.trim(), dept:dept.value, lvl:lvl.value, when:Date.now()});
