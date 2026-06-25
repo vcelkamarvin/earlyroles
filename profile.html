@@ -27,12 +27,25 @@
     <div class="dhead">
       <div>
         <h1>Profile &amp; resume</h1>
-        <p>The AI uses this to tailor your resume, cover letters and Auto-Apply submissions.</p>
+        <p>Paste your CV or LinkedIn and let AI build a recruiter-ready profile — it powers your matching and AI Apply Assist drafts.</p>
       </div>
       <a href="dashboard.html" class="btn btn-out">← Dashboard</a>
     </div>
 
-    <div class="dcard" style="margin-top:24px">
+    <div class="dcard" id="aiCard" style="margin-top:24px">
+      <h3 style="margin:0 0 4px">✨ Optimize my profile with AI</h3>
+      <div class="h-sub">Paste your LinkedIn "About" + experience, or your CV — AI rewrites it into a recruiter-ready profile and fills the fields below. Review before saving.</div>
+      <textarea id="cvText" placeholder="Paste your LinkedIn text or CV here…" style="width:100%;min-height:120px;margin-top:12px;padding:12px;border:1px solid #e6e8ec;border-radius:12px;font:inherit;box-sizing:border-box;line-height:1.5"></textarea>
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:10px">
+        <label class="btn btn-out btn-sm" style="cursor:pointer;margin:0">📄 Upload CV<input id="cvFile" type="file" accept=".txt,.pdf,.docx" hidden></label>
+        <button class="btn btn-accent" id="optBtn" type="button">✨ Optimize with AI</button>
+        <span class="micro" id="optNote" style="color:var(--faint)"></span>
+      </div>
+      <div id="optExtra" style="margin-top:14px;display:none"></div>
+    </div>
+
+    <div class="dcard" style="margin-top:18px">
+      <div id="pstrength" class="micro" style="margin-bottom:14px"></div>
       <form class="pform" id="profForm" novalidate>
         <div class="prow2">
           <div class="field2"><label for="fullName">Full name</label><input id="fullName" type="text" placeholder="Alex Morgan" /></div>
@@ -79,6 +92,47 @@
     document.getElementById('perr').textContent='✓ Saved.';
     showToast('✓ Profile saved');
     setTimeout(()=>location.href='dashboard.html', 900);
+  });
+
+  /* ----- profile strength meter ----- */
+  function updateStrength(){
+    const fields=['fullName','headline','location','summary','skills','experience'];
+    const filled=fields.filter(id=>(((document.getElementById(id)||{}).value)||'').trim().length>2).length;
+    const pct=Math.round(filled/fields.length*100);
+    const el=document.getElementById('pstrength'); if(!el) return;
+    const label= pct>=85?'Strong 💪':pct>=50?'Getting there':'Thin';
+    el.innerHTML='<b>Profile strength: '+pct+'%</b> · '+label+' — a complete profile means better matches and stronger Apply Assist drafts.';
+  }
+  ['fullName','headline','location','summary','skills','experience'].forEach(id=>{ const el=document.getElementById(id); if(el) el.addEventListener('input',updateStrength); });
+  updateStrength();
+
+  /* ----- AI optimize ----- */
+  function esc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  if(window.initCvUpload) initCvUpload('cvFile','cvText','optBtn');
+  const optBtn=document.getElementById('optBtn'), optNote=document.getElementById('optNote');
+  if(optBtn) optBtn.addEventListener('click', async function(){
+    const text=(((document.getElementById('cvText')||{}).value)||'').trim();
+    if(text.length<30){ optNote.textContent='Paste a bit more of your CV / LinkedIn first.'; return; }
+    optBtn.disabled=true; const orig=optBtn.textContent; optBtn.textContent='Optimizing…'; optNote.textContent='';
+    try{
+      const r=await fetch('/api/optimize',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:text})});
+      const d=await r.json();
+      if(d && d.error){ optNote.textContent=d.error; }
+      else if(d){
+        if(d.headline) set('headline', d.headline);
+        if(d.summary) set('summary', d.summary);
+        if(Array.isArray(d.skills)&&d.skills.length) set('skills', d.skills.join(', '));
+        if(Array.isArray(d.experience)&&d.experience.length) set('experience', d.experience.map(x=>'• '+x).join('\n'));
+        const extra=document.getElementById('optExtra'); let html='';
+        if(Array.isArray(d.strengths)&&d.strengths.length) html+='<div style="font-weight:700;font-size:13px;margin-bottom:6px">Your standout strengths</div><div class="jtags" style="margin-bottom:12px">'+d.strengths.map(s=>'<span class="jchip">'+esc(s)+'</span>').join('')+'</div>';
+        if(Array.isArray(d.tips)&&d.tips.length) html+='<div style="font-weight:700;font-size:13px;margin-bottom:6px">Quick tips to go further</div><ul class="modal-ul">'+d.tips.map(t=>'<li>'+esc(t)+'</li>').join('')+'</ul>';
+        extra.innerHTML=html; extra.style.display=html?'block':'none';
+        optNote.textContent=(d.engine==='ai'?'✨ Optimized by AI':'Optimized')+' — review the fields below, tweak, then Save.';
+        if(window.gtag) gtag('event','profile_optimize',{engine:d.engine});
+        updateStrength();
+      }
+    }catch(e){ optNote.textContent='Could not optimize right now — try again in a moment.'; }
+    optBtn.disabled=false; optBtn.textContent=orig;
   });
 })();
 </script>
