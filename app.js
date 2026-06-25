@@ -45,7 +45,7 @@ const JOBS = [
 ];
 
 /* Logo URL via Clearbit; falls back to initials on error */
-function logoURL(domain){ return "https://www.google.com/s2/favicons?domain=" + domain + "&sz=64"; }
+function logoURL(domain){ return "https://icons.duckduckgo.com/ip3/" + domain + ".ico"; }
 function logoImg(co, domain){
   const initials = co.replace(/[^A-Za-z0-9 ]/g,'').split(' ').filter(Boolean).slice(0,2).map(w=>w[0]).join('').toUpperCase();
   return `<span class="jlogo" data-i="${initials}"><img src="${logoURL(domain)}" alt="${co}" loading="lazy" onerror="this.parentNode.textContent=this.parentNode.dataset.i"></span>`;
@@ -554,8 +554,9 @@ function initCvUpload(fileId, textareaId, runBtnId){
 window.initCvUpload = initCvUpload;
 
 /* ---------- Real job search (live US remote roles via Remotive API) ---------- */
-async function fetchRealJobs(query){
-  /* Pull live roles straight from company hiring systems (Greenhouse + Ashby) → DIRECT apply links, no aggregator middle-man. */
+async function fetchRealJobs(query, onProgress){
+  /* Pull live roles straight from company hiring systems (Greenhouse + Ashby) → DIRECT apply links, no aggregator middle-man.
+     onProgress(partialList) fires as each company resolves, so the board fills in progressively instead of waiting for all of them. */
   const initials=co=>(co||'?').replace(/[^A-Za-z0-9 ]/g,'').split(' ').filter(Boolean).slice(0,2).map(w=>w[0]).join('').toUpperCase();
   const tsOf=d=>{ if(!d) return 0; if(typeof d==='number') return d>1e12?d:d*1000; const t=Date.parse(d); return isNaN(t)?0:t; };
   const ago=d=>{ const t=tsOf(d); if(!t) return 'recently'; const days=Math.floor((Date.now()-t)/86400000); return days<=0?'today':days===1?'1d ago':days<30?days+'d ago':Math.floor(days/30)+'mo ago'; };
@@ -570,26 +571,26 @@ async function fetchRealJobs(query){
   const safe=p=>p.then(x=>x).catch(()=>[]);
   const remoteUS=/remote|anywhere|distributed|hybrid|work from home|\bwfh\b|united states|u\.s|usa|north america/i;
 
-  const NAMES={stripe:'Stripe',coinbase:'Coinbase',brex:'Brex',gitlab:'GitLab',dropbox:'Dropbox',robinhood:'Robinhood',databricks:'Databricks',cloudflare:'Cloudflare',discord:'Discord',figma:'Figma',gusto:'Gusto',instacart:'Instacart',airbnb:'Airbnb',twitch:'Twitch',affirm:'Affirm',samsara:'Samsara',mongodb:'MongoDB',datadog:'Datadog',twilio:'Twilio',asana:'Asana',anthropic:'Anthropic',scaleai:'Scale AI',flexport:'Flexport',lyft:'Lyft',pinterest:'Pinterest',sofi:'SoFi',elastic:'Elastic',okta:'Okta',vercel:'Vercel',newrelic:'New Relic',faire:'Faire',ramp:'Ramp',vanta:'Vanta',replit:'Replit',linear:'Linear',posthog:'PostHog'};
+  const NAMES={stripe:'Stripe',coinbase:'Coinbase',brex:'Brex',gitlab:'GitLab',dropbox:'Dropbox',robinhood:'Robinhood',databricks:'Databricks',cloudflare:'Cloudflare',discord:'Discord',figma:'Figma',gusto:'Gusto',instacart:'Instacart',airbnb:'Airbnb',twitch:'Twitch',affirm:'Affirm',samsara:'Samsara',mongodb:'MongoDB',datadog:'Datadog',twilio:'Twilio',asana:'Asana',anthropic:'Anthropic',scaleai:'Scale AI',flexport:'Flexport',lyft:'Lyft',pinterest:'Pinterest',sofi:'SoFi',elastic:'Elastic',okta:'Okta',vercel:'Vercel',newrelic:'New Relic',faire:'Faire',ramp:'Ramp',vanta:'Vanta',replit:'Replit',linear:'Linear',posthog:'PostHog',sumologic:'Sumo Logic',cockroachlabs:'Cockroach Labs',sofi:'SoFi'};
   const nm=t=>NAMES[t]||(t.charAt(0).toUpperCase()+t.slice(1));
-  const DOMAINS={stripe:'stripe.com',coinbase:'coinbase.com',brex:'brex.com',gitlab:'gitlab.com',dropbox:'dropbox.com',robinhood:'robinhood.com',databricks:'databricks.com',cloudflare:'cloudflare.com',discord:'discord.com',figma:'figma.com',gusto:'gusto.com',instacart:'instacart.com',airbnb:'airbnb.com',twitch:'twitch.tv',affirm:'affirm.com',samsara:'samsara.com',mongodb:'mongodb.com',datadog:'datadoghq.com',twilio:'twilio.com',asana:'asana.com',anthropic:'anthropic.com',scaleai:'scale.com',flexport:'flexport.com',lyft:'lyft.com',pinterest:'pinterest.com',sofi:'sofi.com',elastic:'elastic.co',okta:'okta.com',vercel:'vercel.com',newrelic:'newrelic.com',faire:'faire.com',ramp:'ramp.com',vanta:'vanta.com',replit:'replit.com',linear:'linear.app',posthog:'posthog.com'};
-  const logoFor=t=>{ const d=DOMAINS[t]; return d?('https://icons.duckduckgo.com/ip3/'+d+'.ico'):''; };
+  const DOMAINS={stripe:'stripe.com',coinbase:'coinbase.com',brex:'brex.com',gitlab:'gitlab.com',dropbox:'dropbox.com',robinhood:'robinhood.com',databricks:'databricks.com',cloudflare:'cloudflare.com',discord:'discord.com',figma:'figma.com',gusto:'gusto.com',instacart:'instacart.com',airbnb:'airbnb.com',twitch:'twitch.tv',affirm:'affirm.com',samsara:'samsara.com',mongodb:'mongodb.com',datadog:'datadoghq.com',twilio:'twilio.com',asana:'asana.com',anthropic:'anthropic.com',scaleai:'scale.com',flexport:'flexport.com',lyft:'lyft.com',pinterest:'pinterest.com',sofi:'sofi.com',elastic:'elastic.co',okta:'okta.com',vercel:'vercel.com',newrelic:'newrelic.com',faire:'faire.com',ramp:'ramp.com',vanta:'vanta.com',replit:'replit.com',linear:'linear.app',posthog:'posthog.com',reddit:'reddit.com',fivetran:'fivetran.com',mercury:'mercury.com',chime:'chime.com',marqeta:'marqeta.com',roblox:'roblox.com',sumologic:'sumologic.com',postman:'postman.com',block:'block.xyz',toast:'toasttab.com',monzo:'monzo.com',carta:'carta.com',cockroachlabs:'cockroachlabs.com',cohere:'cohere.com',watershed:'watershed.com',sardine:'sardine.ai',persona:'withpersona.com',astronomer:'astronomer.io',sierra:'sierra.ai'};
+  const ATSHOST=/greenhouse\.io|ashbyhq\.com|lever\.co|myworkday|smartrecruiters|recruitee|workable|icims|jobvite|bamboohr|paylocity|ripplingats/i;
+  const logoUrl=(t,u)=>{ let d=DOMAINS[t]; if(!d){ try{ const h=new URL(u).hostname.replace(/^www\./,''); if(h && !ATSHOST.test(h)) d=h; }catch(e){} } if(!d) d=t.replace(/[^a-z0-9]/g,'')+'.com'; return 'https://icons.duckduckgo.com/ip3/'+d+'.ico'; };
 
-  const GH=['stripe','databricks','mongodb','datadog','okta','samsara','airbnb','anthropic','elastic','pinterest','robinhood','cloudflare','brex','gitlab','coinbase','figma','instacart','twilio','affirm','scaleai','lyft','asana','sofi','gusto','discord','vercel','newrelic','flexport','faire','dropbox'];
-  const ASHBY=['ramp','vanta','replit','linear','posthog'];
+  const GH=['stripe','databricks','mongodb','datadog','okta','samsara','airbnb','anthropic','elastic','pinterest','robinhood','cloudflare','brex','gitlab','coinbase','figma','instacart','twilio','affirm','scaleai','lyft','asana','sofi','gusto','discord','vercel','newrelic','flexport','faire','dropbox','reddit','fivetran','mercury','chime','marqeta','roblox','sumologic','postman','block','toast','monzo','carta','cockroachlabs'];
+  const ASHBY=['ramp','vanta','replit','linear','posthog','cohere','watershed','sardine','persona','astronomer','sierra'];
 
   const ghOne=t=>safe((async()=>{ const j=await (await fetch('https://boards-api.greenhouse.io/v1/boards/'+t+'/jobs')).json();
-    return (j.jobs||[]).filter(x=>remoteUS.test((x.location&&x.location.name)||'')).map(x=>mk({title:x.title,co:nm(t),logo:logoFor(t),loc:(x.location&&x.location.name)||'Remote',dept:catOf(x.title),tags:[catOf(x.title)],url:x.absolute_url,date:x.updated_at,src:'gh',token:t,gid:x.id})); })());
+    return (j.jobs||[]).filter(x=>remoteUS.test((x.location&&x.location.name)||'')).map(x=>mk({title:x.title,co:nm(t),logo:logoUrl(t,x.absolute_url),loc:(x.location&&x.location.name)||'Remote',dept:catOf(x.title),tags:[catOf(x.title)],url:x.absolute_url,date:x.updated_at,src:'gh',token:t,gid:x.id})); })());
   const ashOne=o=>safe((async()=>{ const j=await (await fetch('https://api.ashbyhq.com/posting-api/job-board/'+o+'?includeCompensation=true')).json();
-    return (j.jobs||[]).filter(x=>x.isRemote||remoteUS.test(x.location||'')).map(x=>mk({title:x.title,co:nm(o),logo:logoFor(o),loc:x.location||'Remote',type:x.employmentType||'',dept:catOf(x.title),tags:[catOf(x.title)],url:x.jobUrl||x.applyUrl,date:x.publishedAt||x.updatedAt,html:x.descriptionHtml||'',src:'ashby'})); })());
+    return (j.jobs||[]).filter(x=>x.isRemote||remoteUS.test(x.location||'')).map(x=>mk({title:x.title,co:nm(o),logo:logoUrl(o,x.jobUrl||x.applyUrl),loc:x.location||'Remote',type:x.employmentType||'',dept:catOf(x.title),tags:[catOf(x.title)],url:x.jobUrl||x.applyUrl,date:x.publishedAt||x.updatedAt,html:x.descriptionHtml||'',src:'ashby'})); })());
 
-  let lists=await Promise.all([...GH.map(ghOne), ...ASHBY.map(ashOne)]);
-  let all=[].concat.apply([],lists);
-  all=all.filter(j=>j.title && j.url);
-  const seen=new Set();
-  all=all.filter(j=>{ const k=((j.title||'')+'|'+(j.co||'')).toLowerCase().replace(/\s+/g,' ').trim(); if(seen.has(k)) return false; seen.add(k); return true; });
+  const tasks=[...GH.map(ghOne), ...ASHBY.map(ashOne)];
+  let all=[]; const seen=new Set();
+  function add(list){ for(let i=0;i<(list||[]).length;i++){ const j=list[i]; if(!j||!j.title||!j.url) continue; const k=((j.title||'')+'|'+(j.co||'')).toLowerCase().replace(/\s+/g,' ').trim(); if(seen.has(k)) continue; seen.add(k); all.push(j); } if(onProgress){ all.sort((a,b)=>(b._ts||0)-(a._ts||0)); try{ onProgress(all.slice(0,3000)); }catch(e){} } }
+  await Promise.all(tasks.map(t=>t.then(add)));
   all.sort((a,b)=>(b._ts||0)-(a._ts||0));
-  return all.slice(0,450);
+  return all.slice(0,3000);
 }
 window.fetchRealJobs = fetchRealJobs;
 

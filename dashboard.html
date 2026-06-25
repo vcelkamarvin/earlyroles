@@ -106,7 +106,7 @@
 
   /* ----- Application tracker (CRM pipeline) ----- */
   function statusOf(id){ const a=Auth.applications(); return a[id]||'Saved'; }
-  function logoFor(j){ return j.logo?`<span class="jlogo" data-i="${j.initials||''}"><img src="${j.logo}" alt="${j.co}" onerror="this.parentNode.textContent=this.parentNode.dataset.i"></span>`:`<span class="jlogo">${j.initials||(j.co||'?').slice(0,2).toUpperCase()}</span>`; }
+  function logoFor(j){ const src=j.logo||(j.domain?logoURL(j.domain):''); const init=j.initials||(j.co||'?').replace(/[^A-Za-z0-9 ]/g,'').split(' ').filter(Boolean).slice(0,2).map(w=>w[0]).join('').toUpperCase(); return src?`<span class="jlogo" data-i="${init}"><img src="${src}" alt="${j.co}" onerror="this.parentNode.textContent=this.parentNode.dataset.i"></span>`:`<span class="jlogo">${init}</span>`; }
   function renderTracker(){
     const ids=[...new Set([...Auth.saved(), ...Object.keys(Auth.applications()).map(Number)])];
     const jobs=ids.map(id=>Auth.getJob(id)).filter(Boolean);

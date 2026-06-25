@@ -83,6 +83,7 @@
         locFilter=document.getElementById('locFilter'), count=document.getElementById('count');
   const LOC_RX={usa:/usa|united states|u\.s|u\.s\.a/i, americas:/americas|north america|usa|united states|canada|latam|brazil|mexico|argentina/i, europe:/europe|emea|united kingdom|uk|germany|france|spain|portugal|poland|netherlands|ireland/i, worldwide:/worldwide|anywhere|global/i};
   let ALL=[];
+  let shown=60;
   function rowHTML(j){
     const saved=Auth.saved();
     const logo=j.logo?`<span class="jlogo" data-i="${j.initials}"><img src="${j.logo}" alt="${j.co}" loading="lazy" onerror="this.parentNode.textContent=this.parentNode.dataset.i"></span>`:`<span class="jlogo">${j.initials||'•'}</span>`;
@@ -106,7 +107,10 @@
       return hay.includes(term) && (!d||hay.includes(d)) && (!l||j.title.toLowerCase().includes(l)) && (!lf||LOC_RX[lf].test(j.loc||''));
     });
     count.textContent=rows.length+' of '+ALL.length+' live roles';
-    board.innerHTML = rows.length? rows.map(rowHTML).join('') : '<div class="empty">No roles match your filters. Try widening your search.</div>';
+    if(!rows.length){ board.innerHTML='<div class="empty">No roles match your filters. Try widening your search.</div>'; return; }
+    const slice=rows.slice(0,shown);
+    board.innerHTML = slice.map(rowHTML).join('') + (rows.length>shown ? ('<div class="center" style="margin-top:22px"><button id="loadMore" class="btn btn-out" type="button">Load more roles (+'+Math.min(60,rows.length-shown)+')</button></div>') : '');
+    const lm=document.getElementById('loadMore'); if(lm) lm.addEventListener('click',function(){ shown+=60; render(); });
   }
   board.addEventListener('click',e=>{
     const ap=e.target.closest('.japply');
@@ -177,7 +181,7 @@
     if(window.gtag) gtag('event','create_alert',{label});
     showToast(Auth.get() ? '🔔 Search saved — find it on your dashboard.' : '🔔 Saved. Sign up to get alerts by email.');
   });
-  [q,dept,lvl,locFilter].forEach(el=>el.addEventListener('input',render));
+  [q,dept,lvl,locFilter].forEach(el=>el.addEventListener('input',function(){ shown=60; render(); }));
   function fallback(){ return JOBS.map(j=>({id:j.id,title:j.title,co:j.co,logo:'',initials:j.co.slice(0,2).toUpperCase(),loc:j.loc,dept:j.dept,type:j.lvl,tags:j.tags,sal:j.sal,ago:j.ago,url:'signup.html'})); }
   const params=new URLSearchParams(location.search);
   const initialQ=(params.get('q')||'').trim(); if(initialQ) q.value=initialQ;
@@ -185,9 +189,9 @@
   const initialLvl=(params.get('lvl')||'').trim(); if(initialLvl) lvl.value=initialLvl;
   const initialDept=(params.get('dept')||'').trim(); if(initialDept){ const o=[...dept.options].find(x=>x.value.toLowerCase()===initialDept.toLowerCase()||x.text.toLowerCase()===initialDept.toLowerCase()); if(o) dept.value=o.value; }
   board.innerHTML='<div class="empty">Loading live US remote roles straight from company career pages…</div>';
-  let lastFetch=0;
+  let lastFetch=0, rThrottle=0;
   function loadBoard(){
-    return fetchRealJobs(initialQ).then(list=>{ if(list&&list.length){ ALL=list; } else if(!ALL.length){ ALL=fallback(); } lastFetch=Date.now(); render(); }).catch(()=>{ if(!ALL.length){ ALL=fallback(); render(); } });
+    return fetchRealJobs(initialQ, function(partial){ if(partial&&partial.length){ ALL=partial; const now=Date.now(); if(now-rThrottle>350){ rThrottle=now; render(); } } }).then(list=>{ if(list&&list.length){ ALL=list; } else if(!ALL.length){ ALL=fallback(); } lastFetch=Date.now(); render(); }).catch(()=>{ if(!ALL.length){ ALL=fallback(); render(); } });
   }
   loadBoard();
   /* auto-add new positions: refresh when you come back to the tab, and periodically while it's open */
