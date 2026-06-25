@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Welcome to EarlyRoles</title>
+<meta name="robots" content="noindex" />
+<link rel="icon" href="favicon.svg" type="image/svg+xml" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<nav>
+  <div class="wrap nav">
+    <a href="index.html" class="brand"><span class="mk">E</span> EarlyRoles</a>
+    <div class="navlinks"><a href="jobs.html">Browse jobs</a><a href="index.html#pricing">Pricing</a></div>
+    <div class="navr"></div>
+  </div>
+</nav>
+
+<div class="authwrap">
+  <div class="authpanel">
+    <div class="authcard" style="text-align:center">
+      <div style="font-size:42px;line-height:1">⏳</div>
+      <h1 id="sTitle" style="margin-top:10px">Activating your plan…</h1>
+      <p class="psub" id="sMsg">One moment while we confirm your payment.</p>
+      <div id="sActions" style="margin-top:22px;display:none">
+        <a href="dashboard.html" class="btn btn-accent btn-block">Go to your dashboard →</a>
+        <a href="jobs.html" class="btn btn-out btn-block" style="margin-top:10px">Browse live roles</a>
+      </div>
+      <p class="micro" id="sNote" style="margin-top:16px;display:none">Tip: create or sign in to your account with the same email so your plan and saved roles stay in sync.</p>
+    </div>
+  </div>
+  <div class="authside">
+    <h2>You're set. Now go get hired.</h2>
+    <p>Apply to live US roles before the crowd, track everything in your pipeline, and let the AI tailor each application.</p>
+    <ul>
+      <li><span class="c">✓</span> Full US remote job feed</li>
+      <li><span class="c">✓</span> Pipeline / CRM tracker</li>
+      <li><span class="c">✓</span> AI resume + matchmaking</li>
+    </ul>
+  </div>
+</div>
+
+<script src="app.js"></script>
+<script>
+(function(){
+  var p=new URLSearchParams(location.search);
+  var plan=(p.get('plan')||'').trim();
+  var session=(p.get('session')||'').trim();
+  function finish(ok){
+    var t=document.getElementById('sTitle'), m=document.getElementById('sMsg'),
+        a=document.getElementById('sActions'), n=document.getElementById('sNote');
+    if(ok){
+      if(plan && window.Auth && Auth.setPlan) Auth.setPlan(plan);
+      if(window.gtag) gtag('event','purchase',{plan:plan});
+      document.querySelector('.authcard div').textContent='🎉';
+      t.textContent="You're in!";
+      m.innerHTML='Your <b>'+(plan||'plan')+'</b> is active. Apply to any live US role, track it in your pipeline, and use the AI tools.';
+      n.style.display='block';
+    } else {
+      document.querySelector('.authcard div').textContent='🤔';
+      t.textContent='Payment not confirmed yet';
+      m.innerHTML="We couldn't confirm the payment automatically. If you completed checkout, email <a href=\"mailto:hello@earlyroles.com\" style=\"color:var(--accent);font-weight:600\">hello@earlyroles.com</a> and we'll activate it right away.";
+    }
+    a.style.display='block';
+  }
+  fetch('/api/verify-checkout?plan='+encodeURIComponent(plan)+'&session='+encodeURIComponent(session))
+    .then(function(r){ return r.json(); })
+    .then(function(d){ finish(!d || d.ok!==false); })   // ok unless explicitly false
+    .catch(function(){ finish(true); });                  // API not deployed yet → optimistic
+})();
+</script>
+</body>
+</html>
