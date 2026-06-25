@@ -144,7 +144,8 @@
     const facts=[['Company',j.co],['Location',j.loc],['Job type',j.type||'—'],['Category',j.dept||'—'],['Salary',(j.sal||'Undisclosed')+(j.salEst?' · est.':'')],['Posted',j.ago||'Recently']]
       .map(f=>`<div class="jd-fact"><span class="l">${f[0]}</span><span class="v" title="${escapeHtml(f[1])}">${escapeHtml(f[1])}</span></div>`).join('');
     let body = j.descHtml ? sanitizeJobHtml(j.descHtml) : '';
-    if(!body) body = j.desc ? ('<p>'+escapeHtml(j.desc)+'…</p>') : '<p>A live US remote role sourced straight from the company hiring feed.</p>';
+    const needFetch = !body && j.src==='gh' && j.token && j.gid;
+    if(!body) body = needFetch ? '<p style="color:var(--faint)">Loading the full role description…</p>' : (j.desc ? ('<p>'+escapeHtml(j.desc)+'…</p>') : ('<p>A live role straight from '+escapeHtml(j.co)+"'s own hiring system. Open it to read the full posting and apply.</p>"));
     ov.innerHTML=`<div class="modal-card">
       <button class="modal-x" aria-label="Close">×</button>
       <div class="modal-head">${logo}<div><div class="modal-title">${escapeHtml(j.title)}</div><div class="modal-meta">${escapeHtml(meta)}</div></div></div>
@@ -163,6 +164,12 @@
     ov.onclick=ev=>{ if(ev.target===ov) close(); };
     ov.querySelector('#d-save').onclick=function(){ Auth.rememberJob(j); const s=Auth.toggleSave(j.id); this.textContent=s.includes(Number(j.id))?'✓ Saved':'Save role'; render(); };
     ov.querySelector('#d-apply').onclick=function(){ Auth.rememberJob(j); if(isPaid()) Auth.setApplication(j.id,'Applied'); close(); tryApply(j); };
+    if(needFetch){
+      fetch('https://boards-api.greenhouse.io/v1/boards/'+j.token+'/jobs/'+j.gid).then(r=>r.json()).then(d=>{
+        const ta=document.createElement('textarea'); ta.innerHTML=d.content||''; const html=(window.sanitizeJobHtml?sanitizeJobHtml(ta.value):'');
+        const bodyEl=ov.querySelector('.jd-body'); if(bodyEl) bodyEl.innerHTML = html || '<p>Open the original posting for the full description.</p>';
+      }).catch(()=>{ const bodyEl=ov.querySelector('.jd-body'); if(bodyEl) bodyEl.innerHTML='<p>Open the original posting for the full description and to apply.</p>'; });
+    }
   }
   document.getElementById('alertBtn').addEventListener('click',function(){
     const label = (q.value.trim()||'All roles') + (dept.value?(' · '+dept.value):'') + (lvl.value?(' · '+lvl.value):'');

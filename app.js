@@ -555,35 +555,39 @@ window.initCvUpload = initCvUpload;
 
 /* ---------- Real job search (live US remote roles via Remotive API) ---------- */
 async function fetchRealJobs(query){
-  /* Aggregate several real remote-job feeds into one big board, US/remote-first. */
+  /* Pull live roles straight from company hiring systems (Greenhouse + Ashby) → DIRECT apply links, no aggregator middle-man. */
   const initials=co=>(co||'?').replace(/[^A-Za-z0-9 ]/g,'').split(' ').filter(Boolean).slice(0,2).map(w=>w[0]).join('').toUpperCase();
   const tsOf=d=>{ if(!d) return 0; if(typeof d==='number') return d>1e12?d:d*1000; const t=Date.parse(d); return isNaN(t)?0:t; };
   const ago=d=>{ const t=tsOf(d); if(!t) return 'recently'; const days=Math.floor((Date.now()-t)/86400000); return days<=0?'today':days===1?'1d ago':days<30?days+'d ago':Math.floor(days/30)+'mo ago'; };
   const clean=h=>String(h||'').replace(/<[^>]+>/g,' ').replace(/&nbsp;/g,' ').replace(/&amp;/g,'&').replace(/\s+/g,' ').trim();
   const hashId=s=>{ let h=0; s=String(s||''); for(let i=0;i<s.length;i++){ h=(h*31 + s.charCodeAt(i))|0; } return Math.abs(h)||1; };
+  const catOf=t=>{ t=(t||'').toLowerCase(); if(/engineer|developer|software|devops|\bsre\b|backend|frontend|full.?stack|data scien|machine learning|security/.test(t))return'Engineering'; if(/data|analyst|analytics/.test(t))return'Data & AI'; if(/design|\bux\b|\bui\b/.test(t))return'Design'; if(/product manager|product owner|\bproduct\b/.test(t))return'Product'; if(/sales|account exec|business develop|revenue/.test(t))return'Sales'; if(/marketing|growth|seo|content|brand/.test(t))return'Marketing'; if(/finance|account|controller|fp&a/.test(t))return'Finance'; if(/support|success|customer/.test(t))return'Customer Support'; if(/recruit|\bpeople\b|\bhr\b|talent/.test(t))return'People'; if(/operations|\bops\b|program manager|project manager/.test(t))return'Operations'; return''; };
   const mk=o=>{ const s=estSalary({sal:o.sal,title:o.title,dept:o.dept,tags:o.tags}); return { id:hashId(o.url||((o.title||'')+(o.co||''))), title:o.title, co:o.co, logo:o.logo||'', initials:initials(o.co),
     loc:o.loc||'Remote', dept:o.dept||'', type:o.type||'', tags:(o.tags||[]).filter(Boolean).slice(0,4),
     sal:s.text, salEst:s.est, url:o.url, ago:ago(o.date), _ts:tsOf(o.date),
-    desc:clean(o.html).slice(0,300), descHtml:String(o.html||'').slice(0,5000) }; };
+    src:o.src||'', token:o.token||'', gid:o.gid||'',
+    desc:clean(o.html).slice(0,300), descHtml:String(o.html||'').slice(0,6000) }; };
   const safe=p=>p.then(x=>x).catch(()=>[]);
+  const remoteUS=/remote|anywhere|distributed|hybrid|work from home|\bwfh\b|united states|u\.s|usa|north america/i;
 
-  const remotive=async()=>{ const j=await (await fetch('https://remotive.com/api/remote-jobs')).json();
-    return (j.jobs||[]).map(x=>mk({title:x.title,co:x.company_name,logo:x.company_logo_url,loc:x.candidate_required_location||'Remote',dept:x.category,type:(x.job_type||'').replace(/_/g,' '),tags:[x.category,(x.job_type||'').replace(/_/g,' ')],sal:x.salary,url:x.url,date:x.publication_date,html:x.description})); };
-  const jobicy=async()=>{ const j=await (await fetch('https://jobicy.com/api/v2/remote-jobs?count=100')).json();
-    return (j.jobs||[]).map(x=>mk({title:x.jobTitle,co:x.companyName,logo:x.companyLogo,loc:x.jobGeo||'Anywhere',dept:(x.jobIndustry||[])[0],type:(x.jobType||[])[0],tags:[(x.jobIndustry||[])[0],(x.jobType||[])[0]],url:x.url,date:x.pubDate,html:x.jobDescription||x.jobExcerpt})); };
-  const remoteok=async()=>{ const arr=await (await fetch('https://remoteok.com/api')).json();
-    return (arr||[]).filter(x=>x&&x.position).map(x=>{ const sal=(x.salary_min&&x.salary_max)?('$'+Math.round(x.salary_min/1000)+'k – $'+Math.round(x.salary_max/1000)+'k'):''; return mk({title:x.position,co:x.company,logo:x.company_logo||x.logo,loc:(x.location||'').trim()||'Worldwide',tags:x.tags,sal:sal,url:x.url||x.apply_url,date:x.date||x.epoch,html:x.description}); }); };
-  const arbeitnow=async()=>{ const j=await (await fetch('https://www.arbeitnow.com/api/job-board-api')).json();
-    return (j.data||[]).filter(x=>x.remote).map(x=>mk({title:x.title,co:x.company_name,loc:x.location||'Remote',type:(x.job_types||[])[0],tags:x.tags,url:x.url,date:x.created_at,html:x.description})); };
+  const NAMES={stripe:'Stripe',coinbase:'Coinbase',brex:'Brex',gitlab:'GitLab',dropbox:'Dropbox',robinhood:'Robinhood',databricks:'Databricks',cloudflare:'Cloudflare',discord:'Discord',figma:'Figma',gusto:'Gusto',instacart:'Instacart',airbnb:'Airbnb',twitch:'Twitch',affirm:'Affirm',samsara:'Samsara',mongodb:'MongoDB',datadog:'Datadog',twilio:'Twilio',asana:'Asana',anthropic:'Anthropic',scaleai:'Scale AI',flexport:'Flexport',lyft:'Lyft',pinterest:'Pinterest',sofi:'SoFi',elastic:'Elastic',okta:'Okta',vercel:'Vercel',newrelic:'New Relic',faire:'Faire',ramp:'Ramp',vanta:'Vanta',replit:'Replit',linear:'Linear',posthog:'PostHog'};
+  const nm=t=>NAMES[t]||(t.charAt(0).toUpperCase()+t.slice(1));
 
-  const lists=await Promise.all([safe(remotive()),safe(jobicy()),safe(remoteok()),safe(arbeitnow())]);
+  const GH=['stripe','databricks','mongodb','datadog','okta','samsara','airbnb','anthropic','elastic','pinterest','robinhood','cloudflare','brex','gitlab','coinbase','figma','instacart','twilio','affirm','scaleai','lyft','asana','sofi','gusto','discord','vercel','newrelic','flexport','faire','dropbox'];
+  const ASHBY=['ramp','vanta','replit','linear','posthog'];
+
+  const ghOne=t=>safe((async()=>{ const j=await (await fetch('https://boards-api.greenhouse.io/v1/boards/'+t+'/jobs')).json();
+    return (j.jobs||[]).filter(x=>remoteUS.test((x.location&&x.location.name)||'')).map(x=>mk({title:x.title,co:nm(t),loc:(x.location&&x.location.name)||'Remote',dept:catOf(x.title),tags:[catOf(x.title)],url:x.absolute_url,date:x.updated_at,src:'gh',token:t,gid:x.id})); })());
+  const ashOne=o=>safe((async()=>{ const j=await (await fetch('https://api.ashbyhq.com/posting-api/job-board/'+o+'?includeCompensation=true')).json();
+    return (j.jobs||[]).filter(x=>x.isRemote||remoteUS.test(x.location||'')).map(x=>mk({title:x.title,co:nm(o),loc:x.location||'Remote',type:x.employmentType||'',dept:catOf(x.title),tags:[catOf(x.title)],url:x.jobUrl||x.applyUrl,date:x.publishedAt||x.updatedAt,html:x.descriptionHtml||'',src:'ashby'})); })());
+
+  let lists=await Promise.all([...GH.map(ghOne), ...ASHBY.map(ashOne)]);
   let all=[].concat.apply([],lists);
-  const usOk=/(usa|united states|u\.s|worldwide|anywhere|americas|north america)/i;
-  all=all.filter(j=>j.title && j.url && usOk.test(j.loc||''));
+  all=all.filter(j=>j.title && j.url);
   const seen=new Set();
   all=all.filter(j=>{ const k=((j.title||'')+'|'+(j.co||'')).toLowerCase().replace(/\s+/g,' ').trim(); if(seen.has(k)) return false; seen.add(k); return true; });
   all.sort((a,b)=>(b._ts||0)-(a._ts||0));
-  return all.slice(0,180);
+  return all.slice(0,450);
 }
 window.fetchRealJobs = fetchRealJobs;
 
