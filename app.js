@@ -572,14 +572,16 @@ async function fetchRealJobs(query){
 
   const NAMES={stripe:'Stripe',coinbase:'Coinbase',brex:'Brex',gitlab:'GitLab',dropbox:'Dropbox',robinhood:'Robinhood',databricks:'Databricks',cloudflare:'Cloudflare',discord:'Discord',figma:'Figma',gusto:'Gusto',instacart:'Instacart',airbnb:'Airbnb',twitch:'Twitch',affirm:'Affirm',samsara:'Samsara',mongodb:'MongoDB',datadog:'Datadog',twilio:'Twilio',asana:'Asana',anthropic:'Anthropic',scaleai:'Scale AI',flexport:'Flexport',lyft:'Lyft',pinterest:'Pinterest',sofi:'SoFi',elastic:'Elastic',okta:'Okta',vercel:'Vercel',newrelic:'New Relic',faire:'Faire',ramp:'Ramp',vanta:'Vanta',replit:'Replit',linear:'Linear',posthog:'PostHog'};
   const nm=t=>NAMES[t]||(t.charAt(0).toUpperCase()+t.slice(1));
+  const DOMAINS={stripe:'stripe.com',coinbase:'coinbase.com',brex:'brex.com',gitlab:'gitlab.com',dropbox:'dropbox.com',robinhood:'robinhood.com',databricks:'databricks.com',cloudflare:'cloudflare.com',discord:'discord.com',figma:'figma.com',gusto:'gusto.com',instacart:'instacart.com',airbnb:'airbnb.com',twitch:'twitch.tv',affirm:'affirm.com',samsara:'samsara.com',mongodb:'mongodb.com',datadog:'datadoghq.com',twilio:'twilio.com',asana:'asana.com',anthropic:'anthropic.com',scaleai:'scale.com',flexport:'flexport.com',lyft:'lyft.com',pinterest:'pinterest.com',sofi:'sofi.com',elastic:'elastic.co',okta:'okta.com',vercel:'vercel.com',newrelic:'newrelic.com',faire:'faire.com',ramp:'ramp.com',vanta:'vanta.com',replit:'replit.com',linear:'linear.app',posthog:'posthog.com'};
+  const logoFor=t=>{ const d=DOMAINS[t]; return d?('https://icons.duckduckgo.com/ip3/'+d+'.ico'):''; };
 
   const GH=['stripe','databricks','mongodb','datadog','okta','samsara','airbnb','anthropic','elastic','pinterest','robinhood','cloudflare','brex','gitlab','coinbase','figma','instacart','twilio','affirm','scaleai','lyft','asana','sofi','gusto','discord','vercel','newrelic','flexport','faire','dropbox'];
   const ASHBY=['ramp','vanta','replit','linear','posthog'];
 
   const ghOne=t=>safe((async()=>{ const j=await (await fetch('https://boards-api.greenhouse.io/v1/boards/'+t+'/jobs')).json();
-    return (j.jobs||[]).filter(x=>remoteUS.test((x.location&&x.location.name)||'')).map(x=>mk({title:x.title,co:nm(t),loc:(x.location&&x.location.name)||'Remote',dept:catOf(x.title),tags:[catOf(x.title)],url:x.absolute_url,date:x.updated_at,src:'gh',token:t,gid:x.id})); })());
+    return (j.jobs||[]).filter(x=>remoteUS.test((x.location&&x.location.name)||'')).map(x=>mk({title:x.title,co:nm(t),logo:logoFor(t),loc:(x.location&&x.location.name)||'Remote',dept:catOf(x.title),tags:[catOf(x.title)],url:x.absolute_url,date:x.updated_at,src:'gh',token:t,gid:x.id})); })());
   const ashOne=o=>safe((async()=>{ const j=await (await fetch('https://api.ashbyhq.com/posting-api/job-board/'+o+'?includeCompensation=true')).json();
-    return (j.jobs||[]).filter(x=>x.isRemote||remoteUS.test(x.location||'')).map(x=>mk({title:x.title,co:nm(o),loc:x.location||'Remote',type:x.employmentType||'',dept:catOf(x.title),tags:[catOf(x.title)],url:x.jobUrl||x.applyUrl,date:x.publishedAt||x.updatedAt,html:x.descriptionHtml||'',src:'ashby'})); })());
+    return (j.jobs||[]).filter(x=>x.isRemote||remoteUS.test(x.location||'')).map(x=>mk({title:x.title,co:nm(o),logo:logoFor(o),loc:x.location||'Remote',type:x.employmentType||'',dept:catOf(x.title),tags:[catOf(x.title)],url:x.jobUrl||x.applyUrl,date:x.publishedAt||x.updatedAt,html:x.descriptionHtml||'',src:'ashby'})); })());
 
   let lists=await Promise.all([...GH.map(ghOne), ...ASHBY.map(ashOne)]);
   let all=[].concat.apply([],lists);

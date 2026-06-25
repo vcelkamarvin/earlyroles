@@ -184,8 +184,15 @@
   const initialLoc=(params.get('loc')||'').trim(); if(initialLoc) locFilter.value=initialLoc;
   const initialLvl=(params.get('lvl')||'').trim(); if(initialLvl) lvl.value=initialLvl;
   const initialDept=(params.get('dept')||'').trim(); if(initialDept){ const o=[...dept.options].find(x=>x.value.toLowerCase()===initialDept.toLowerCase()||x.text.toLowerCase()===initialDept.toLowerCase()); if(o) dept.value=o.value; }
-  board.innerHTML='<div class="empty">Loading live US remote roles…</div>';
-  fetchRealJobs(initialQ).then(list=>{ ALL=(list&&list.length)?list:fallback(); render(); }).catch(()=>{ ALL=fallback(); render(); });
+  board.innerHTML='<div class="empty">Loading live US remote roles straight from company career pages…</div>';
+  let lastFetch=0;
+  function loadBoard(){
+    return fetchRealJobs(initialQ).then(list=>{ if(list&&list.length){ ALL=list; } else if(!ALL.length){ ALL=fallback(); } lastFetch=Date.now(); render(); }).catch(()=>{ if(!ALL.length){ ALL=fallback(); render(); } });
+  }
+  loadBoard();
+  /* auto-add new positions: refresh when you come back to the tab, and periodically while it's open */
+  document.addEventListener('visibilitychange',function(){ if(!document.hidden && Date.now()-lastFetch>120000) loadBoard(); });
+  setInterval(function(){ if(!document.hidden && Date.now()-lastFetch>300000) loadBoard(); }, 120000);
 })();
 </script>
 </body>
