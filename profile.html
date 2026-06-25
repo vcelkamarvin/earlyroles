@@ -6,6 +6,27 @@
 <title>Profile &amp; resume — EarlyRoles</title>
 <meta name="robots" content="noindex, follow" />
 <link rel="stylesheet" href="styles.css" />
+<style>
+.phero{background:linear-gradient(180deg,#f7f9ff 0%,#fff 100%);border:1px solid #e9edf6;border-radius:20px;padding:26px 28px;margin-top:22px}
+.phero .eyebrow{text-align:left;margin-bottom:8px}
+.phero h1{font-size:clamp(26px,3.4vw,36px);line-height:1.08;margin:0 0 8px}
+.phero p.lede{margin:0;color:var(--muted);max-width:60ch;font-size:15px;line-height:1.55}
+.pbarwrap{margin-top:20px}
+.pbartop{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:7px;font-size:13px}
+.pbartop b{font-size:14px}
+.pbar{height:10px;border-radius:99px;background:#e9edf3;overflow:hidden}
+.pbar > i{display:block;height:100%;width:0%;border-radius:99px;background:linear-gradient(90deg,#2563eb,#5b8def);transition:width .5s ease}
+.pbar.is-strong > i{background:linear-gradient(90deg,#16a34a,#22c55e)}
+.benefits{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.benefit{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;color:#1f3a8a;background:#eef3ff;border:1px solid #dbe6ff;border-radius:99px;padding:6px 12px}
+.aiwrap{border:1.5px solid var(--accent);border-radius:18px;padding:22px 24px;margin-top:18px;background:#fff;position:relative;box-shadow:0 6px 24px rgba(37,99,235,.07)}
+.aiwrap .aibadge{position:absolute;top:-11px;left:22px;background:var(--accent);color:#fff;font-size:11px;font-weight:700;letter-spacing:.03em;padding:3px 11px;border-radius:99px}
+.unlock{border:1px solid #e6e8ec;border-radius:18px;padding:22px 24px;margin-top:18px;background:#fafbfc}
+.unlock.ready{border-color:#bbf0cb;background:linear-gradient(180deg,#f1fcf4,#fff)}
+.unlock h3{margin:0 0 6px}
+.unlock .urow{display:flex;gap:12px;flex-wrap:wrap;margin-top:14px}
+@media(max-width:560px){.unlock .urow .btn{width:100%}}
+</style>
 </head>
 <body>
 
@@ -24,17 +45,28 @@
 
 <div class="dash">
   <div class="wrap" style="max-width:760px">
-    <div class="dhead">
-      <div>
-        <h1>Profile &amp; resume</h1>
-        <p>Paste your CV or LinkedIn and let AI build a recruiter-ready profile — it powers your matching and AI Apply Assist drafts.</p>
+
+    <!-- HERO + STRENGTH -->
+    <div class="phero">
+      <div class="eyebrow">Your profile = your match engine</div>
+      <h1>A profile that gets you to applicant&nbsp;#1.</h1>
+      <p class="lede">The stronger your profile, the better we match you to live US-remote roles — and the better your AI Apply Assist drafts. Paste your CV once; AI does the polishing.</p>
+      <div class="pbarwrap">
+        <div class="pbartop"><b id="pstrength">Profile strength: 0%</b><span id="pstrengthlabel" style="color:var(--faint)"></span></div>
+        <div class="pbar" id="pbar"><i></i></div>
       </div>
-      <a href="dashboard.html" class="btn btn-out">← Dashboard</a>
+      <div class="benefits">
+        <span class="benefit">⚡ Recruiter-ready in seconds</span>
+        <span class="benefit">🎯 Tuned for US remote roles</span>
+        <span class="benefit">🤖 Powers Apply Assist drafts</span>
+      </div>
     </div>
 
-    <div class="dcard" id="aiCard" style="margin-top:24px">
-      <h3 style="margin:0 0 4px">✨ Optimize my profile with AI</h3>
-      <div class="h-sub">Paste your LinkedIn "About" + experience, or your CV — AI rewrites it into a recruiter-ready profile and fills the fields below. Review before saving.</div>
+    <!-- AI OPTIMIZE (primary action) -->
+    <div class="aiwrap" id="aiCard">
+      <span class="aibadge">★ AI</span>
+      <h3 style="margin:0 0 4px">Optimize my profile with AI</h3>
+      <div class="h-sub">Paste your LinkedIn "About" + experience, or upload your CV — AI rewrites it into a recruiter-ready profile and fills the fields below. You review before saving.</div>
       <textarea id="cvText" placeholder="Paste your LinkedIn text or CV here…" style="width:100%;min-height:120px;margin-top:12px;padding:12px;border:1px solid #e6e8ec;border-radius:12px;font:inherit;box-sizing:border-box;line-height:1.5"></textarea>
       <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:10px">
         <label class="btn btn-out btn-sm" style="cursor:pointer;margin:0">📄 Upload CV<input id="cvFile" type="file" accept=".txt,.pdf,.docx" hidden></label>
@@ -44,8 +76,10 @@
       <div id="optExtra" style="margin-top:14px;display:none"></div>
     </div>
 
+    <!-- REVIEW & REFINE -->
     <div class="dcard" style="margin-top:18px">
-      <div id="pstrength" class="micro" style="margin-bottom:14px"></div>
+      <h3 style="margin:0 0 4px">Review &amp; refine</h3>
+      <div class="h-sub" style="margin-bottom:16px">Tweak anything AI generated, then save. This is what we match on.</div>
       <form class="pform" id="profForm" novalidate>
         <div class="prow2">
           <div class="field2"><label for="fullName">Full name</label><input id="fullName" type="text" placeholder="Alex Morgan" /></div>
@@ -62,6 +96,17 @@
         <button type="submit" class="btn btn-accent">Save profile</button>
       </form>
     </div>
+
+    <!-- UNLOCK / UPSELL -->
+    <div class="unlock" id="unlock">
+      <h3 id="unlockH">Complete your profile to unlock 1-click Apply Assist</h3>
+      <p class="h-sub" id="unlockP" style="margin:0">Finish your profile and AI will match you to live roles and draft a ready-to-send application for each — you just review and apply.</p>
+      <div class="urow" id="unlockRow">
+        <a href="match.html" class="btn btn-ink">Find my matches →</a>
+        <a href="index.html#pricing" class="btn btn-out">See Apply Assist plans</a>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -85,23 +130,40 @@
     const g=id=>document.getElementById(id).value.trim();
     const profile={fullName:g('fullName'),headline:g('headline'),location:g('location'),email:g('email2'),summary:g('summary'),skills:g('skills'),experience:g('experience')};
     Auth.setProfile(profile);
-    // keep the account name in sync
     const cur=Auth.get()||{}; cur.name=profile.fullName||cur.name; if(profile.email) cur.email=profile.email;
     localStorage.setItem(Auth.key, JSON.stringify(cur));
     if(window.gtag) gtag('event','save_profile');
     document.getElementById('perr').textContent='✓ Saved.';
     showToast('✓ Profile saved');
-    setTimeout(()=>location.href='dashboard.html', 900);
+    updateStrength();
+    const fields=['fullName','headline','location','summary','skills','experience'];
+    const filled=fields.filter(id=>(((document.getElementById(id)||{}).value)||'').trim().length>2).length;
+    if(filled>=5){ document.getElementById('unlock').scrollIntoView({behavior:'smooth',block:'center'}); }
+    else { setTimeout(()=>location.href='dashboard.html', 900); }
   });
 
-  /* ----- profile strength meter ----- */
+  /* ----- profile strength + unlock state ----- */
   function updateStrength(){
     const fields=['fullName','headline','location','summary','skills','experience'];
     const filled=fields.filter(id=>(((document.getElementById(id)||{}).value)||'').trim().length>2).length;
     const pct=Math.round(filled/fields.length*100);
-    const el=document.getElementById('pstrength'); if(!el) return;
-    const label= pct>=85?'Strong 💪':pct>=50?'Getting there':'Thin';
-    el.innerHTML='<b>Profile strength: '+pct+'%</b> · '+label+' — a complete profile means better matches and stronger Apply Assist drafts.';
+    const bar=document.getElementById('pbar'); const fill=bar?bar.querySelector('i'):null;
+    if(fill) fill.style.width=pct+'%';
+    if(bar) bar.classList.toggle('is-strong', pct>=85);
+    const txt=document.getElementById('pstrength'); if(txt) txt.textContent='Profile strength: '+pct+'%';
+    const lab=document.getElementById('pstrengthlabel'); if(lab) lab.textContent = pct>=85?'Strong — ready to match 💪':pct>=50?'Getting there':'Add a few more details';
+    const card=document.getElementById('unlock'), h=document.getElementById('unlockH'), pr=document.getElementById('unlockP');
+    if(card&&h&&pr){
+      if(pct>=85){
+        card.classList.add('ready');
+        h.textContent='🎉 Your profile is recruiter-ready';
+        pr.textContent='Let AI match you to your best live US-remote roles and draft a ready-to-send application for each.';
+      } else {
+        card.classList.remove('ready');
+        h.textContent='Complete your profile to unlock 1-click Apply Assist';
+        pr.textContent='You’re '+pct+'% there. Finish your profile and AI will match you to live roles and draft an application for each — you just review and apply.';
+      }
+    }
   }
   ['fullName','headline','location','summary','skills','experience'].forEach(id=>{ const el=document.getElementById(id); if(el) el.addEventListener('input',updateStrength); });
   updateStrength();
@@ -127,9 +189,10 @@
         if(Array.isArray(d.strengths)&&d.strengths.length) html+='<div style="font-weight:700;font-size:13px;margin-bottom:6px">Your standout strengths</div><div class="jtags" style="margin-bottom:12px">'+d.strengths.map(s=>'<span class="jchip">'+esc(s)+'</span>').join('')+'</div>';
         if(Array.isArray(d.tips)&&d.tips.length) html+='<div style="font-weight:700;font-size:13px;margin-bottom:6px">Quick tips to go further</div><ul class="modal-ul">'+d.tips.map(t=>'<li>'+esc(t)+'</li>').join('')+'</ul>';
         extra.innerHTML=html; extra.style.display=html?'block':'none';
-        optNote.textContent=(d.engine==='ai'?'✨ Optimized by AI':'Optimized')+' — review the fields below, tweak, then Save.';
+        optNote.textContent=(d.engine==='ai'?'✨ Optimized by AI':'Optimized')+' — review below, then Save.';
         if(window.gtag) gtag('event','profile_optimize',{engine:d.engine});
         updateStrength();
+        document.getElementById('profForm').scrollIntoView({behavior:'smooth',block:'start'});
       }
     }catch(e){ optNote.textContent='Could not optimize right now — try again in a moment.'; }
     optBtn.disabled=false; optBtn.textContent=orig;
