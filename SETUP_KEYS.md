@@ -13,11 +13,12 @@ functions can read them. `.env.example` in the repo just documents *which* keys 
 
 ## The two keys
 
-### 1. `OPENAI_API_KEY` — turns on the real AI
-- Get it at **platform.openai.com/api-keys** (create a new secret key, starts with `sk-...`).
-- Powers the **LinkedIn review / roast** and **match** tools (model: gpt-4o-mini, very cheap).
-- Without it, the site uses a built-in heuristic — so nothing breaks, it just isn't "real AI".
-- Tip: set a small monthly usage cap in your OpenAI billing settings.
+### 1. `ANTHROPIC_API_KEY` — turns on the real AI (Claude)
+- Get it at **console.anthropic.com → API keys** (starts with `sk-ant-...`). Uses your Claude credits.
+- Powers the **LinkedIn review / roast** and **match** tools (default model: Claude Haiku, cheap).
+- Optional: set `CLAUDE_MODEL` to override the model (default `claude-haiku-4-5-20251001`).
+- Optional alternative: `OPENAI_API_KEY` (gpt-4o-mini) also works as a fallback if you prefer.
+- Without any key, the site uses a built-in heuristic — nothing breaks, it just isn't "real AI".
 
 ### 2. `STRIPE_SECRET_KEY` — verifies real payments
 - From your **existing Firmadeal Stripe account** → **Developers → API keys** → **Secret key** (`sk_live_...`).
