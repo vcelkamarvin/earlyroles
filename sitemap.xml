@@ -2,7 +2,6 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://earlyroles.com/</loc><lastmod>2026-07-02</lastmod><changefreq>daily</changefreq><priority>1.0</priority></url>
   <url><loc>https://earlyroles.com/jobs.html</loc><lastmod>2026-07-02</lastmod><changefreq>hourly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://earlyroles.com/match.html</loc><lastmod>2026-07-02</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://earlyroles.com/remote-jobs-not-on-linkedin.html</loc><lastmod>2026-07-02</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://earlyroles.com/remote-software-engineer-jobs.html</loc><lastmod>2026-07-02</lastmod><changefreq>daily</changefreq><priority>0.8</priority></url>
   <url><loc>https://earlyroles.com/remote-product-manager-jobs.html</loc><lastmod>2026-07-02</lastmod><changefreq>daily</changefreq><priority>0.8</priority></url>
@@ -13,6 +12,10 @@
   <url><loc>https://earlyroles.com/jobs-in-switzerland.html</loc><lastmod>2026-07-02</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>
   <url><loc>https://earlyroles.com/remote-jobs-switzerland.html</loc><lastmod>2026-07-02</lastmod><changefreq>daily</changefreq><priority>0.8</priority></url>
   <url><loc>https://earlyroles.com/jobs-in-iceland-for-foreigners.html</loc><lastmod>2026-07-02</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>
+  <url><loc>https://earlyroles.com/software-engineer-jobs-switzerland.html</loc><lastmod>2026-07-02</lastmod><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://earlyroles.com/english-speaking-jobs-switzerland.html</loc><lastmod>2026-07-02</lastmod><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://earlyroles.com/software-engineer-jobs-iceland.html</loc><lastmod>2026-07-02</lastmod><changefreq>daily</changefreq><priority>0.8</priority></url>
+  <url><loc>https://earlyroles.com/english-speaking-jobs-iceland.html</loc><lastmod>2026-07-02</lastmod><changefreq>daily</changefreq><priority>0.8</priority></url>
   <url><loc>https://earlyroles.com/jobs-at-stripe.html</loc><lastmod>2026-07-02</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
   <url><loc>https://earlyroles.com/jobs-at-coinbase.html</loc><lastmod>2026-07-02</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
   <url><loc>https://earlyroles.com/jobs-at-databricks.html</loc><lastmod>2026-07-02</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>

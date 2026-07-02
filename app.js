@@ -81,7 +81,22 @@ const JOBS = [
   {id:44, title:"Product Designer", co:"Sidekick Health", domain:"sidekickhealth.com", loc:"Reykjavík, Iceland", lvl:"Mid · 3–5 yrs", dept:"Design", tags:["Visa-friendly","English-speaking"], sal:"ISK 900k–1.2M/mo", ago:"6h ago", url:"https://www.sidekickhealth.com/careers/", visa:true},
   {id:45, title:"Machine Learning Engineer", co:"Lucinity", domain:"lucinity.com", loc:"Reykjavík, Iceland", lvl:"Senior · 6–10 yrs", dept:"Data & AI", tags:["Visa-friendly","Relocation","English-speaking"], sal:"ISK 1.1M–1.5M/mo", ago:"2h ago", url:"https://www.lucinity.com/careers", visa:true},
   {id:46, title:"Biotech Process Engineer", co:"Alvotech", domain:"alvotech.com", loc:"Reykjavík, Iceland", lvl:"Mid · 3–5 yrs", dept:"Operations", tags:["Visa-friendly","Relocation"], sal:"ISK 950k–1.3M/mo", ago:"8h ago", url:"https://www.alvotech.com/careers", visa:true},
-  {id:47, title:"Full-Stack Engineer (Remote EU)", co:"Meniga", domain:"meniga.com", loc:"Remote — Iceland / Europe", lvl:"Mid · 3–5 yrs", dept:"Engineering", tags:["Remote-first","Visa-friendly","English-speaking"], sal:"€65k–€90k", ago:"4h ago", url:"https://www.meniga.com/careers", visa:true}
+  {id:47, title:"Full-Stack Engineer (Remote EU)", co:"Meniga", domain:"meniga.com", loc:"Remote — Iceland / Europe", lvl:"Mid · 3–5 yrs", dept:"Engineering", tags:["Remote-first","Visa-friendly","English-speaking"], sal:"€65k–€90k", ago:"4h ago", url:"https://www.meniga.com/careers", visa:true},
+  /* More Switzerland roles */
+  {id:48, title:"Senior DevOps Engineer", co:"Sensirion", domain:"sensirion.com", loc:"Zürich, Switzerland", lvl:"Senior · 6–10 yrs", dept:"Engineering", tags:["Visa-friendly","Relocation"], sal:"CHF 115k–145k", ago:"3h ago", url:"https://www.sensirion.com/careers", visa:true},
+  {id:49, title:"Machine Learning Engineer", co:"Unique", domain:"unique.ch", loc:"Zürich, Switzerland", lvl:"Senior · 6–10 yrs", dept:"Data & AI", tags:["Visa-friendly","English-speaking"], sal:"CHF 125k–160k", ago:"1h ago", url:"https://www.unique.ch/careers", visa:true},
+  {id:50, title:"Product Marketing Manager", co:"Yokoy", domain:"yokoy.io", loc:"Zürich, Switzerland", lvl:"Mid · 3–5 yrs", dept:"Marketing", tags:["Visa-friendly","English-speaking"], sal:"CHF 100k–130k", ago:"5h ago", url:"https://www.yokoy.io/careers/", visa:true},
+  {id:51, title:"Senior Backend Engineer", co:"Sonar", domain:"sonarsource.com", loc:"Geneva, Switzerland", lvl:"Senior · 6–10 yrs", dept:"Engineering", tags:["Visa-friendly","Relocation"], sal:"CHF 120k–155k", ago:"6h ago", url:"https://www.sonarsource.com/company/careers/", visa:true},
+  {id:52, title:"Data Engineer", co:"Teralytics", domain:"teralytics.net", loc:"Zürich, Switzerland", lvl:"Mid · 3–5 yrs", dept:"Data & AI", tags:["Visa-friendly","English-speaking"], sal:"CHF 110k–140k", ago:"8h ago", url:"https://www.teralytics.net/careers", visa:true},
+  {id:53, title:"Customer Success Manager (DACH)", co:"Sherpany", domain:"sherpany.com", loc:"Remote — Switzerland", lvl:"Mid · 3–5 yrs", dept:"Customer Support", tags:["Remote-first","Visa-friendly"], sal:"CHF 90k–120k", ago:"7h ago", url:"https://www.sherpany.com/en/careers/", visa:true},
+  {id:54, title:"Security Engineer", co:"Proton", domain:"proton.me", loc:"Geneva, Switzerland", lvl:"Senior · 6–10 yrs", dept:"Engineering", tags:["Visa-friendly","Relocation","English-speaking"], sal:"CHF 130k–165k", ago:"2h ago", url:"https://proton.me/careers", visa:true},
+  /* More Iceland roles */
+  {id:55, title:"Senior Backend Engineer", co:"Tempo", domain:"tempo.io", loc:"Reykjavík, Iceland", lvl:"Senior · 6–10 yrs", dept:"Engineering", tags:["Visa-friendly","Relocation","English-speaking"], sal:"ISK 1.2M–1.6M/mo", ago:"3h ago", url:"https://www.tempo.io/careers", visa:true},
+  {id:56, title:"Frontend Engineer", co:"Dohop", domain:"dohop.com", loc:"Reykjavík, Iceland", lvl:"Mid · 3–5 yrs", dept:"Engineering", tags:["Visa-friendly","English-speaking"], sal:"ISK 950k–1.3M/mo", ago:"5h ago", url:"https://www.dohop.com/careers/", visa:true},
+  {id:57, title:"Data Scientist — Climate", co:"Carbfix", domain:"carbfix.com", loc:"Reykjavík, Iceland", lvl:"Mid · 3–5 yrs", dept:"Data & AI", tags:["Visa-friendly","Relocation"], sal:"ISK 1.0M–1.4M/mo", ago:"9h ago", url:"https://www.carbfix.com/careers", visa:true},
+  {id:58, title:"Game Server Engineer", co:"Solid Clouds", domain:"solidclouds.com", loc:"Reykjavík, Iceland", lvl:"Mid · 3–5 yrs", dept:"Engineering", tags:["Visa-friendly","English-speaking"], sal:"ISK 950k–1.3M/mo", ago:"6h ago", url:"https://solidclouds.com/careers/", visa:true},
+  {id:59, title:"Product Manager", co:"Indó", domain:"indo.is", loc:"Reykjavík, Iceland", lvl:"Senior · 6–10 yrs", dept:"Product", tags:["Visa-friendly","English-speaking"], sal:"ISK 1.1M–1.5M/mo", ago:"4h ago", url:"https://indo.is/", visa:true},
+  {id:60, title:"DevOps Engineer (Remote Nordics)", co:"Avia", domain:"avia.is", loc:"Remote — Iceland / Nordics", lvl:"Mid · 3–5 yrs", dept:"Engineering", tags:["Remote-first","Visa-friendly","English-speaking"], sal:"€60k–€85k", ago:"7h ago", url:"https://avia.is/", visa:true}
 ];
 
 /* Logo URL via Clearbit; falls back to initials on error */
@@ -114,7 +129,6 @@ function renderNav(){
     const here = (location.pathname.split('/').pop()||'index.html');
     const items = [
       ['jobs.html','Browse jobs'],
-      ['match.html','Match me'],
       ['index.html#auto','Auto-Apply'],
       ['index.html#pricing','Pricing']
     ];
@@ -459,44 +473,9 @@ function matchJobs(text, limit){
   return scored.slice(0,limit);
 }
 window.matchJobs = matchJobs;
-
-function renderMatches(list, container){
-  container.innerHTML = list.map(m=>{
-    const j=m.job;
-    return `<div class="jrow" data-id="${j.id}">
-      ${logoImg(j.co,j.domain)}
-      <div class="jmain">
-        <div class="jtitle">${j.title} <span class="matchpct">${m.pct}% match</span></div>
-        <div class="jmeta"><span>${j.co}</span><span>·</span><span>${j.loc}</span><span>·</span><span>${j.lvl}</span></div>
-        ${m.reasons.length?`<div class="jtags">${m.reasons.map(r=>`<span class="jchip">${r}</span>`).join('')}</div>`:''}
-      </div>
-      <div class="jside"><div class="jsal">${j.sal}</div><div class="jbtns"><button class="japply" type="button">View &amp; apply →</button></div></div>
-    </div>`;
-  }).join('');
-  wireJobRows(container);
-}
-/* inputId: textarea, btnId: button, resultsId: container, ctaId (optional): element to reveal after match */
-function initMatcher(inputId, btnId, resultsId, ctaId){
-  const inp=document.getElementById(inputId), btn=document.getElementById(btnId), res=document.getElementById(resultsId);
-  if(!btn||!inp||!res) return;
-  function run(){
-    const text=(inp.value||'').trim();
-    if(text.replace(/https?:\/\/\S+/g,'').trim().length < 8){
-      res.innerHTML='<div class="empty">Paste a little more — your headline, top skills, or your “About” section work best.</div>';
-      return;
-    }
-    const p=Auth.profile(); p.linkedin=text; if(!p.summary) p.summary=text.slice(0,400); Auth.setProfile(p);
-    const list=matchJobs(text,6);
-    if(window.gtag) gtag('event','linkedin_match',{count:list.length});
-    res.innerHTML='<div class="matchhead">✨ Your top US matches</div>';
-    const wrap=document.createElement('div'); wrap.className='joblist'; res.appendChild(wrap);
-    renderMatches(list, wrap);
-    if(ctaId){ const c=document.getElementById(ctaId); if(c) c.style.display='flex'; }
-    res.scrollIntoView({behavior:'smooth',block:'nearest'});
-  }
-  btn.addEventListener('click', run);
-}
-window.initMatcher = initMatcher;
+/* matchJobs / matchTokens / jobKeywords are kept — the Auto-Apply engine (runAutoApplySweep)
+   relies on them to rank fresh roles against the user's profile. The standalone "Match me"
+   page + its initMatcher/renderMatches UI were removed in favor of the converting signup flow. */
 
 /* ---------- Realistic cover letter ---------- */
 function buildCoverLetter(o){
@@ -594,19 +573,21 @@ async function fetchRealJobs(query, onProgress, maxCompanies){
   const nm=t=>NAMES[t]||(t.charAt(0).toUpperCase()+t.slice(1));
   const DOMAINS={stripe:'stripe.com',coinbase:'coinbase.com',brex:'brex.com',gitlab:'gitlab.com',dropbox:'dropbox.com',robinhood:'robinhood.com',databricks:'databricks.com',cloudflare:'cloudflare.com',discord:'discord.com',figma:'figma.com',gusto:'gusto.com',instacart:'instacart.com',airbnb:'airbnb.com',twitch:'twitch.tv',affirm:'affirm.com',samsara:'samsara.com',mongodb:'mongodb.com',datadog:'datadoghq.com',twilio:'twilio.com',asana:'asana.com',anthropic:'anthropic.com',scaleai:'scale.com',flexport:'flexport.com',lyft:'lyft.com',pinterest:'pinterest.com',sofi:'sofi.com',elastic:'elastic.co',okta:'okta.com',vercel:'vercel.com',newrelic:'newrelic.com',faire:'faire.com',ramp:'ramp.com',vanta:'vanta.com',replit:'replit.com',linear:'linear.app',posthog:'posthog.com',reddit:'reddit.com',fivetran:'fivetran.com',mercury:'mercury.com',chime:'chime.com',marqeta:'marqeta.com',roblox:'roblox.com',sumologic:'sumologic.com',postman:'postman.com',block:'block.xyz',toast:'toasttab.com',monzo:'monzo.com',carta:'carta.com',cockroachlabs:'cockroachlabs.com',cohere:'cohere.com',watershed:'watershed.com',sardine:'sardine.ai',persona:'withpersona.com',astronomer:'astronomer.io',sierra:'sierra.ai',
     on:'on-running.com',scandit:'scandit.com',beekeeper:'beekeeper.io',frontify:'frontify.com',ledgy:'ledgy.com',climeworks:'climeworks.com',nexthink:'nexthink.com',sophiagenetics:'sophiagenetics.com',wefox:'wefox.com',sonarsource:'sonarsource.com',planted:'eatplanted.com',yokoy:'yokoy.io',proton:'proton.me',
-    ccpgames:'ccpgames.com',controlant:'controlant.com',sidekickhealth:'sidekickhealth.com',kerecis:'kerecis.com',meniga:'meniga.com',noxmedical:'noxmedical.com',lucinity:'lucinity.com',alvotech:'alvotech.com',taktikal:'taktikal.is'};
+    ccpgames:'ccpgames.com',controlant:'controlant.com',sidekickhealth:'sidekickhealth.com',kerecis:'kerecis.com',meniga:'meniga.com',noxmedical:'noxmedical.com',lucinity:'lucinity.com',alvotech:'alvotech.com',taktikal:'taktikal.is',
+    sensirion:'sensirion.com',avaloq:'avaloq.com',sherpany:'sherpany.com',squirro:'squirro.com',bexio:'bexio.com',teralytics:'teralytics.net',unique:'unique.ch',flatfox:'flatfox.ch',
+    tempo:'tempo.io',dohop:'dohop.com',carbfix:'carbfix.com',solidclouds:'solidclouds.com',indo:'indo.is',avia:'avia.is',dohop:'dohop.com'};
   const ATSHOST=/greenhouse\.io|ashbyhq\.com|lever\.co|myworkday|smartrecruiters|recruitee|workable|icims|jobvite|bamboohr|paylocity|ripplingats/i;
   const logoUrl=(t,u)=>{ let d=DOMAINS[t]; if(!d){ try{ const h=new URL(u).hostname.replace(/^www\./,''); if(h && !ATSHOST.test(h)) d=h; }catch(e){} } if(!d) d=t.replace(/[^a-z0-9]/g,'')+'.com'; return 'https://icons.duckduckgo.com/ip3/'+d+'.ico'; };
 
   const GH=['stripe','databricks','mongodb','datadog','okta','samsara','airbnb','anthropic','elastic','pinterest','robinhood','cloudflare','brex','gitlab','coinbase','figma','instacart','twilio','affirm','scaleai','lyft','asana','sofi','gusto','discord','vercel','newrelic','flexport','faire','dropbox','reddit','fivetran','mercury','chime','marqeta','roblox','sumologic','postman','block','toast','monzo','carta','cockroachlabs','benchling','airtable','webflow','grammarly','hashicorp','confluent','squarespace','doordash','wealthsimple','gemini','plaid','notion','airbyte','retool','clickup','remote','deel','angellist','wistia','digitalocean','betterup'];
   const ASHBY=['ramp','vanta','replit','linear','posthog','cohere','watershed','sardine','persona','astronomer','sierra','clay','mintlify','baseten','hex','census','warp','browserbase','decagon','openstore','runway','tome'];
   /* Switzerland + Iceland employers (Greenhouse / Ashby / Lever). Invalid tokens are dropped safely. */
-  const GH_CH=['scandit','frontify','nexthink','sophiagenetics','wefox'];
-  const ASHBY_CH=['ledgy','yokoy','planted'];
-  const LEVER_CH=['on','beekeeper','climeworks','sonarsource','proton'];
-  const GH_IS=['ccpgames','controlant','alvotech','kerecis'];
-  const ASHBY_IS=['lucinity','sidekickhealth','taktikal'];
-  const LEVER_IS=['meniga','noxmedical'];
+  const GH_CH=['scandit','frontify','nexthink','sophiagenetics','wefox','teralytics','sensirion','avaloq','sherpany','squirro','bexio','gatemgo','flatfox','ava','mindmaze','oncologie'];
+  const ASHBY_CH=['ledgy','yokoy','planted','unique','deepjudge','nomoko','parloa','tally','laserhub'];
+  const LEVER_CH=['on','beekeeper','climeworks','sonarsource','proton','yapeal','relike','nezasa','advertima'];
+  const GH_IS=['ccpgames','controlant','alvotech','kerecis','solidclouds','carbfix'];
+  const ASHBY_IS=['lucinity','sidekickhealth','taktikal','avia','indo'];
+  const LEVER_IS=['meniga','noxmedical','tempo','dohop','oz'];
 
   /* keep a posting if it belongs to any target region (US/CH/IS) or is remote */
   const keep=(loc,isRemote)=>regionsOf(loc,isRemote).length>0;
