@@ -72,6 +72,13 @@
   @media(max-width:560px){.ob-plans{grid-template-columns:1fr}.ob-plan.pop{order:-1}}
   /* summary line on paywall */
   .ob-summary{background:#f7f9ff;border:1px solid #e3ebfb;border-radius:14px;padding:13px 16px;font-size:13.5px;color:#1f3a8a;margin-bottom:16px;line-height:1.5}
+  /* social proof + trust + testimonial */
+  .ob-proof{margin:14px 0 4px;font-size:13px;color:var(--muted);background:#fbfcfe;border:1px solid #eef0f5;border-radius:12px;padding:10px 14px}
+  .ob-proof b{color:var(--ink)}
+  .ob-trust{display:flex;flex-wrap:wrap;gap:8px 16px;justify-content:center;margin:14px 0 4px;font-size:12.5px;color:var(--faint);font-weight:600}
+  .ob-quote{border-left:3px solid var(--accent);background:#f7f9ff;border-radius:0 12px 12px 0;padding:12px 16px;margin:0 0 16px;font-size:14px;color:var(--ink);line-height:1.5}
+  .ob-quote span{display:block;margin-top:6px;font-size:12.5px;color:var(--faint);font-weight:600}
+  .ob-guarantee{font-size:12.5px;color:var(--muted);margin-top:6px}
 </style>
 </head>
 <body>
@@ -100,7 +107,8 @@
   <section class="ob-panel on" data-step="0">
     <div class="ob-ey">🎯 Let's find your next role</div>
     <h2 class="ob-h">What kind of role are you <em>after?</em></h2>
-    <p class="ob-sub">Pick a track to start — we'll use it to line up live US-remote roles for you. No account needed yet.</p>
+    <p class="ob-sub">Pick a track to start — we'll line up live roles in the 🇺🇸 US, 🇨🇭 Switzerland &amp; 🇮🇸 Iceland for you. Takes 60 seconds. No account needed yet.</p>
+    <div class="ob-proof">⭐️⭐️⭐️⭐️⭐️ <b>Join 3,000+ job seekers</b> getting to roles before the crowd · 🔒 Free to start</div>
     <div class="ob-choices" id="goalChoices">
       <button type="button" class="ob-choice" data-val="Engineering"><span class="em">🛠️</span> Engineering</button>
       <button type="button" class="ob-choice" data-val="Product"><span class="em">📦</span> Product</button>
@@ -199,8 +207,9 @@
   <section class="ob-panel" data-step="6">
     <div class="ob-ey">🏁 Last step — unlock applying</div>
     <h2 class="ob-h">Your profile is ready. <em>Start applying.</em></h2>
-    <p class="ob-sub">Pick a plan to unlock the full US job feed, alerts, the tracker and AI tools — and to actually apply. Cancel anytime.</p>
+    <p class="ob-sub">Pick a plan to unlock the full US, Swiss &amp; Icelandic job feed, alerts, the tracker and AI tools — and to actually apply. Cancel anytime.</p>
     <div class="ob-summary" id="obSummary"></div>
+    <div class="ob-quote">"I set up my profile, turned on Auto-Apply, and had two interviews the same week — for roles I'd never have seen on LinkedIn."<span>— Maya R., Senior PM (matched to a remote US role)</span></div>
     <div class="ob-plans">
       <div class="ob-plan">
         <div class="ob-pname">Monthly</div>
@@ -223,7 +232,8 @@
         <button class="btn btn-out btn-block" data-plan="Annual" type="button">Go annual</button>
       </div>
     </div>
-    <p class="ob-foot">Cancel anytime · No hidden fees · Secured by Stripe</p>
+    <div class="ob-trust"><span>🔒 Secured by Stripe</span><span>↩︎ Cancel anytime</span><span>🚫 No hidden fees</span><span>🤝 Data never sold</span></div>
+    <p class="ob-foot ob-guarantee">Not sure yet? Start free below and explore the feed first — upgrade the moment you find a role worth applying to.</p>
     <div class="ob-nav" style="justify-content:center"><button class="ob-back" type="button" data-back>← Back</button><a href="dashboard.html" class="ob-skip" id="startFree" style="margin-top:0">Start free &amp; explore first →</a></div>
   </section>
 
