@@ -56,10 +56,12 @@
       <select id="locFilter">
         <option value="">All locations</option>
         <option value="usa">🇺🇸 USA</option>
-        <option value="americas">Americas</option>
+        <option value="switzerland">🇨🇭 Switzerland</option>
+        <option value="iceland">🇮🇸 Iceland</option>
+        <option value="remote">🌍 Remote / Anywhere</option>
         <option value="europe">Europe / EMEA</option>
-        <option value="worldwide">Worldwide / Anywhere</option>
       </select>
+      <label class="visachk" style="display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer"><input type="checkbox" id="visaOnly"> 🛂 Visa-friendly</label>
       <button id="alertBtn" class="btn btn-out btn-sm" type="button">🔔 Save this search</button>
       <span class="fcount" id="count"></span>
     </div>
@@ -91,8 +93,12 @@
 (function(){
   const board=document.getElementById('board'), q=document.getElementById('q'),
         dept=document.getElementById('dept'), lvl=document.getElementById('lvl'),
-        locFilter=document.getElementById('locFilter'), count=document.getElementById('count');
-  const LOC_RX={usa:/usa|united states|u\.s|u\.s\.a/i, americas:/americas|north america|usa|united states|canada|latam|brazil|mexico|argentina/i, europe:/europe|emea|united kingdom|uk|germany|france|spain|portugal|poland|netherlands|ireland/i, worldwide:/worldwide|anywhere|global/i};
+        locFilter=document.getElementById('locFilter'), count=document.getElementById('count'),
+        visaOnly=document.getElementById('visaOnly');
+  const LOC_RX={usa:/usa|united states|u\.s|u\.s\.a/i, switzerland:/switzerland|schweiz|suisse|svizzera|z[üu]rich|geneva|gen[eè]ve|basel|bern|lausanne|zug|lugano/i, iceland:/iceland|[íi]sland|reykjav[ií]k|k[óo]pavogur|akureyri/i, remote:/remote|anywhere|distributed|worldwide|global|hybrid/i, europe:/europe|emea|united kingdom|uk|germany|france|spain|portugal|poland|netherlands|ireland|switzerland|iceland/i};
+  const REGION_KEY={usa:'us',switzerland:'ch',iceland:'is',remote:'remote'};
+  /* prefer the job's own region tags (from the fetch engine), fall back to a location regex */
+  function inLoc(j,lf){ if(!lf) return true; const rk=REGION_KEY[lf]; if(rk && Array.isArray(j.regions)&&j.regions.length) return j.regions.includes(rk); return (LOC_RX[lf]||/.*/).test(j.loc||''); }
   let ALL=[];
   let shown=60;
   function rowHTML(j){
@@ -112,10 +118,10 @@
       </div>`;
   }
   function render(){
-    const term=q.value.toLowerCase().trim(); const d=dept.value.toLowerCase(), l=lvl.value.toLowerCase(), lf=locFilter.value;
+    const term=q.value.toLowerCase().trim(); const d=dept.value.toLowerCase(), l=lvl.value.toLowerCase(), lf=locFilter.value; const vf=visaOnly&&visaOnly.checked;
     const rows=ALL.filter(j=>{
       const hay=(j.title+' '+j.co+' '+(j.dept||'')+' '+(j.tags||[]).join(' ')).toLowerCase();
-      return hay.includes(term) && (!d||hay.includes(d)) && (!l||j.title.toLowerCase().includes(l)) && (!lf||LOC_RX[lf].test(j.loc||''));
+      return hay.includes(term) && (!d||hay.includes(d)) && (!l||j.title.toLowerCase().includes(l)) && inLoc(j,lf) && (!vf||j.visa||(j.tags||[]).indexOf('Visa-friendly')>=0);
     });
     count.textContent=rows.length+' of '+ALL.length+' live roles';
     if(!rows.length){ board.innerHTML='<div class="empty">No roles match your filters. Try widening your search.</div>'; return; }
@@ -193,7 +199,8 @@
     showToast(Auth.get() ? '🔔 Search saved — find it on your dashboard.' : '🔔 Saved. Sign up to get alerts by email.');
   });
   [q,dept,lvl,locFilter].forEach(el=>el.addEventListener('input',function(){ shown=60; render(); }));
-  function fallback(){ return JOBS.map(j=>({id:j.id,title:j.title,co:j.co,logo:j.domain?logoURL(j.domain):'',initials:j.co.slice(0,2).toUpperCase(),loc:j.loc,dept:j.dept,type:j.lvl,tags:j.tags,sal:j.sal,ago:j.ago,url:j.url||'signup.html'})); }
+  if(visaOnly) visaOnly.addEventListener('change',function(){ shown=60; render(); });
+  function fallback(){ return JOBS.map(j=>({id:j.id,title:j.title,co:j.co,logo:j.domain?logoURL(j.domain):'',initials:j.co.slice(0,2).toUpperCase(),loc:j.loc,dept:j.dept,type:j.lvl,tags:j.tags,sal:j.sal,ago:j.ago,url:j.url||'signup.html',visa:!!j.visa})); }
   const params=new URLSearchParams(location.search);
   const initialQ=(params.get('q')||'').trim(); if(initialQ) q.value=initialQ;
   const initialLoc=(params.get('loc')||'').trim(); if(initialLoc) locFilter.value=initialLoc;
@@ -228,7 +235,7 @@
   }
   let lastFetch=0, rThrottle=0;
   function loadBoard(){
-    return fetchRealJobs(initialQ, function(partial){ if(partial&&partial.length){ ALL=partial; const now=Date.now(); if(now-rThrottle>350){ rThrottle=now; render(); } } }).then(list=>{ if(list&&list.length){ ALL=list; } else if(!ALL.length){ ALL=fallback(); } lastFetch=Date.now(); render(); injectJobLD(ALL); }).catch(()=>{ if(!ALL.length){ ALL=fallback(); render(); } });
+    return fetchRealJobs(initialQ, function(partial){ if(partial&&partial.length){ ALL=partial; const now=Date.now(); if(now-rThrottle>350){ rThrottle=now; render(); } } }).then(list=>{ if(list&&list.length){ ALL=list; } else if(!ALL.length){ ALL=fallback(); } lastFetch=Date.now(); render(); injectJobLD(ALL); try{ if(typeof runAutoApplySweep==='function' && isPaid()) runAutoApplySweep(ALL,{max:8}); }catch(e){} }).catch(()=>{ if(!ALL.length){ ALL=fallback(); render(); } });
   }
   loadBoard();
   /* SEO safety net: if the live feed is slow/unavailable, still emit JobPosting
