@@ -3,10 +3,21 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Browse live US remote jobs — EarlyRoles</title>
-<meta name="description" content="Browse live US remote roles sourced before they hit LinkedIn or Indeed. Filter by role, seniority and location, and apply directly." />
+<title>Browse Live US Remote Jobs (2026) — Apply Direct | EarlyRoles</title>
+<meta name="description" content="Browse live US remote jobs sourced straight from company hiring systems before they hit LinkedIn or Indeed. Filter by role, seniority, salary and location, and apply directly." />
+<meta name="keywords" content="US remote jobs, remote jobs, work from home jobs, remote software jobs, remote jobs hiring now" />
+<link rel="icon" href="favicon.svg" type="image/svg+xml" />
 <link rel="canonical" href="https://earlyroles.com/jobs.html" />
-<meta name="description" content="Browse US remote jobs sourced straight from company hiring systems." />
+<meta name="robots" content="index, follow" />
+<meta property="og:title" content="Browse Live US Remote Jobs — Apply Direct" />
+<meta property="og:description" content="Live US remote roles sourced straight from company hiring systems. Filter, save and apply directly — before the crowd." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://earlyroles.com/jobs.html" />
+<meta property="og:image" content="https://earlyroles.com/og-image.svg" />
+<meta property="og:site_name" content="EarlyRoles" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://earlyroles.com/og-image.svg" />
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"EarlyRoles","item":"https://earlyroles.com/"},{"@type":"ListItem","position":2,"name":"Browse jobs","item":"https://earlyroles.com/jobs.html"}]}</script>
 <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -26,8 +37,8 @@
 <section style="padding-top:48px">
   <div class="wrap">
     <div class="eyebrow" style="text-align:left">🇺🇸 US remote jobs</div>
-    <h2 class="sec" style="text-align:left;margin-left:0">Browse openings before they go public.</h2>
-    <p style="color:var(--muted);margin-top:12px;max-width:60ch">Pulled live from real US remote hiring feeds. Save roles to your dashboard, or let Auto-Apply handle them for you.</p>
+    <h1 class="sec" style="text-align:left;margin-left:0">Browse live US remote jobs before they go public.</h1>
+    <p style="color:var(--muted);margin-top:12px;max-width:60ch">Pulled live from real US remote hiring feeds, straight from company career pages. Save roles to your dashboard, or let Auto-Apply handle them for you.</p>
 
     <div class="filters">
       <input id="q" type="text" placeholder="Search role, company or keyword…" />
@@ -182,18 +193,47 @@
     showToast(Auth.get() ? '🔔 Search saved — find it on your dashboard.' : '🔔 Saved. Sign up to get alerts by email.');
   });
   [q,dept,lvl,locFilter].forEach(el=>el.addEventListener('input',function(){ shown=60; render(); }));
-  function fallback(){ return JOBS.map(j=>({id:j.id,title:j.title,co:j.co,logo:'',initials:j.co.slice(0,2).toUpperCase(),loc:j.loc,dept:j.dept,type:j.lvl,tags:j.tags,sal:j.sal,ago:j.ago,url:'signup.html'})); }
+  function fallback(){ return JOBS.map(j=>({id:j.id,title:j.title,co:j.co,logo:j.domain?logoURL(j.domain):'',initials:j.co.slice(0,2).toUpperCase(),loc:j.loc,dept:j.dept,type:j.lvl,tags:j.tags,sal:j.sal,ago:j.ago,url:j.url||'signup.html'})); }
   const params=new URLSearchParams(location.search);
   const initialQ=(params.get('q')||'').trim(); if(initialQ) q.value=initialQ;
   const initialLoc=(params.get('loc')||'').trim(); if(initialLoc) locFilter.value=initialLoc;
   const initialLvl=(params.get('lvl')||'').trim(); if(initialLvl) lvl.value=initialLvl;
   const initialDept=(params.get('dept')||'').trim(); if(initialDept){ const o=[...dept.options].find(x=>x.value.toLowerCase()===initialDept.toLowerCase()||x.text.toLowerCase()===initialDept.toLowerCase()); if(o) dept.value=o.value; }
-  board.innerHTML='<div class="empty">Loading live US remote roles straight from company career pages…</div>';
+  /* Seed the board instantly with sample roles so it's never empty while the
+     live feed loads (or if it's slow/unavailable). Live results replace these. */
+  ALL=fallback(); render();
+  /* JobPosting structured data → eligible for the Google Jobs experience */
+  let ldDone=false;
+  function injectJobLD(rows){
+    if(ldDone||!rows||!rows.length) return; ldDone=true;
+    const iso=t=>{ try{ return new Date(t||Date.now()).toISOString().slice(0,10); }catch(e){ return new Date().toISOString().slice(0,10); } };
+    rows.slice(0,15).forEach(j=>{
+      try{
+        const s=document.createElement('script'); s.type='application/ld+json';
+        s.textContent=JSON.stringify({
+          "@context":"https://schema.org/","@type":"JobPosting",
+          "title":j.title,
+          "description":(j.desc&&j.desc.length>40?j.desc:(j.title+' — live US remote role at '+j.co+'. Apply directly on the company’s careers page via EarlyRoles.')),
+          "datePosted":iso(j._ts),
+          "validThrough":iso((j._ts||Date.now())+45*86400000),
+          "employmentType":(/part/i.test(j.type||'')?'PART_TIME':(/contract/i.test(j.type||'')?'CONTRACTOR':'FULL_TIME')),
+          "hiringOrganization":{"@type":"Organization","name":j.co},
+          "jobLocationType":"TELECOMMUTE",
+          "applicantLocationRequirements":{"@type":"Country","name":"USA"},
+          "url":j.url
+        });
+        document.body.appendChild(s);
+      }catch(e){}
+    });
+  }
   let lastFetch=0, rThrottle=0;
   function loadBoard(){
-    return fetchRealJobs(initialQ, function(partial){ if(partial&&partial.length){ ALL=partial; const now=Date.now(); if(now-rThrottle>350){ rThrottle=now; render(); } } }).then(list=>{ if(list&&list.length){ ALL=list; } else if(!ALL.length){ ALL=fallback(); } lastFetch=Date.now(); render(); }).catch(()=>{ if(!ALL.length){ ALL=fallback(); render(); } });
+    return fetchRealJobs(initialQ, function(partial){ if(partial&&partial.length){ ALL=partial; const now=Date.now(); if(now-rThrottle>350){ rThrottle=now; render(); } } }).then(list=>{ if(list&&list.length){ ALL=list; } else if(!ALL.length){ ALL=fallback(); } lastFetch=Date.now(); render(); injectJobLD(ALL); }).catch(()=>{ if(!ALL.length){ ALL=fallback(); render(); } });
   }
   loadBoard();
+  /* SEO safety net: if the live feed is slow/unavailable, still emit JobPosting
+     structured data from whatever roles are on the board. */
+  setTimeout(function(){ injectJobLD(ALL); }, 5000);
   /* auto-add new positions: refresh when you come back to the tab, and periodically while it's open */
   document.addEventListener('visibilitychange',function(){ if(!document.hidden && Date.now()-lastFetch>120000) loadBoard(); });
   setInterval(function(){ if(!document.hidden && Date.now()-lastFetch>300000) loadBoard(); }, 120000);

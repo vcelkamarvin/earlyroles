@@ -1,5 +1,5 @@
 # EarlyRoles
 
-Jobs you won't find on LinkedIn or Indeed. US remote roles, AI matching, AI Auto-Apply, and a free LinkedIn roast.
+Jobs you won't find on LinkedIn or Indeed. Live US remote roles pulled straight from company hiring systems, AI matching, and AI Auto-Apply.
 
 Live: https://earlyroles.vercel.app

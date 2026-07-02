@@ -28,20 +28,46 @@ const CONFIG = {
   gtag('js', new Date()); gtag('config', id);
 })();
 
-/* ---------- Job data (illustrative samples) ---------- */
+/* ---------- Job data (illustrative samples) ----------
+   Every sample role is fully US-remote and carries a real apply URL that
+   points at the company's own careers / hiring page, so "Apply" takes the
+   user to a genuine application rather than a dead end. */
 const JOBS = [
-  {id:1, title:"Senior Staff Data Scientist — Consumer Relevance", co:"Reddit", domain:"reddit.com", loc:"Remote — US", lvl:"Lead · 10+ yrs", dept:"Data & AI", tags:["Data & AI","For makers"], sal:"$233k–$326k", ago:"2h ago"},
-  {id:2, title:"Staff Site Reliability Engineer — Volcano", co:"Kong", domain:"konghq.com", loc:"Remote (United States)", lvl:"Lead · 10+ yrs", dept:"Engineering", tags:["Startup energy","For makers"], sal:"$150k–$210k", ago:"2h ago"},
-  {id:3, title:"Senior Account Executive", co:"TELUS Digital", domain:"telusdigital.com", loc:"Remote (United States)", lvl:"Senior · 6–10 yrs", dept:"Sales", tags:["Startup energy","Introvert-friendly"], sal:"$165k–$210k", ago:"1h ago"},
-  {id:4, title:"Regional Sales Manager — Enterprise", co:"Elliptic", domain:"elliptic.co", loc:"Remote — New York, US", lvl:"Mid · 3–5 yrs", dept:"Sales", tags:["Sales","Built for leaders"], sal:"$130k–$250k", ago:"3h ago"},
-  {id:5, title:"Director, Revenue Accounting", co:"Kaseya", domain:"kaseya.com", loc:"United States — Remote", lvl:"Lead · 10+ yrs", dept:"Finance", tags:["Operations","Built for leaders"], sal:"$165k–$180k", ago:"2h ago"},
-  {id:6, title:"Account Manager (Southwest Region)", co:"BridgeBio Pharma", domain:"bridgebio.com", loc:"Remote — USA", lvl:"Lead · 10+ yrs", dept:"Sales", tags:["Sales","Built for leaders"], sal:"$155k–$210k", ago:"1h ago"},
-  {id:7, title:"Senior Architect — Enterprise Solutions", co:"3Cloud", domain:"3cloudsolutions.com", loc:"Remote — US", lvl:"Senior · 6–10 yrs", dept:"Engineering", tags:["Startup energy","Introvert-friendly"], sal:"$145k–$205k", ago:"2h ago"},
-  {id:8, title:"Senior Practice Director, Mainframe AMS", co:"Ensono", domain:"ensono.com", loc:"Remote — United States", lvl:"Lead · 10+ yrs", dept:"Engineering", tags:["Built for leaders"], sal:"$200k–$250k", ago:"2h ago"},
-  {id:9, title:"Lifecycle Marketing Manager", co:"Notion", domain:"notion.so", loc:"Remote — US", lvl:"Mid · 3–5 yrs", dept:"Marketing", tags:["Startup energy","For makers"], sal:"$140k–$175k", ago:"4h ago"},
-  {id:10, title:"Product Designer, Growth", co:"Figma", domain:"figma.com", loc:"Remote (United States)", lvl:"Senior · 6–10 yrs", dept:"Design", tags:["For makers"], sal:"$160k–$215k", ago:"4h ago"},
-  {id:11, title:"Backend Engineer, Payments", co:"Stripe", domain:"stripe.com", loc:"Remote — US", lvl:"Mid · 3–5 yrs", dept:"Engineering", tags:["For makers","Startup energy"], sal:"$185k–$240k", ago:"5h ago"},
-  {id:12, title:"Customer Success Lead", co:"Coinbase", domain:"coinbase.com", loc:"United States — Remote", lvl:"Senior · 6–10 yrs", dept:"Operations", tags:["Built for leaders"], sal:"$120k–$165k", ago:"5h ago"}
+  {id:1, title:"Senior Staff Data Scientist — Consumer Relevance", co:"Reddit", domain:"reddit.com", loc:"Remote — US", lvl:"Lead · 10+ yrs", dept:"Data & AI", tags:["Data & AI","For makers"], sal:"$233k–$326k", ago:"2h ago", url:"https://boards.greenhouse.io/reddit"},
+  {id:2, title:"Staff Site Reliability Engineer", co:"Kong", domain:"konghq.com", loc:"Remote (United States)", lvl:"Lead · 10+ yrs", dept:"Engineering", tags:["Startup energy","For makers"], sal:"$150k–$210k", ago:"2h ago", url:"https://konghq.com/careers"},
+  {id:3, title:"Senior Account Executive", co:"TELUS Digital", domain:"telusdigital.com", loc:"Remote (United States)", lvl:"Senior · 6–10 yrs", dept:"Sales", tags:["Startup energy","Introvert-friendly"], sal:"$165k–$210k", ago:"1h ago", url:"https://www.telusdigital.com/about/careers"},
+  {id:4, title:"Regional Sales Manager — Enterprise", co:"Elliptic", domain:"elliptic.co", loc:"Remote — US", lvl:"Mid · 3–5 yrs", dept:"Sales", tags:["Sales","Built for leaders"], sal:"$130k–$250k", ago:"3h ago", url:"https://www.elliptic.co/careers"},
+  {id:5, title:"Director, Revenue Accounting", co:"Kaseya", domain:"kaseya.com", loc:"United States — Remote", lvl:"Lead · 10+ yrs", dept:"Finance", tags:["Operations","Built for leaders"], sal:"$165k–$180k", ago:"2h ago", url:"https://www.kaseya.com/careers/"},
+  {id:6, title:"Account Manager (Southwest Region)", co:"BridgeBio Pharma", domain:"bridgebio.com", loc:"Remote — USA", lvl:"Lead · 10+ yrs", dept:"Sales", tags:["Sales","Built for leaders"], sal:"$155k–$210k", ago:"1h ago", url:"https://bridgebio.com/careers/"},
+  {id:7, title:"Senior Architect — Enterprise Solutions", co:"3Cloud", domain:"3cloudsolutions.com", loc:"Remote — US", lvl:"Senior · 6–10 yrs", dept:"Engineering", tags:["Startup energy","Introvert-friendly"], sal:"$145k–$205k", ago:"2h ago", url:"https://www.3cloudsolutions.com/careers/"},
+  {id:8, title:"Senior Practice Director, Mainframe AMS", co:"Ensono", domain:"ensono.com", loc:"Remote — United States", lvl:"Lead · 10+ yrs", dept:"Engineering", tags:["Built for leaders"], sal:"$200k–$250k", ago:"2h ago", url:"https://www.ensono.com/company/careers/"},
+  {id:9, title:"Lifecycle Marketing Manager", co:"Notion", domain:"notion.so", loc:"Remote — US", lvl:"Mid · 3–5 yrs", dept:"Marketing", tags:["Startup energy","For makers"], sal:"$140k–$175k", ago:"4h ago", url:"https://www.notion.so/careers"},
+  {id:10, title:"Product Designer, Growth", co:"Figma", domain:"figma.com", loc:"Remote (United States)", lvl:"Senior · 6–10 yrs", dept:"Design", tags:["For makers"], sal:"$160k–$215k", ago:"4h ago", url:"https://www.figma.com/careers/"},
+  {id:11, title:"Backend Engineer, Payments", co:"Stripe", domain:"stripe.com", loc:"Remote — US", lvl:"Mid · 3–5 yrs", dept:"Engineering", tags:["For makers","Startup energy"], sal:"$185k–$240k", ago:"5h ago", url:"https://stripe.com/jobs/search"},
+  {id:12, title:"Customer Success Lead", co:"Coinbase", domain:"coinbase.com", loc:"United States — Remote", lvl:"Senior · 6–10 yrs", dept:"Operations", tags:["Built for leaders"], sal:"$120k–$165k", ago:"5h ago", url:"https://www.coinbase.com/careers/positions"},
+  {id:13, title:"Senior Full-Stack Engineer", co:"GitLab", domain:"gitlab.com", loc:"Remote — US", lvl:"Senior · 6–10 yrs", dept:"Engineering", tags:["Remote-first","For makers"], sal:"$150k–$205k", ago:"1h ago", url:"https://about.gitlab.com/jobs/"},
+  {id:14, title:"Product Manager, Platform", co:"Vercel", domain:"vercel.com", loc:"Remote (United States)", lvl:"Senior · 6–10 yrs", dept:"Product", tags:["Startup energy","Remote-first"], sal:"$170k–$225k", ago:"3h ago", url:"https://vercel.com/careers"},
+  {id:15, title:"Machine Learning Engineer", co:"Anthropic", domain:"anthropic.com", loc:"Remote — US", lvl:"Senior · 6–10 yrs", dept:"Data & AI", tags:["Data & AI","For makers"], sal:"$255k–$405k", ago:"2h ago", url:"https://www.anthropic.com/careers"},
+  {id:16, title:"Frontend Engineer, Design Systems", co:"Linear", domain:"linear.app", loc:"Remote — Americas", lvl:"Mid · 3–5 yrs", dept:"Engineering", tags:["Startup energy","For makers"], sal:"$150k–$200k", ago:"6h ago", url:"https://linear.app/careers"},
+  {id:17, title:"Growth Marketing Lead", co:"Ramp", domain:"ramp.com", loc:"Remote — US", lvl:"Lead · 10+ yrs", dept:"Marketing", tags:["Startup energy","Built for leaders"], sal:"$160k–$210k", ago:"4h ago", url:"https://ramp.com/careers"},
+  {id:18, title:"Data Analyst, Revenue", co:"Notion", domain:"notion.so", loc:"United States — Remote", lvl:"Mid · 3–5 yrs", dept:"Data & AI", tags:["Data & AI"], sal:"$110k–$150k", ago:"7h ago", url:"https://www.notion.so/careers"},
+  {id:19, title:"Staff Product Designer", co:"Dropbox", domain:"dropbox.com", loc:"Remote — US", lvl:"Lead · 10+ yrs", dept:"Design", tags:["Remote-first","Built for leaders"], sal:"$180k–$240k", ago:"3h ago", url:"https://jobs.dropbox.com/all-jobs"},
+  {id:20, title:"Customer Success Manager", co:"Vanta", domain:"vanta.com", loc:"Remote (United States)", lvl:"Mid · 3–5 yrs", dept:"Customer Support", tags:["Startup energy","Introvert-friendly"], sal:"$95k–$135k", ago:"5h ago", url:"https://www.vanta.com/company/careers"},
+  {id:21, title:"Enterprise Account Executive", co:"Datadog", domain:"datadoghq.com", loc:"Remote — US", lvl:"Senior · 6–10 yrs", dept:"Sales", tags:["Sales","Built for leaders"], sal:"$140k–$280k OTE", ago:"2h ago", url:"https://careers.datadoghq.com/"},
+  {id:22, title:"Senior Backend Engineer, Infrastructure", co:"Cloudflare", domain:"cloudflare.com", loc:"United States — Remote", lvl:"Senior · 6–10 yrs", dept:"Engineering", tags:["For makers","Remote-first"], sal:"$165k–$225k", ago:"8h ago", url:"https://www.cloudflare.com/careers/jobs/"},
+  {id:23, title:"Content Marketing Manager", co:"PostHog", domain:"posthog.com", loc:"Remote — Worldwide", lvl:"Mid · 3–5 yrs", dept:"Marketing", tags:["Startup energy","Remote-first"], sal:"$120k–$160k", ago:"1h ago", url:"https://posthog.com/careers"},
+  {id:24, title:"Product Manager, Payments", co:"Mercury", domain:"mercury.com", loc:"Remote — US", lvl:"Senior · 6–10 yrs", dept:"Product", tags:["Startup energy","Built for leaders"], sal:"$175k–$230k", ago:"6h ago", url:"https://mercury.com/jobs"},
+  {id:25, title:"Senior UX Researcher", co:"Figma", domain:"figma.com", loc:"Remote (United States)", lvl:"Senior · 6–10 yrs", dept:"Design", tags:["For makers"], sal:"$155k–$205k", ago:"9h ago", url:"https://www.figma.com/careers/"},
+  {id:26, title:"DevOps Engineer, Platform", co:"Replit", domain:"replit.com", loc:"Remote — US", lvl:"Mid · 3–5 yrs", dept:"Engineering", tags:["Startup energy","Remote-first"], sal:"$150k–$200k", ago:"3h ago", url:"https://replit.com/careers"},
+  {id:27, title:"Head of People Operations", co:"Brex", domain:"brex.com", loc:"Remote — US", lvl:"Lead · 10+ yrs", dept:"Operations", tags:["Built for leaders"], sal:"$185k–$240k", ago:"5h ago", url:"https://www.brex.com/careers"},
+  {id:28, title:"Sales Development Representative", co:"Twilio", domain:"twilio.com", loc:"United States — Remote", lvl:"Mid · 3–5 yrs", dept:"Sales", tags:["Sales","Introvert-friendly"], sal:"$65k–$95k OTE", ago:"2h ago", url:"https://www.twilio.com/en-us/company/jobs"},
+  {id:29, title:"Financial Analyst, FP&A", co:"Affirm", domain:"affirm.com", loc:"Remote — US", lvl:"Mid · 3–5 yrs", dept:"Finance", tags:["Remote-first"], sal:"$105k–$140k", ago:"7h ago", url:"https://www.affirm.com/careers"},
+  {id:30, title:"Senior Data Scientist, Fraud", co:"Robinhood", domain:"robinhood.com", loc:"Remote (United States)", lvl:"Senior · 6–10 yrs", dept:"Data & AI", tags:["Data & AI","For makers"], sal:"$180k–$250k", ago:"4h ago", url:"https://careers.robinhood.com/"},
+  {id:31, title:"Technical Writer, Developer Docs", co:"MongoDB", domain:"mongodb.com", loc:"Remote — US", lvl:"Mid · 3–5 yrs", dept:"Marketing", tags:["Remote-first","Introvert-friendly"], sal:"$110k–$150k", ago:"6h ago", url:"https://www.mongodb.com/company/careers"},
+  {id:32, title:"Engineering Manager, Frontend", co:"Gusto", domain:"gusto.com", loc:"United States — Remote", lvl:"Lead · 10+ yrs", dept:"Engineering", tags:["Built for leaders"], sal:"$200k–$260k", ago:"3h ago", url:"https://gusto.com/about/careers"},
+  {id:33, title:"Customer Support Specialist", co:"Discord", domain:"discord.com", loc:"Remote — US", lvl:"Mid · 3–5 yrs", dept:"Customer Support", tags:["Introvert-friendly","Remote-first"], sal:"$70k–$95k", ago:"8h ago", url:"https://discord.com/careers"},
+  {id:34, title:"Senior Product Manager, AI", co:"Scale AI", domain:"scale.com", loc:"Remote (United States)", lvl:"Senior · 6–10 yrs", dept:"Product", tags:["Data & AI","Startup energy"], sal:"$190k–$250k", ago:"1h ago", url:"https://scale.com/careers"},
+  {id:35, title:"Brand Designer", co:"Vercel", domain:"vercel.com", loc:"Remote — US", lvl:"Mid · 3–5 yrs", dept:"Design", tags:["For makers","Remote-first"], sal:"$130k–$175k", ago:"5h ago", url:"https://vercel.com/careers"}
 ];
 
 /* Logo URL via Clearbit; falls back to initials on error */
@@ -74,7 +100,6 @@ function renderNav(){
     const here = (location.pathname.split('/').pop()||'index.html');
     const items = [
       ['jobs.html','Browse jobs'],
-      ['roast.html','🔥 Roast'],
       ['match.html','Match me'],
       ['index.html#auto','Auto-Apply'],
       ['index.html#pricing','Pricing']
@@ -226,11 +251,14 @@ function openJobModal(id){
   ov.querySelector('#m-save').onclick=function(){ const s=Auth.toggleSave(j.id); this.textContent=s.includes(j.id)?'✓ Saved':'Save role'; };
   ov.querySelector('#m-cover').onclick=function(){ location.href='dashboard.html#cover'; };
   ov.querySelector('#m-apply').onclick=function(){
+    if(Auth.rememberJob) Auth.rememberJob(j);
     if(!isPaid()){ close(); showPaywall(j.title); return; }
     Auth.setApplication(j.id,'Applied'); if(!Auth.saved().includes(j.id)) Auth.toggleSave(j.id);
     if(window.gtag) gtag('event','apply',{job:j.title});
+    /* Real apply: open the company's own application page in a new tab. */
+    if(j.url && j.url!=='signup.html' && j.url!=='jobs.html'){ window.open(j.url,'_blank','noopener'); }
     this.textContent='✓ Applied';
-    document.getElementById('m-note').textContent='Status: Applied — manage it in your dashboard tracker.';
+    document.getElementById('m-note').textContent='Status: Applied — we opened '+j.co+"'s application page in a new tab. Track it in your dashboard.";
   };
 }
 window.openJobModal = openJobModal;
@@ -399,103 +427,6 @@ function initMatcher(inputId, btnId, resultsId, ctaId){
 }
 window.initMatcher = initMatcher;
 
-/* ---------- Viral: Roast My LinkedIn ---------- */
-function roastLinkedIn(text){
-  const raw=text||''; const t=raw.toLowerCase();
-  const words=raw.trim().split(/\s+/).filter(Boolean);
-  const buzz=["synergy","ninja","guru","rockstar","passionate","results-driven","results driven","team player","detail-oriented","detail oriented","go-getter","go getter","thought leader","hustle","disrupt","disruptive","10x","visionary","self-starter","self starter","dynamic","wear many hats","outside the box","game-changer","game changer","serial entrepreneur","growth hacker","evangelist","maverick","jack of all trades","world-class","best-in-class","love to learn","results oriented"];
-  const found=buzz.filter(b=>t.includes(b));
-  const hasNumbers=/\d/.test(raw);
-  const emojis=(raw.match(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/gu)||[]).length;
-  const exclaims=(raw.match(/!/g)||[]).length;
-  const passive=/responsible for|in charge of|tasked with|helped with|worked on/i.test(raw);
-  const roasts=[]; let score=18;
-  if(found.length){ score+=Math.min(42,found.length*9); roasts.push(`You dropped ${found.length} buzzword${found.length>1?'s':''} — "${found[0]}"${found[1]?`, "${found[1]}"`:''}${found.length>2?'…':''}. Recruiters have buzzword blindness; they scrolled past on contact.`); }
-  if(!hasNumbers){ score+=18; roasts.push(`Zero numbers. "Drove growth" — by 2% or 200%? Right now it's a vibe, not a result.`); }
-  if(passive){ score+=14; roasts.push(`"Responsible for…" is where impact goes to nap. You didn't supervise the work — you shipped it. Say that.`); }
-  if(words.length<25){ score+=16; roasts.push(`This profile is shorter than your coffee order. There's "concise," and then there's "witness protection."`); }
-  if(words.length>200){ score+=12; roasts.push(`That's a memoir, not a profile. If it needs a scrollbar, the recruiter already left.`); }
-  if(emojis>4){ score+=10; roasts.push(`${emojis} emojis — your headline looks like a slot machine. 🎰`); }
-  if(exclaims>3){ score+=6; roasts.push(`${exclaims} exclamation marks. We get it, you're excited!!!! Breathe.`); }
-  if(!roasts.length){ roasts.push(`Suspiciously clean. Either you're genuinely sharp or an AI wrote this — we won't tell. Add one bold metric and you're dangerous.`); score=30; }
-  score=Math.max(12,Math.min(98,score));
-  const fixes=[
-    hasNumbers?`Move your single biggest number to the very first line — lead with the win.`:`Add 2–3 hard metrics (%, $, users, hours saved). One real number beats ten adjectives.`,
-    found.length?`Delete "${found[0]}." Replace it with the concrete thing you actually did.`:`Open with a one-line value prop: "I help [who] do [what], measured by [result]."`,
-    passive?`Turn every "responsible for X" into "did X → which caused Y."`:`Close with a clear ask: the exact role you want next.`
-  ];
-  let verdict;
-  if(score>=80) verdict="🔥🔥🔥 Third-degree burns. This needs a glow-up, friend.";
-  else if(score>=55) verdict="🔥 Toasty. Very fixable, but the recruiter is squinting.";
-  else if(score>=35) verdict="😅 Lightly singed. A couple tweaks from solid.";
-  else verdict="😎 Barely a sunburn. You're already ahead of most.";
-  return {score,verdict,roasts,fixes};
-}
-window.roastLinkedIn = roastLinkedIn;
-
-/* Deterministic profile read from a LinkedIn URL (demo: seeded by the profile slug) */
-function buildRoastFromURL(url){
-  const slug=((url.split('/in/')[1]||url).replace(/[\/?#].*$/,'').replace(/[^a-z0-9-]/gi,''))||'profile';
-  let h=0; for(let i=0;i<slug.length;i++){ h=(h*31+slug.charCodeAt(i))>>>0; }
-  const score=46+(h%44); // 46–89
-  const pool=[
-    "Your headline is probably just your job title. That's a name tag, not a pitch — say who you help and the result you get them.",
-    "Bet there isn't a single number in your About section. Recruiters skim for digits — give them some.",
-    "“Passionate, results-driven professional” is profile wallpaper. Swap the adjectives for specifics.",
-    "Your About likely opens with “I am a…”. Lead with the outcome you create, not your job description.",
-    "Experience bullets that start with “Responsible for” are where impact goes to nap. Rewrite as “did X → got Y.”",
-    "Skills section endorsed 50× for “Microsoft Word”? Curate down to the five that actually matter.",
-    "Your headline is doing less work than your “Open to work” banner. Flip that.",
-    "If your summary needs a “see more” click before any substance, the recruiter already bounced."
-  ];
-  const roasts=[...new Set([pool[h%pool.length], pool[(h>>3)%pool.length], pool[(h>>6)%pool.length]])];
-  const fixes=[
-    "Rewrite your headline as: [Role] helping [who] achieve [result]. Lead with value, not your title.",
-    "Put 2–3 hard metrics (%, $, users, hours saved) in the first two lines of your About.",
-    "Turn every experience bullet into action → impact: what you did and the number it moved."
-  ];
-  let verdict;
-  if(score>=80) verdict="🔥🔥🔥 Needs work — but every fix below is quick.";
-  else if(score>=64) verdict="🔥 Toasty. A few changes and recruiters start replying.";
-  else if(score>=52) verdict="😅 Decent. A couple of tweaks from strong.";
-  else verdict="😎 Solid base. Polish these and you're dangerous.";
-  return {score,verdict,roasts,fixes,slug};
-}
-window.buildRoastFromURL = buildRoastFromURL;
-
-/* Roast = a free tool to FIX your profile. Input: LinkedIn profile URL only. */
-function initRoast(inputId, btnId, resultsId){
-  const inp=document.getElementById(inputId), btn=document.getElementById(btnId), res=document.getElementById(resultsId);
-  if(!btn||!inp||!res) return;
-  function run(){
-    const val=(inp.value||'').trim();
-    if(!/linkedin\.com\/in\//i.test(val)){ res.innerHTML='<div class="empty">Paste your full LinkedIn profile link — e.g. linkedin.com/in/your-name</div>'; return; }
-    const r=buildRoastFromURL(val);
-    if(window.gtag) gtag('event','linkedin_roast',{score:r.score});
-    res.innerHTML=`
-      <div class="roastcard">
-        <div class="cringe"><div class="cringe-l">🔥 Cringe-o-meter</div><div class="cringe-bar"><span style="width:${r.score}%"></span></div><div class="cringe-n">${r.score}<small>/100</small></div></div>
-        <div class="verdict">${r.verdict}</div>
-        <h4 class="modal-h">What's holding your profile back</h4><ul class="roast-ul">${r.roasts.map(x=>`<li>${x}</li>`).join('')}</ul>
-        <h4 class="modal-h">Fix it — your glow-up ✨</h4><ul class="glow-ul">${r.fixes.map(x=>`<li>${x}</li>`).join('')}</ul>
-        <div class="roast-cta">
-          <button class="btn btn-out" id="roastShare">📋 Copy my fixes</button>
-          <a class="btn btn-out" id="roastTweet" target="_blank" rel="noopener">𝕏 Share my score</a>
-          <a class="btn btn-accent" href="match.html">Now find my best roles →</a>
-        </div>
-        <p class="privacy-note">Instant read from your public profile link. Apply the fixes, then re-run to watch your score improve.</p>
-      </div>`;
-    const share=location.href.split('#')[0];
-    const shareText=`My LinkedIn scored ${r.score}/100 on the Cringe-o-meter ${r.verdict.split(' ')[0]} Roast yours free:`;
-    document.getElementById('roastTweet').href='https://twitter.com/intent/tweet?text='+encodeURIComponent(shareText)+'&url='+encodeURIComponent(share);
-    document.getElementById('roastShare').addEventListener('click',function(){ try{ navigator.clipboard.writeText('My LinkedIn fixes:\n- '+r.fixes.join('\n- ')+'\n\n'+shareText+' '+share); showToast('Fixes copied'); }catch(e){ showToast('Copy not available here'); } });
-    res.scrollIntoView({behavior:'smooth',block:'nearest'});
-  }
-  btn.addEventListener('click', run);
-  inp.addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); run(); } });
-}
-window.initRoast = initRoast;
-
 /* ---------- Realistic cover letter ---------- */
 function buildCoverLetter(o){
   o=o||{};
@@ -577,8 +508,8 @@ async function fetchRealJobs(query, onProgress, maxCompanies){
   const ATSHOST=/greenhouse\.io|ashbyhq\.com|lever\.co|myworkday|smartrecruiters|recruitee|workable|icims|jobvite|bamboohr|paylocity|ripplingats/i;
   const logoUrl=(t,u)=>{ let d=DOMAINS[t]; if(!d){ try{ const h=new URL(u).hostname.replace(/^www\./,''); if(h && !ATSHOST.test(h)) d=h; }catch(e){} } if(!d) d=t.replace(/[^a-z0-9]/g,'')+'.com'; return 'https://icons.duckduckgo.com/ip3/'+d+'.ico'; };
 
-  const GH=['stripe','databricks','mongodb','datadog','okta','samsara','airbnb','anthropic','elastic','pinterest','robinhood','cloudflare','brex','gitlab','coinbase','figma','instacart','twilio','affirm','scaleai','lyft','asana','sofi','gusto','discord','vercel','newrelic','flexport','faire','dropbox','reddit','fivetran','mercury','chime','marqeta','roblox','sumologic','postman','block','toast','monzo','carta','cockroachlabs'];
-  const ASHBY=['ramp','vanta','replit','linear','posthog','cohere','watershed','sardine','persona','astronomer','sierra'];
+  const GH=['stripe','databricks','mongodb','datadog','okta','samsara','airbnb','anthropic','elastic','pinterest','robinhood','cloudflare','brex','gitlab','coinbase','figma','instacart','twilio','affirm','scaleai','lyft','asana','sofi','gusto','discord','vercel','newrelic','flexport','faire','dropbox','reddit','fivetran','mercury','chime','marqeta','roblox','sumologic','postman','block','toast','monzo','carta','cockroachlabs','benchling','airtable','webflow','grammarly','hashicorp','confluent','squarespace','doordash','wealthsimple','gemini','plaid','notion','airbyte','retool','clickup','remote','deel','angellist','wistia','digitalocean','betterup'];
+  const ASHBY=['ramp','vanta','replit','linear','posthog','cohere','watershed','sardine','persona','astronomer','sierra','clay','mintlify','baseten','hex','census','warp','browserbase','decagon','openstore','runway','tome'];
 
   const ghOne=t=>safe((async()=>{ const j=await (await fetch('https://boards-api.greenhouse.io/v1/boards/'+t+'/jobs')).json();
     return (j.jobs||[]).filter(x=>remoteUS.test((x.location&&x.location.name)||'')).map(x=>mk({title:x.title,co:nm(t),logo:logoUrl(t,x.absolute_url),loc:(x.location&&x.location.name)||'Remote',dept:catOf(x.title),tags:[catOf(x.title)],url:x.absolute_url,date:x.updated_at,src:'gh',token:t,gid:x.id})); })());
@@ -617,50 +548,6 @@ function sanitizeJobHtml(html){
   return tmp.innerHTML.trim();
 }
 window.sanitizeJobHtml = sanitizeJobHtml;
-
-/* ---------- Real profile review (paste/CV → /api/review → AI or heuristic) ---------- */
-function renderReviewCard(r){
-  return `<div class="roastcard">
-    <div class="cringe"><div class="cringe-l">🔥 Cringe-o-meter</div><div class="cringe-bar"><span style="width:${r.score}%"></span></div><div class="cringe-n">${r.score}<small>/100</small></div></div>
-    <div class="verdict">${r.verdict||''}</div>
-    <h4 class="modal-h">What's holding your profile back</h4><ul class="roast-ul">${(r.roasts||[]).map(x=>`<li>${x}</li>`).join('')}</ul>
-    <h4 class="modal-h">Fix it — your glow-up ✨</h4><ul class="glow-ul">${(r.fixes||[]).map(x=>`<li>${x}</li>`).join('')}</ul>
-    <div class="roast-cta">
-      <button class="btn btn-out" id="roastShare">📋 Copy my fixes</button>
-      <a class="btn btn-out" id="roastTweet" target="_blank" rel="noopener">𝕏 Share my score</a>
-      <a class="btn btn-accent" href="match.html">Now find my best roles →</a>
-    </div>
-    <p class="privacy-note">${r.engine==='ai'?'Reviewed by AI':'Instant review'} · your text is used only to generate this result, never stored or sold.</p>
-  </div>`;
-}
-window.renderReviewCard = renderReviewCard;
-
-function initProfileReview(inputId, btnId, resultsId, consentId){
-  const inp=document.getElementById(inputId), btn=document.getElementById(btnId), res=document.getElementById(resultsId);
-  const consent=consentId?document.getElementById(consentId):null;
-  if(!btn||!inp||!res) return;
-  async function run(){
-    const text=(inp.value||'').trim();
-    if(text.length<20){ res.innerHTML='<div class="empty">Paste your headline + “About” section, or upload your CV, so we have something to review.</div>'; return; }
-    if(consent && !consent.checked){ res.innerHTML='<div class="empty">Please tick the box — EarlyRoles only reviews your own profile.</div>'; return; }
-    res.innerHTML='<div class="empty">Reviewing your profile…</div>';
-    let r=null;
-    try{
-      const resp=await fetch('/api/review',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text})});
-      if(resp.ok) r=await resp.json();
-    }catch(e){}
-    if(!r || typeof r.score!=='number'){ r = window.roastLinkedIn ? roastLinkedIn(text) : {score:60,verdict:'',roasts:[],fixes:[]}; r.engine='heuristic'; }
-    if(window.gtag) gtag('event','profile_review',{score:r.score, engine:r.engine});
-    res.innerHTML=renderReviewCard(r);
-    const share=location.href.split('#')[0];
-    const shareText=`My LinkedIn scored ${r.score}/100 on the Cringe-o-meter ${(r.verdict||'').split(' ')[0]} Review yours free:`;
-    const tw=document.getElementById('roastTweet'); if(tw) tw.href='https://twitter.com/intent/tweet?text='+encodeURIComponent(shareText)+'&url='+encodeURIComponent(share);
-    const sh=document.getElementById('roastShare'); if(sh) sh.addEventListener('click',function(){ try{ navigator.clipboard.writeText('My LinkedIn fixes:\n- '+(r.fixes||[]).join('\n- ')+'\n\n'+shareText+' '+share); showToast('Fixes copied'); }catch(e){ showToast('Copy not available here'); } });
-    res.scrollIntoView({behavior:'smooth',block:'nearest'});
-  }
-  btn.addEventListener('click', run);
-}
-window.initProfileReview = initProfileReview;
 
 /* ---------- Stripe checkout (real when STRIPE_* env vars are set on the server) ---------- */
 async function startCheckout(plan){
@@ -760,7 +647,7 @@ function activityTicker(){
     ['matched to a','Senior PM','role at Reddit'],
     ['applied via','Auto-Apply','to Stripe'],
     ['— new role added','2 min ago','at Kong (Remote US)'],
-    ['improved their LinkedIn','+18 pts','on the Cringe-o-meter'],
+    ['tailored a CV for a','Backend Engineer','role at Stripe'],
     ['matched to a','Data Scientist','role at Figma'],
     ['— new role added','just now','at Coinbase (Remote US)'],
     ['got a reply in','2 days','via EarlyRoles'],

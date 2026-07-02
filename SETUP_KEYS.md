@@ -15,7 +15,7 @@ functions can read them. `.env.example` in the repo just documents *which* keys 
 
 ### 1. `ANTHROPIC_API_KEY` — turns on the real AI (Claude)
 - Get it at **console.anthropic.com → API keys** (starts with `sk-ant-...`). Uses your Claude credits.
-- Powers the **LinkedIn review / roast** and **match** tools (default model: Claude Haiku, cheap).
+- Powers the **profile optimize** (`/api/optimize`) and **match** tools (default model: Claude Haiku, cheap).
 - Optional: set `CLAUDE_MODEL` to override the model (default `claude-haiku-4-5-20251001`).
 - Optional alternative: `OPENAI_API_KEY` (gpt-4o-mini) also works as a fallback if you prefer.
 - Without any key, the site uses a built-in heuristic — nothing breaks, it just isn't "real AI".
@@ -28,8 +28,8 @@ functions can read them. `.env.example` in the repo just documents *which* keys 
   key upgrades it to *verified & secure*.
 
 ## After adding the keys
-- **AI:** open `/roast.html` or `/match.html`, paste a profile — the result footer will say
-  "Reviewed by AI" instead of "Instant review".
+- **AI:** open `/profile.html` (Optimize with AI) or `/match.html`, paste a profile — the result
+  will say "Optimized by AI" instead of the built-in heuristic.
 - **Stripe:** do one real low-value test purchase → you should land on `/success.html` with the
   plan activated; refund yourself from the Stripe Dashboard afterwards.
 
