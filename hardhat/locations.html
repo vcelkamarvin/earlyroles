@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Locations — Offshore &amp; Trades Jobs Worldwide | HardHat</title>
+<meta name="description" content="High-paying offshore and trades jobs across the world's energy hubs — North Sea, Gulf of Mexico, Middle East, Australia, West Africa, Brazil and more.">
+<link rel="icon" href="favicon.svg">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="hazbar"></div>
+<div id="nav"></div>
+
+<section>
+  <div class="wrap">
+    <div class="eyebrow">We’re all around the world</div>
+    <h2 class="sec" style="max-width:22ch">Jobs on every major energy frontier</h2>
+    <p class="lead">Pick a hub to see which sectors are hiring and jump into matched roles. Open-role figures are illustrative industry estimates.</p>
+    <div class="bigstat" style="margin-top:28px"><b id="total">0</b><span>est. open roles across 10 global hubs</span></div>
+    <div class="locgrid" id="grid" style="margin-top:26px"></div>
+  </div>
+</section>
+
+<div id="foot"></div>
+<script src="app.js"></script>
+<script>
+HH.mountChrome('locations.html');
+var total=HH_LOCATIONS.reduce(function(a,l){return a+l.open;},0);
+document.getElementById('total').textContent=total.toLocaleString();
+document.getElementById('grid').innerHTML=HH_LOCATIONS.map(function(l){
+  var ch=l.sectors.map(function(id){var s=HH.sector(id);return s?'<span class="jchip">'+s.icon+' '+s.name+'</span>':'';}).join('');
+  var n=HH_JOBS.filter(function(j){return j.locId===l.id;}).length;
+  return '<a class="loccard" id="'+l.id+'" href="jobs.html?loc='+l.id+'"><div class="lf">'+l.flag+'</div><h3>'+l.name+'</h3>'+
+    '<div class="hub">'+l.hub+'</div><div class="lo">'+l.open.toLocaleString()+' roles (est.)'+(n?' · '+n+' featured':'')+'</div>'+
+    '<div class="lch">'+ch+'</div></a>';
+}).join('');
+</script>
+</body>
+</html>

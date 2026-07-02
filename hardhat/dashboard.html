@@ -42,6 +42,8 @@
         <div class="dstat"><b id="stPlan" style="font-size:18px">Free</b><span>plan</span></div>
       </div>
 
+      <div id="recBox" style="margin-top:24px"></div>
+
       <h3 class="display" style="font-size:20px;margin:30px 0 12px">Application pipeline</h3>
       <div class="pipe" id="pipe"></div>
 
@@ -81,6 +83,19 @@ else {
   document.getElementById('stApplied').textContent=appliedN;
   document.getElementById('stTickets').textContent=list.filter(function(tk){return done[tk.id];}).length;
   document.getElementById('stPlan').textContent=HH.Auth.isPaid()?(HH.Auth.plan()==='fasttrack'?'Fast-Track':'Pro'):'Free';
+  // recommendations
+  var rec=HH.recommendations(intake);
+  if(rec){
+    var recTickets=rec.nextTickets.length?rec.nextTickets.map(function(t){return t.name;}).join(' + '):'You hold the required tickets';
+    var recLocs=rec.locations.map(function(l){return l.flag+' '+l.name;}).join(' · ');
+    var recJobs=rec.jobs.map(function(j){return '<div class="jchip" style="display:block;margin-bottom:6px">'+j.icon+' '+j.title+' — '+j.pay+'</div>';}).join('');
+    document.getElementById('recBox').innerHTML='<div class="rec"><div class="rh"><span class="rk">◆ Recommended for you</span></div>'+
+      '<div class="recgrid"><div class="reccard"><h5>Best-fit sector</h5><b>'+rec.sector.name+'</b><p style="color:var(--muted);font-size:12.5px;margin-top:4px">'+rec.sector.pay+'</p></div>'+
+      '<div class="reccard"><h5>Get this ticket next</h5><b style="font-size:14px">'+recTickets+'</b></div>'+
+      '<div class="reccard"><h5>Best locations</h5><b style="font-size:13px">'+(recLocs||'Worldwide')+'</b></div></div>'+
+      '<div style="margin-top:14px"><div class="eyebrow" style="text-align:left;margin-bottom:8px">Jobs you qualify for</div>'+recJobs+
+      '<a class="btn btn-hi btn-sm" style="margin-top:8px" href="jobs.html">See all matched jobs →</a></div></div>';
+  }
   // pipeline
   var stages=[['saved','Saved'],['applied','Applied'],['responded','Responded'],['interview','Interviewing'],['offer','Offer'],['rejected','Closed']];
   document.getElementById('pipe').innerHTML=stages.map(function(st){

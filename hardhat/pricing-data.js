@@ -4,14 +4,14 @@ var HH_PRICING = [
     id:'free', name:'Deckhand', price:'$0', per:'forever', note:'Get started, no card',
     plan:null, cta:'Start free', href:'start.html', feat:false,
     features:[
-      {t:'Browse the full job board', on:true},
+      {t:'Browse the full job board worldwide', on:true},
       {t:'Pay & rotation explorer', on:true},
       {t:'Rig-Ready Score + step 1 of your plan', on:true},
       {t:'Save up to 3 jobs', on:true},
       {t:'Agency directory (preview only)', on:true},
+      {t:'Apply to jobs + agency contacts', on:false},
       {t:'Full ticket & medical roadmap', on:false},
-      {t:'AI offshore CV builder', on:false},
-      {t:'Full crewing-agency directory', on:false}
+      {t:'AI offshore CV builder', on:false}
     ]
   },
   {
@@ -19,11 +19,11 @@ var HH_PRICING = [
     plan:'pro_monthly', cta:'Go Pro', href:'#', feat:true,
     features:[
       {t:'Everything in Deckhand', on:true},
+      {t:'Apply to jobs + full agency contacts', on:true},
       {t:'Full ticket & medical roadmap tracker', on:true},
+      {t:'Personalized recommendations', on:true},
       {t:'Unlimited saved jobs + job alerts', on:true},
       {t:'AI offshore CV builder', on:true},
-      {t:'Ticket-gap analyzer', on:true},
-      {t:'Full crewing-agency & operator directory', on:true},
       {t:'Application templates that get replies', on:true},
       {t:'Done-for-you CV + agency shortlist', on:false}
     ]

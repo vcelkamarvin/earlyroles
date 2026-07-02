@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Blog — HardHat</title>
+<meta name="description" content="Guides to getting hired in high-paying offshore and trades jobs with no degree: tickets, pay, sectors and how to break in.">
+<link rel="icon" href="favicon.svg">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="hazbar"></div>
+<div id="nav"></div>
+
+<section>
+  <div class="wrap">
+    <div class="eyebrow">HardHat Blog</div>
+    <h2 class="sec" style="max-width:24ch">Learn how to get into high-paying trade work</h2>
+    <p class="lead">No fluff — the tickets, the pay, the sectors, and exactly how people with no experience break in.</p>
+    <div class="bloggrid" id="grid"></div>
+    <div class="center" style="margin-top:36px"><a class="btn btn-hi btn-lg" href="start.html">Get your Rig-Ready plan →</a></div>
+  </div>
+</section>
+
+<div id="foot"></div>
+<script src="app.js"></script>
+<script>
+HH.mountChrome('blog.html');
+document.getElementById('grid').innerHTML = HH_BLOG.map(function(b){
+  return '<a class="blogcard" href="post.html?slug='+b.slug+'"><div class="bt"><span class="tg">'+b.tag+'</span> '+b.date+' · '+b.read+'</div>'+
+    '<h3>'+b.title+'</h3><p>'+b.excerpt+'</p><span class="rd">Read article →</span></a>';
+}).join('');
+</script>
+</body>
+</html>

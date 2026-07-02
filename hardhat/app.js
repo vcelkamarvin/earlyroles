@@ -23,14 +23,14 @@ window.hhTrack = ga;
 /* SECTORS — the 8 verticals                                           */
 /* ------------------------------------------------------------------ */
 var SECTORS = [
-  { id:'oil',    icon:'🛢️', name:'Offshore Oil & Gas', blurb:'Roughneck, roustabout, floorhand, derrickhand on rigs & platforms.', pay:'$60k–$130k', rota:'2 on / 3 off', noexp:true },
-  { id:'wind',   icon:'🌬️', name:'Offshore Wind',       blurb:'GWO-certified turbine techs building & maintaining wind farms.',      pay:'$55k–$110k', rota:'2 on / 2 off', noexp:true },
-  { id:'diving', icon:'🤿', name:'Commercial Diving',    blurb:'Air & saturation divers, tenders — underwater welding & inspection.', pay:'$50k–$180k', rota:'project',     noexp:false },
-  { id:'marine', icon:'⚓', name:'Merchant Marine',      blurb:'Deckhand, OS/AB, wiper — cargo ships, tugs, supply vessels.',        pay:'$45k–$90k',  rota:'28 on / 28 off', noexp:true },
-  { id:'mining', icon:'⛏️', name:'FIFO Mining',          blurb:'Fly-in fly-out remote mine operators, trades & haul-truck drivers.', pay:'$70k–$140k', rota:'2 on / 1 off', noexp:true },
-  { id:'weld',   icon:'🔥', name:'Pipeline / Welding',   blurb:'Structural & pipeline welders, riggers, fabricators.',               pay:'$55k–$120k', rota:'project',     noexp:false },
-  { id:'wtt',    icon:'⚡', name:'Wind Turbine Tech',    blurb:'Onshore turbine service techs — climb, service, fault-find.',        pay:'$50k–$85k',  rota:'rota',       noexp:true },
-  { id:'cdl',    icon:'🚛', name:'Hazmat / CDL Haul',    blurb:'Long-haul, tanker & hazmat drivers — oilfield & heavy freight.',     pay:'$60k–$110k', rota:'weeks out',  noexp:true }
+  { id:'oil',    icon:'🛢️', name:'Offshore Oil & Gas', blurb:'Roughneck, roustabout, floorhand, derrickhand on rigs & platforms.', pay:'$70k–$165k', rota:'2 on / 3 off', noexp:true },
+  { id:'wind',   icon:'🌬️', name:'Offshore Wind',       blurb:'GWO-certified turbine techs building & maintaining wind farms.',      pay:'$65k–$140k', rota:'2 on / 2 off', noexp:true },
+  { id:'diving', icon:'🤿', name:'Commercial Diving',    blurb:'Air & saturation divers, tenders — underwater welding & inspection.', pay:'$65k–$250k', rota:'project',     noexp:false },
+  { id:'marine', icon:'⚓', name:'Merchant Marine',      blurb:'Deckhand, OS/AB, wiper — cargo ships, tugs, supply vessels.',        pay:'$58k–$130k', rota:'28 on / 28 off', noexp:true },
+  { id:'mining', icon:'⛏️', name:'FIFO Mining',          blurb:'Fly-in fly-out remote mine operators, trades & haul-truck drivers.', pay:'$88k–$180k', rota:'2 on / 1 off', noexp:true },
+  { id:'weld',   icon:'🔥', name:'Pipeline / Welding',   blurb:'Structural & pipeline welders, riggers, fabricators.',               pay:'$68k–$160k', rota:'project',     noexp:false },
+  { id:'wtt',    icon:'⚡', name:'Wind Turbine Tech',    blurb:'Onshore turbine service techs — climb, service, fault-find.',        pay:'$58k–$105k',  rota:'rota',       noexp:true },
+  { id:'cdl',    icon:'🚛', name:'Hazmat / CDL Haul',    blurb:'Long-haul, tanker & hazmat drivers — oilfield & heavy freight.',     pay:'$72k–$135k', rota:'weeks out',  noexp:true }
 ];
 window.HH_SECTORS = SECTORS;
 function sector(id){ for(var i=0;i<SECTORS.length;i++) if(SECTORS[i].id===id) return SECTORS[i]; return null; }
@@ -94,16 +94,70 @@ window.HH_TICKETS = TICKETS;
 /* PAY & ROTATION data                                                 */
 /* ------------------------------------------------------------------ */
 var PAY = {
-  oil:   { entry:'$55k', exp:'$130k', day:'$180–$500/day', rota:'2 wk on / 3 wk off', tax:false, note:'Day-rate roles; overtime common offshore.' },
-  wind:  { entry:'$50k', exp:'$110k', day:'$220–$420/day', rota:'2 on / 2 off',       tax:false, note:'GWO tickets open EU + US offshore wind.' },
-  diving:{ entry:'$45k', exp:'$180k', day:'$300–$1,200/day', rota:'project-based',     tax:false, note:'Saturation diving is the top of the pay scale.' },
-  marine:{ entry:'$45k', exp:'$90k',  day:'$150–$350/day',  rota:'28 on / 28 off',    tax:true,  note:'US mariners may qualify for foreign-earned income exclusion.' },
-  mining:{ entry:'$70k', exp:'$140k', day:'$250–$550/day',  rota:'2 on / 1 off (FIFO)', tax:false, note:'Camp, flights & meals usually covered.' },
-  weld:  { entry:'$50k', exp:'$120k', day:'$25–$60/hr',     rota:'project / shutdown', tax:false, note:'Certified 6G pipe welders earn the most.' },
-  wtt:   { entry:'$48k', exp:'$85k',  day:'$25–$45/hr',     rota:'rota + travel',      tax:false, note:'Traveling techs get per-diem on top.' },
-  cdl:   { entry:'$60k', exp:'$110k', day:'$0.55–$0.80/mi', rota:'weeks out',          tax:false, note:'Oilfield & hazmat pays a premium over dry van.' }
+  oil:   { entry:'$70k', exp:'$165k', day:'$250–$650/day', rota:'2 wk on / 3 wk off', tax:false, note:'Day-rate roles; overtime common offshore.' },
+  wind:  { entry:'$65k', exp:'$140k', day:'$300–$550/day', rota:'2 on / 2 off',       tax:false, note:'GWO tickets open EU + US offshore wind.' },
+  diving:{ entry:'$65k', exp:'$250k', day:'$450–$1,600/day', rota:'project-based',    tax:false, note:'Saturation diving is the top of the pay scale.' },
+  marine:{ entry:'$58k', exp:'$130k', day:'$220–$480/day',  rota:'28 on / 28 off',   tax:true,  note:'US mariners may qualify for foreign-earned income exclusion.' },
+  mining:{ entry:'$88k', exp:'$180k', day:'$320–$700/day',  rota:'2 on / 1 off (FIFO)', tax:false, note:'Camp, flights & meals usually covered on top.' },
+  weld:  { entry:'$68k', exp:'$160k', day:'$32–$78/hr',     rota:'project / shutdown', tax:false, note:'Certified 6G pipe welders earn the most.' },
+  wtt:   { entry:'$58k', exp:'$105k', day:'$30–$55/hr',     rota:'rota + travel',      tax:false, note:'Traveling techs get per-diem on top.' },
+  cdl:   { entry:'$72k', exp:'$135k', day:'$0.65–$0.95/mi', rota:'weeks out',          tax:false, note:'Oilfield & hazmat pays a premium over dry van.' }
 };
 window.HH_PAY = PAY;
+
+/* ------------------------------------------------------------------ */
+/* DEMAND — illustrative industry estimates (labeled "est." in UI)     */
+/* ------------------------------------------------------------------ */
+var DEMAND = {
+  oil:    { open:4200, growth:'+12%' },
+  wind:   { open:3800, growth:'+31%' },
+  diving: { open:900,  growth:'+9%'  },
+  marine: { open:5100, growth:'+7%'  },
+  mining: { open:6400, growth:'+15%' },
+  weld:   { open:7300, growth:'+11%' },
+  wtt:    { open:2600, growth:'+28%' },
+  cdl:    { open:9100, growth:'+6%'  }
+};
+window.HH_DEMAND = DEMAND;
+window.HH_DEMAND_TOTAL = 39400; // est. open roles across sectors
+
+/* ------------------------------------------------------------------ */
+/* LOCATIONS — worldwide hubs (est. open roles)                        */
+/* ------------------------------------------------------------------ */
+var LOCATIONS = [
+  { id:'northsea', name:'North Sea', flag:'🇬🇧🇳🇴', hub:'Aberdeen · Stavanger', sectors:['oil','wind','diving'], open:5200 },
+  { id:'gom',      name:'Gulf of Mexico', flag:'🇺🇸', hub:'Houston · New Orleans', sectors:['oil','diving','marine'], open:6100 },
+  { id:'me',       name:'Middle East', flag:'🇦🇪🇶🇦', hub:'Dubai · Doha · Dammam', sectors:['oil','weld','diving'], open:4800 },
+  { id:'wafrica',  name:'West Africa', flag:'🇳🇬🇦🇴', hub:'Lagos · Luanda', sectors:['oil','diving','marine'], open:2400 },
+  { id:'ausfifo',  name:'Australia (FIFO)', flag:'🇦🇺', hub:'Perth · Pilbara · QLD', sectors:['mining','weld','cdl'], open:7200 },
+  { id:'brazil',   name:'Brazil — Santos Basin', flag:'🇧🇷', hub:'Rio · Macaé', sectors:['oil','diving'], open:1900 },
+  { id:'seasia',   name:'Southeast Asia', flag:'🇸🇬🇲🇾', hub:'Singapore · Batam', sectors:['marine','oil','weld'], open:3300 },
+  { id:'guyana',   name:'Guyana', flag:'🇬🇾', hub:'Georgetown', sectors:['oil','marine'], open:1200 },
+  { id:'useast',   name:'US East Coast Wind', flag:'🇺🇸', hub:'NJ · MA · VA', sectors:['wind','wtt','marine'], open:2800 },
+  { id:'caspian',  name:'Caspian', flag:'🇰🇿🇦🇿', hub:'Baku · Atyrau', sectors:['oil','weld'], open:1100 }
+];
+window.HH_LOCATIONS = LOCATIONS;
+function location(id){ for(var i=0;i<LOCATIONS.length;i++) if(LOCATIONS[i].id===id) return LOCATIONS[i]; return null; }
+
+/* ------------------------------------------------------------------ */
+/* COMPANIES — real operators/employers (logos via CDN + text fallback)*/
+/* Independent platform — NOT affiliated; logos are their trademarks.  */
+/* ------------------------------------------------------------------ */
+var COMPANIES = [
+  { name:'Shell', domain:'shell.com' }, { name:'BP', domain:'bp.com' },
+  { name:'Equinor', domain:'equinor.com' }, { name:'TotalEnergies', domain:'totalenergies.com' },
+  { name:'Chevron', domain:'chevron.com' }, { name:'ExxonMobil', domain:'exxonmobil.com' },
+  { name:'Ørsted', domain:'orsted.com' }, { name:'Vestas', domain:'vestas.com' },
+  { name:'Siemens Gamesa', domain:'siemensgamesa.com' }, { name:'Maersk', domain:'maersk.com' },
+  { name:'Halliburton', domain:'halliburton.com' }, { name:'SLB', domain:'slb.com' },
+  { name:'Baker Hughes', domain:'bakerhughes.com' }, { name:'Transocean', domain:'deepwater.com' },
+  { name:'Saipem', domain:'saipem.com' }, { name:'Subsea7', domain:'subsea7.com' },
+  { name:'TechnipFMC', domain:'technipfmc.com' }, { name:'Aker Solutions', domain:'akersolutions.com' },
+  { name:'Fugro', domain:'fugro.com' }, { name:'Petrofac', domain:'petrofac.com' },
+  { name:'BHP', domain:'bhp.com' }, { name:'Rio Tinto', domain:'riotinto.com' },
+  { name:'Fortescue', domain:'fortescue.com' }, { name:'Wood', domain:'woodplc.com' }
+];
+window.HH_COMPANIES = COMPANIES;
 
 /* ------------------------------------------------------------------ */
 /* CREWING AGENCIES / OPERATORS directory                              */
@@ -131,24 +185,85 @@ window.HH_AGENCIES = AGENCIES;
 /* SEED JOBS (curated; live fetch can augment)                         */
 /* ------------------------------------------------------------------ */
 var JOBS = [
-  { id:'j1', title:'Roustabout (No Experience)', co:'Gulf Drilling Co', sector:'oil', icon:'🛢️', loc:'Gulf of Mexico', rota:'14/14', pay:'$62,000', payn:62000, noexp:true, tickets:['bosiet','ogukmed'] },
-  { id:'j2', title:'Floorhand / Roughneck', co:'North Sea Energy', sector:'oil', icon:'🛢️', loc:'North Sea, UK', rota:'2 on / 3 off', pay:'$78,000', payn:78000, noexp:true, tickets:['bosiet','mist'] },
-  { id:'j3', title:'GWO Wind Turbine Technician', co:'Ørsted Contractor', sector:'wind', icon:'🌬️', loc:'East Coast, US', rota:'2 on / 2 off', pay:'$71,000', payn:71000, noexp:true, tickets:['gwobst','huet'] },
-  { id:'j4', title:'Trainee Wind Tech', co:'Vestas Service', sector:'wtt', icon:'⚡', loc:'Texas, US', rota:'rota + travel', pay:'$52,000', payn:52000, noexp:true, tickets:['gwoheights'] },
-  { id:'j5', title:'Deckhand / OS', co:'Crowley Marine', sector:'marine', icon:'⚓', loc:'US Gulf & Coastwise', rota:'28/28', pay:'$58,000', payn:58000, noexp:true, tickets:['stcw','twicm'] },
-  { id:'j6', title:'Diver Tender / Trainee', co:'Subsea Services', sector:'diving', icon:'🤿', loc:'Louisiana, US', rota:'project', pay:'$54,000', payn:54000, noexp:false, tickets:['dmt','divemed'] },
-  { id:'j7', title:'FIFO Haul Truck Operator', co:'Pilbara Mining', sector:'mining', icon:'⛏️', loc:'WA, Australia', rota:'2 on / 1 off', pay:'$95,000', payn:95000, noexp:true, tickets:['induction','medm'] },
-  { id:'j8', title:'Process Operator (FIFO)', co:'Remote Resources', sector:'mining', icon:'⛏️', loc:'Queensland, AU', rota:'8/6', pay:'$88,000', payn:88000, noexp:true, tickets:['induction','medm'] },
-  { id:'j9', title:'Pipeline Welder (6G)', co:'Continental Pipeline', sector:'weld', icon:'🔥', loc:'Permian Basin, US', rota:'project', pay:'$105,000', payn:105000, noexp:false, tickets:['weldcert','osha'] },
-  { id:'j10', title:'Structural Welder / Fitter', co:'Fab Yard Industries', sector:'weld', icon:'🔥', loc:'Houston, US', rota:'shutdown', pay:'$72,000', payn:72000, noexp:false, tickets:['weldcert','osha'] },
-  { id:'j11', title:'Hazmat Tanker Driver', co:'Oilfield Logistics', sector:'cdl', icon:'🚛', loc:'North Dakota, US', rota:'weeks out', pay:'$84,000', payn:84000, noexp:true, tickets:['cdla','hazmat'] },
-  { id:'j12', title:'Saturation Diver', co:'Deepwater Subsea', sector:'diving', icon:'🤿', loc:'West Africa (offshore)', rota:'28-day sat', pay:'$165,000', payn:165000, noexp:false, tickets:['dmt','divemed'] },
-  { id:'j13', title:'Roustabout — Platform', co:'Shelf Operators', sector:'oil', icon:'🛢️', loc:'Gulf of Mexico', rota:'7/7', pay:'$66,000', payn:66000, noexp:true, tickets:['bosiet','ogukmed','mist'] },
-  { id:'j14', title:'Able Seaman (AB)', co:'Harvey Gulf', sector:'marine', icon:'⚓', loc:'US Gulf', rota:'28/14', pay:'$76,000', payn:76000, noexp:false, tickets:['stcw','mmc','twicm'] },
-  { id:'j15', title:'Offshore Wind — Cable Puller', co:'Prysmian Contractor', sector:'wind', icon:'🌬️', loc:'Northeast US', rota:'project', pay:'$68,000', payn:68000, noexp:true, tickets:['gwobst'] },
-  { id:'j16', title:'CDL Driver — Frac Sand', co:'Basin Haul', sector:'cdl', icon:'🚛', loc:'Texas, US', rota:'home weekly', pay:'$74,000', payn:74000, noexp:true, tickets:['cdla'] }
+  { id:'j1', title:'Roustabout (No Experience)', co:'Shell', logo:'shell.com', sector:'oil', icon:'🛢️', loc:'Gulf of Mexico', locId:'gom', rota:'14/14', pay:'$74,000', payn:74000, noexp:true, tickets:['bosiet','ogukmed'] },
+  { id:'j2', title:'Floorhand / Roughneck', co:'BP', logo:'bp.com', sector:'oil', icon:'🛢️', loc:'North Sea, UK', locId:'northsea', rota:'2 on / 3 off', pay:'$92,000', payn:92000, noexp:true, tickets:['bosiet','mist'] },
+  { id:'j3', title:'GWO Wind Turbine Technician', co:'Ørsted', logo:'orsted.com', sector:'wind', icon:'🌬️', loc:'East Coast, US', locId:'useast', rota:'2 on / 2 off', pay:'$86,000', payn:86000, noexp:true, tickets:['gwobst','huet'] },
+  { id:'j4', title:'Trainee Wind Tech', co:'Vestas', logo:'vestas.com', sector:'wtt', icon:'⚡', loc:'Texas, US', locId:'gom', rota:'rota + travel', pay:'$61,000', payn:61000, noexp:true, tickets:['gwoheights'] },
+  { id:'j5', title:'Deckhand / OS', co:'Maersk', logo:'maersk.com', sector:'marine', icon:'⚓', loc:'US Gulf & Coastwise', locId:'gom', rota:'28/28', pay:'$68,000', payn:68000, noexp:true, tickets:['stcw','twicm'] },
+  { id:'j6', title:'Diver Tender / Trainee', co:'Subsea7', logo:'subsea7.com', sector:'diving', icon:'🤿', loc:'Louisiana, US', locId:'gom', rota:'project', pay:'$66,000', payn:66000, noexp:false, tickets:['dmt','divemed'] },
+  { id:'j7', title:'FIFO Haul Truck Operator', co:'BHP', logo:'bhp.com', sector:'mining', icon:'⛏️', loc:'Pilbara, WA, Australia', locId:'ausfifo', rota:'2 on / 1 off', pay:'$118,000', payn:118000, noexp:true, tickets:['induction','medm'] },
+  { id:'j8', title:'Process Operator (FIFO)', co:'Rio Tinto', logo:'riotinto.com', sector:'mining', icon:'⛏️', loc:'Queensland, AU', locId:'ausfifo', rota:'8/6', pay:'$104,000', payn:104000, noexp:true, tickets:['induction','medm'] },
+  { id:'j9', title:'Pipeline Welder (6G)', co:'Saipem', logo:'saipem.com', sector:'weld', icon:'🔥', loc:'Permian Basin, US', locId:'gom', rota:'project', pay:'$128,000', payn:128000, noexp:false, tickets:['weldcert','osha'] },
+  { id:'j10', title:'Structural Welder / Fitter', co:'TechnipFMC', logo:'technipfmc.com', sector:'weld', icon:'🔥', loc:'Houston, US', locId:'gom', rota:'shutdown', pay:'$84,000', payn:84000, noexp:false, tickets:['weldcert','osha'] },
+  { id:'j11', title:'Hazmat Tanker Driver', co:'Halliburton', logo:'halliburton.com', sector:'cdl', icon:'🚛', loc:'North Dakota, US', locId:'gom', rota:'weeks out', pay:'$96,000', payn:96000, noexp:true, tickets:['cdla','hazmat'] },
+  { id:'j12', title:'Saturation Diver', co:'Subsea7', logo:'subsea7.com', sector:'diving', icon:'🤿', loc:'West Africa (offshore)', locId:'wafrica', rota:'28-day sat', pay:'$210,000', payn:210000, noexp:false, tickets:['dmt','divemed'] },
+  { id:'j13', title:'Roustabout — Platform', co:'Equinor', logo:'equinor.com', sector:'oil', icon:'🛢️', loc:'Norwegian Cont. Shelf', locId:'northsea', rota:'2 on / 4 off', pay:'$98,000', payn:98000, noexp:true, tickets:['bosiet','ogukmed','mist'] },
+  { id:'j14', title:'Able Seaman (AB)', co:'Maersk', logo:'maersk.com', sector:'marine', icon:'⚓', loc:'Singapore', locId:'seasia', rota:'28/14', pay:'$88,000', payn:88000, noexp:false, tickets:['stcw','mmc','twicm'] },
+  { id:'j15', title:'Offshore Wind — Cable Puller', co:'Siemens Gamesa', logo:'siemensgamesa.com', sector:'wind', icon:'🌬️', loc:'Northeast US', locId:'useast', rota:'project', pay:'$79,000', payn:79000, noexp:true, tickets:['gwobst'] },
+  { id:'j16', title:'CDL Driver — Frac Sand', co:'SLB', logo:'slb.com', sector:'cdl', icon:'🚛', loc:'Texas, US', locId:'gom', rota:'home weekly', pay:'$82,000', payn:82000, noexp:true, tickets:['cdla'] },
+  { id:'j17', title:'Roustabout — Jack-up Rig', co:'Transocean', logo:'deepwater.com', sector:'oil', icon:'🛢️', loc:'Dubai, UAE', locId:'me', rota:'28/28', pay:'$105,000', payn:105000, noexp:true, tickets:['bosiet','mist'] },
+  { id:'j18', title:'Welder — Offshore Fabrication', co:'Petrofac', logo:'petrofac.com', sector:'weld', icon:'🔥', loc:'Doha, Qatar', locId:'me', rota:'roster', pay:'$112,000', payn:112000, noexp:false, tickets:['weldcert','osha'] },
+  { id:'j19', title:'ROV Trainee / Pilot Tech', co:'Fugro', logo:'fugro.com', sector:'diving', icon:'🤿', loc:'Aberdeen, UK', locId:'northsea', rota:'project', pay:'$72,000', payn:72000, noexp:true, tickets:['bosiet'] },
+  { id:'j20', title:'Deck Crew — FPSO', co:'SBM / Guyana', logo:'exxonmobil.com', sector:'marine', icon:'⚓', loc:'Guyana (offshore)', locId:'guyana', rota:'28/28', pay:'$94,000', payn:94000, noexp:true, tickets:['stcw'] },
+  { id:'j21', title:'FIFO Trades Assistant', co:'Fortescue', logo:'fortescue.com', sector:'mining', icon:'⛏️', loc:'Pilbara, AU', locId:'ausfifo', rota:'2/1', pay:'$99,000', payn:99000, noexp:true, tickets:['induction','medm'] },
+  { id:'j22', title:'Offshore Wind Technician', co:'Ørsted', logo:'orsted.com', sector:'wind', icon:'🌬️', loc:'North Sea, DE/UK', locId:'northsea', rota:'2 on / 2 off', pay:'$102,000', payn:102000, noexp:false, tickets:['gwobst','huet','offmed'] },
+  { id:'j23', title:'Drilling Roughneck', co:'Chevron', logo:'chevron.com', sector:'oil', icon:'🛢️', loc:'Santos Basin, Brazil', locId:'brazil', rota:'14/21', pay:'$96,000', payn:96000, noexp:true, tickets:['bosiet','ogukmed'] },
+  { id:'j24', title:'Maintenance Welder — Shutdown', co:'Wood', logo:'woodplc.com', sector:'weld', icon:'🔥', loc:'Rotterdam, NL', locId:'northsea', rota:'shutdown', pay:'$90,000', payn:90000, noexp:false, tickets:['weldcert','osha'] }
 ];
 window.HH_JOBS = JOBS;
+
+/* ------------------------------------------------------------------ */
+/* BLOG — SEO / guidance articles                                      */
+/* ------------------------------------------------------------------ */
+var BLOG = [
+  { slug:'highest-paying-no-degree-jobs-2026', tag:'Guide', date:'2026-06-28', read:'7 min',
+    title:'The 8 Highest-Paying Jobs You Can Get With No Degree in 2026',
+    excerpt:'Offshore rigs, wind, diving and FIFO mining routinely pay $80k–$200k+ with zero degree required. Here’s the honest breakdown of pay, tickets and how to get in.',
+    body:['Forget the myth that big money needs a four-year degree. Across offshore energy, maritime and heavy industry, employers hire on <b>safety tickets, medicals and attitude</b> — not diplomas.',
+      'Here’s what the eight no-degree sectors pay and what it takes to start:',
+      'LIST:Offshore Oil &amp; Gas — $70k–$165k. Ticket: BOSIET + offshore medical.|Commercial Diving — $65k–$250k. Ticket: commercial dive school + diver medical.|FIFO Mining — $88k–$180k. Ticket: site induction + pre-employment medical.|Pipeline / Structural Welding — $68k–$160k. Ticket: 6G/AWS weld cert + OSHA.|Offshore Wind — $65k–$140k. Ticket: GWO Basic Safety Training.|Merchant Marine — $58k–$130k. Ticket: STCW + credential.|Hazmat / CDL Haul — $72k–$135k. Ticket: CDL-A + hazmat/tanker.|Wind Turbine Tech — $58k–$105k. Ticket: GWO working-at-heights.',
+      'The barrier isn’t talent — it’s knowing the exact ticket for the path you want, and who actually hires. That’s the entire reason we built HardHat’s Rig-Ready assessment and roadmap tracker.',
+      'CTA'] },
+  { slug:'offshore-oil-rig-job-no-experience', tag:'How-to', date:'2026-06-20', read:'8 min',
+    title:'How to Get an Offshore Oil Rig Job With No Experience',
+    excerpt:'A step-by-step route to a roustabout or roughneck role — the tickets, the medical, and how to actually reach the hiring crewing agencies.',
+    body:['Entry-level offshore roles — roustabout and floorhand — are designed for people with no oil-and-gas background. What they require is proof you can be trusted on a dangerous worksite.',
+      'The path in four steps:',
+      'LIST:Get your BOSIET (offshore survival + helicopter escape) — 3 days.|Pass an offshore medical (OGUK/OEUK or equivalent).|Build an offshore-format CV: tickets, medicals and reliability first.|Apply through crewing agencies and operators — not general job boards.',
+      'Most people fail at step 4: they apply on LinkedIn and hear nothing, because these jobs are filled by specialist crewing agencies. Our directory lists exactly who to contact per region.',
+      'CTA'] },
+  { slug:'bosiet-huet-oguk-explained', tag:'Tickets', date:'2026-06-12', read:'6 min',
+    title:'BOSIET, HUET & OGUK Medical: The Offshore Tickets Explained',
+    excerpt:'What each offshore ticket actually is, what it costs, how long it takes, and which one you need first.',
+    body:['Offshore certifications sound like alphabet soup. Here’s what actually matters before your first rig job.',
+      'LIST:BOSIET — Basic Offshore Safety Induction &amp; Emergency Training. Includes HUET (helicopter underwater escape). ~$900–$1,400, 3 days. Mandatory.|OGUK/OEUK Medical — offshore fitness exam, valid 2 years. ~$150–$250.|MIST — Minimum Industry Safety Training induction. ~$120–$200.|TWIC — US transport worker ID for Gulf platforms. ~$125.',
+      'Get BOSIET and your medical first — they’re what recruiters filter on. The HardHat roadmap tracks every ticket per sector with live costs.',
+      'CTA'] },
+  { slug:'offshore-wind-gwo-break-in', tag:'Guide', date:'2026-06-05', read:'7 min',
+    title:'Offshore Wind Is Booming: How to Break In With GWO',
+    excerpt:'Offshore wind is the fastest-growing no-degree sector (+31% demand). Here’s how GWO tickets get you a turbine job.',
+    body:['Offshore wind is scaling fast across the North Sea, US East Coast and Asia — and it’s hungry for technicians.',
+      'The entry ticket is <b>GWO Basic Safety Training</b>: working at heights, first aid, fire awareness, manual handling and sea survival. Add an offshore medical and you’re eligible for trainee turbine roles.',
+      'LIST:GWO Basic Safety Training — ~$1,200–$1,800, 4–5 days.|Offshore/climb medical.|Optional GWO Basic Technical to stand out.',
+      'Trade or military background helps but isn’t required. Take the assessment to see wind roles you already qualify for.',
+      'CTA'] },
+  { slug:'fifo-mining-pay-how-to-get-hired', tag:'How-to', date:'2026-05-27', read:'6 min',
+    title:'FIFO Mining Jobs: What They Pay and How to Get Hired',
+    excerpt:'Fly-in fly-out mining in Australia pays $88k–$180k with camp, flights and meals covered. Here’s the entry route.',
+    body:['FIFO (fly-in fly-out) mining is one of the highest-paying no-degree paths on earth — and camp, flights and meals are usually covered on top of pay.',
+      'LIST:Get a site safety induction (Standard 11 / general induction).|Pass a pre-employment medical + drug &amp; alcohol screen.|Apply through labour-hire agencies (WorkPac, Hays and similar).',
+      'Haul-truck operator, process operator and trades-assistant roles regularly take people with zero mining experience. The key is the medical and a clean D&amp;A test.',
+      'CTA'] },
+  { slug:'become-commercial-diver', tag:'Career', date:'2026-05-18', read:'9 min',
+    title:'How to Become a Commercial Diver (and Earn $180k+)',
+    excerpt:'Commercial and saturation diving sit at the very top of the no-degree pay scale. Here’s the real path and the costs.',
+    body:['Commercial diving — underwater welding, inspection and saturation work — can pay $180k–$250k+ at the top end. It’s also the most demanding entry on this list.',
+      'LIST:Attend an accredited commercial dive school (ADCI/HSE/IMCA) — $12k–$30k, 3–7 months.|Pass a commercial diving medical (annual).|Start as a tender, progress to air diver, then saturation.',
+      'It’s a real investment of time and money, but few no-degree careers pay like saturation diving. Track the exact path in your HardHat roadmap.',
+      'CTA'] }
+];
+window.HH_BLOG = BLOG;
+function blogPost(slug){ for(var i=0;i<BLOG.length;i++) if(BLOG[i].slug===slug) return BLOG[i]; return null; }
 
 /* ------------------------------------------------------------------ */
 /* AUTH + STATE (localStorage) — keys prefixed hh_                     */
@@ -204,6 +319,29 @@ function rigReadyScore(intake){
   return { score:s, gaps:gaps, blurb:blurb };
 }
 window.HH.rigReadyScore = rigReadyScore;
+window.HH.location = location;
+window.HH.blogPost = blogPost;
+
+/* ------------------------------------------------------------------ */
+/* RECOMMENDATIONS — personalized next steps                           */
+/* ------------------------------------------------------------------ */
+function recommendations(intake){
+  if(!intake) return null;
+  var sec = sector(intake.sector) || SECTORS[0];
+  var held = intake.tickets || [];
+  // next tickets = required, not yet held
+  var nextTickets = (TICKETS[intake.sector]||[]).filter(function(t){ return t.req && held.indexOf(t.id)<0; }).slice(0,2);
+  // top jobs = same sector, ranked by ticket overlap then pay
+  var jobs = JOBS.filter(function(j){ return j.sector===intake.sector; }).map(function(j){
+    var need=j.tickets||[]; var have=need.filter(function(t){return held.indexOf(t)>=0;}).length;
+    j._score = (need.length?have/need.length:0.5)*100 + (j.noexp&&intake.experience==='none'?10:0);
+    return j;
+  }).sort(function(a,b){ return (b._score-a._score)||(b.payn-a.payn); }).slice(0,3);
+  // best locations for this sector
+  var locs = LOCATIONS.filter(function(l){ return l.sectors.indexOf(intake.sector)>=0; }).sort(function(a,b){return b.open-a.open;}).slice(0,3);
+  return { sector:sec, nextTickets:nextTickets, jobs:jobs, locations:locs };
+}
+window.HH.recommendations = recommendations;
 
 /* ------------------------------------------------------------------ */
 /* PAYWALL                                                             */
@@ -252,18 +390,27 @@ function navHTML(active){
     : '<a class="btn btn-out btn-sm" href="login.html">Log in</a><a class="btn btn-hi btn-sm" href="start.html">Start free</a>';
   return '<nav><div class="wrap nav">'+
     '<a class="brand" href="index.html"><span class="mk">⛏</span>HardHat</a>'+
-    '<div class="navlinks">'+a('jobs.html','Jobs')+a('roadmap.html','Roadmap')+a('pay.html','Pay')+a('directory.html','Agencies')+a('pricing.html','Pricing')+'</div>'+
+    '<div class="navlinks">'+a('jobs.html','Jobs')+a('locations.html','Locations')+a('roadmap.html','Roadmap')+a('pay.html','Pay')+a('directory.html','Agencies')+a('blog.html','Blog')+a('pricing.html','Pricing')+'</div>'+
     '<div class="navr">'+right+'</div>'+
     '</div></nav>';
 }
+/* company logo with graceful text-wordmark fallback (works offline) */
+function logo(domain, name, cls){
+  var safe = (name||'').replace(/"/g,'');
+  var wm = '<span class="wm">'+safe+'</span>';
+  if(!domain) return wm;
+  return '<img class="'+(cls||'lg')+'" src="https://logo.clearbit.com/'+domain+'" alt="'+safe+'" loading="lazy" '+
+         'onerror="this.outerHTML=&quot;<span class=\\&quot;wm\\&quot;>'+safe+'</span>&quot;">';
+}
+window.HH.logo = logo;
 function footHTML(){
   return '<footer><div class="wrap foot">'+
-    '<div style="max-width:260px"><div class="brand" style="margin-bottom:10px"><span class="mk">⛏</span>HardHat</div>'+
-    '<p>The no-degree path to high-paying offshore & trades work. Find the job, get the tickets, get hired.</p></div>'+
-    '<div class="fcol"><h5>Explore</h5><a href="jobs.html">Job board</a><a href="roadmap.html">Ticket roadmap</a><a href="pay.html">Pay explorer</a><a href="directory.html">Agencies</a></div>'+
-    '<div class="fcol"><h5>Product</h5><a href="start.html">Rig-Ready assessment</a><a href="cv.html">Offshore CV builder</a><a href="pricing.html">Pricing</a><a href="dashboard.html">Dashboard</a></div>'+
+    '<div style="max-width:280px"><div class="brand" style="margin-bottom:10px"><span class="mk">⛏</span>HardHat</div>'+
+    '<p>Find the job. Get qualified. Get hired. The no-degree path to high-paying offshore &amp; trades work — worldwide.</p></div>'+
+    '<div class="fcol"><h5>Explore</h5><a href="jobs.html">Job board</a><a href="locations.html">Locations</a><a href="roadmap.html">Ticket roadmap</a><a href="pay.html">Pay explorer</a><a href="directory.html">Agencies</a></div>'+
+    '<div class="fcol"><h5>Product</h5><a href="start.html">Rig-Ready assessment</a><a href="cv.html">Offshore CV builder</a><a href="blog.html">Blog</a><a href="pricing.html">Pricing</a><a href="dashboard.html">Dashboard</a></div>'+
     '<div class="fcol"><h5>Company</h5><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="mailto:hello@hardhatjobs.co">Contact</a></div>'+
-    '</div><div class="wrap" style="margin-top:28px;font-size:12px;color:var(--faint)">© '+2026+' HardHat. Not affiliated with named operators or agencies — links are informational. Work offshore and in the trades carries real risk; always follow certified safety training.</div></footer>';
+    '</div><div class="wrap" style="margin-top:28px;font-size:12px;color:var(--faint);line-height:1.7">© 2026 HardHat. <b style="color:var(--muted)">Independent platform — not affiliated with, endorsed by, or partnered with any company named on this site.</b> Company names and logos are the trademarks of their respective owners, shown only to indicate sectors and employers that hire for these roles. Job listings, pay ranges and demand figures are illustrative industry estimates, not live vacancies or guarantees. Work offshore and in the trades carries real physical risk — always complete accredited safety training.</div></footer>';
 }
 window.HH.mountChrome = function(active){
   var n=document.getElementById('nav'); if(n) n.innerHTML=navHTML(active);
@@ -283,7 +430,7 @@ function initReveal(){
   els.forEach(function(e){ io.observe(e); });
 }
 /* social-proof ticker */
-var TICK=['Deckhand hired in Louisiana – $58k','Roughneck got BOSIET-ready in 9 days','FIFO operator signed – $95k, WA','Wind tech landed first offshore rota','Welder passed 6G – $105k pipeline job'];
+var TICK=['Deckhand hired in Singapore – $68k','Roughneck got BOSIET-ready in 9 days','FIFO operator signed – $118k, Pilbara','Wind tech landed North Sea rota – $102k','Welder passed 6G – $128k pipeline job','Sat diver signed West Africa – $210k'];
 window.HH.mountTicker=function(){
   var i=0; var el=document.createElement('div'); el.className='ticker';
   el.innerHTML='<span class="dot"></span><span id="tkt"></span>';

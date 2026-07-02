@@ -48,7 +48,8 @@ function render(){
   document.getElementById('dirList').innerHTML=shown.map(function(a){
     var s=HH.sector(a.sector);
     var link=paid&&a.url&&a.url!=='#'?('<a class="btn btn-ink btn-sm" href="'+a.url+'" target="_blank" rel="noopener">Visit →</a>'):'<span class="badge">Pro</span>';
-    return '<div class="jrow" style="cursor:default"><div class="jlogo">'+(s?s.icon:'🏢')+'</div>'+
+    var lg=a.url&&a.url!=='#'?HH.logo(a.url.replace(/^https?:\/\/(www\.)?/,'').replace(/\/.*$/,''),a.name):(s?s.icon:'🏢');
+    return '<div class="jrow" style="cursor:default"><div class="jlogo">'+lg+'</div>'+
       '<div class="jmain"><h3>'+a.name+'</h3><div class="jco">'+a.type+'</div>'+
       '<div class="jchips"><span class="jchip">'+(s?s.name:'')+'</span><span class="jchip">'+a.region+'</span></div></div>'+
       '<div style="flex:none">'+link+'</div></div>';

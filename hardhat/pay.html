@@ -23,10 +23,11 @@
       <select id="expSel"><option value="entry">Entry level (no experience)</option><option value="exp">Experienced</option></select>
     </div>
 
-    <div class="grid3" style="margin-top:8px">
+    <div class="dstats" style="margin-top:8px">
       <div class="dstat"><b id="payBig">—</b><span>typical annual pay</span></div>
-      <div class="dstat"><b id="payRate" style="font-size:22px">—</b><span>day / hourly rate</span></div>
-      <div class="dstat"><b id="payRota" style="font-size:20px">—</b><span>rotation</span></div>
+      <div class="dstat"><b id="payRate" style="font-size:20px">—</b><span>day / hourly rate</span></div>
+      <div class="dstat"><b id="payRota" style="font-size:18px">—</b><span>rotation</span></div>
+      <div class="dstat"><b id="payDem" style="font-size:22px">—</b><span>open roles (est.)</span></div>
     </div>
     <div class="notice" id="payNote" style="margin-top:16px"></div>
     <div class="notice" id="taxNote" style="margin-top:10px;display:none">🧾 Tax note: some sea time may qualify for foreign-earned income exclusion / seafarer relief — check with a tax pro.</div>
@@ -34,7 +35,7 @@
     <h3 class="display" style="font-size:20px;margin:36px 0 14px">All sectors compared</h3>
     <div class="tblwrap">
       <table class="tbl" id="allTbl">
-        <thead><tr><th>Sector</th><th>Entry</th><th>Experienced</th><th>Rate</th><th>Rotation</th><th>Tickets to start</th></tr></thead>
+        <thead><tr><th>Sector</th><th>Entry</th><th>Experienced</th><th>Rate</th><th>Open (est.)</th><th>Top hubs</th></tr></thead>
         <tbody></tbody>
       </table>
     </div>
@@ -50,19 +51,22 @@ HH.mountChrome('pay.html');
 var sec=document.getElementById('secSel'), exp=document.getElementById('expSel');
 sec.innerHTML=HH_SECTORS.map(function(s){return '<option value="'+s.id+'">'+s.icon+' '+s.name+'</option>';}).join('');
 var intake=HH.Auth.intake(); if(intake&&intake.sector) sec.value=intake.sector;
+function topHubs(sid){
+  return HH_LOCATIONS.filter(function(l){return l.sectors.indexOf(sid)>=0;}).sort(function(a,b){return b.open-a.open;}).slice(0,2).map(function(l){return l.name;}).join(', ');
+}
 function render(){
   var p=HH_PAY[sec.value];
   document.getElementById('payBig').textContent=exp.value==='entry'?p.entry:p.exp;
   document.getElementById('payRate').textContent=p.day;
   document.getElementById('payRota').textContent=p.rota;
-  document.getElementById('payNote').textContent='💬 '+p.note;
+  document.getElementById('payDem').textContent=(HH_DEMAND[sec.value].open).toLocaleString();
+  document.getElementById('payNote').textContent='💬 '+p.note+'  ·  Demand '+HH_DEMAND[sec.value].growth+' · top hubs: '+topHubs(sec.value);
   document.getElementById('taxNote').style.display=p.tax?'block':'none';
 }
 sec.onchange=render; exp.onchange=render; render();
 document.querySelector('#allTbl tbody').innerHTML=HH_SECTORS.map(function(s){
   var p=HH_PAY[s.id];
-  var req=(HH_TICKETS[s.id]||[]).filter(function(t){return t.req;}).map(function(t){return t.name.split(' /')[0].split(' (')[0];}).slice(0,3).join(', ');
-  return '<tr><td><b>'+s.icon+' '+s.name+'</b></td><td class="num">'+p.entry+'</td><td class="num">'+p.exp+'</td><td>'+p.day+'</td><td>'+p.rota+'</td><td style="color:var(--muted);font-size:12.5px">'+req+'</td></tr>';
+  return '<tr><td><b>'+s.icon+' '+s.name+'</b></td><td class="num">'+p.entry+'</td><td class="num">'+p.exp+'</td><td>'+p.day+'</td><td class="num">'+HH_DEMAND[s.id].open.toLocaleString()+'</td><td style="color:var(--muted);font-size:12.5px">'+topHubs(s.id)+'</td></tr>';
 }).join('');
 </script>
 </body>

@@ -232,3 +232,104 @@ footer{border-top:1px solid var(--line);padding:48px 0 40px;color:var(--muted);f
 .reveal{opacity:0;transform:translateY(14px);transition:.6s}
 .reveal.in{opacity:1;transform:none}
 .notice{background:var(--panel);border:1px solid var(--line2);border-left:3px solid var(--hi);border-radius:8px;padding:13px 15px;font-size:13.5px;color:var(--ink2)}
+
+/* ============ v2 — SaaS / technical components ============ */
+
+/* hero grid + world motif */
+.hero{background-image:linear-gradient(rgba(255,255,255,.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.02) 1px,transparent 1px);background-size:44px 44px}
+.pills3{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:26px}
+.pill3{display:inline-flex;align-items:center;gap:8px;background:var(--panel);border:1px solid var(--line2);border-radius:999px;padding:9px 16px;font-size:13.5px;color:var(--ink2);font-weight:600}
+.pill3 b{color:var(--hi)}
+.pill3 .n{width:20px;height:20px;border-radius:50%;background:var(--hi);color:#0c0e11;display:grid;place-items:center;font-family:"Archivo";font-weight:800;font-size:12px}
+
+/* logo wall */
+.logowall{padding:30px 0 8px}
+.logowall .cap{text-align:center;font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--faint)}
+.logorow{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:22px 40px;margin-top:22px;min-height:34px}
+.logorow img{height:26px;width:auto;max-width:120px;object-fit:contain;filter:grayscale(1) brightness(0) invert(.8);opacity:.62;transition:.2s}
+.logorow img:hover{filter:grayscale(0);opacity:1}
+.logorow .wm{font-family:"Archivo",sans-serif;font-weight:800;font-size:17px;color:var(--ink2);opacity:.7;letter-spacing:-.01em}
+.jlogo img{width:100%;height:100%;object-fit:contain;border-radius:6px;background:#fff;padding:5px}
+.jlogo .wm{font-family:"Archivo";font-weight:800;font-size:11px;color:var(--ink2);text-align:center;line-height:1.05;padding:2px}
+
+/* demand */
+.demandrow{display:flex;align-items:center;gap:14px;padding:12px 0;border-bottom:1px solid var(--line)}
+.demandrow .dl{width:190px;flex:none;font-weight:600;font-size:14px;display:flex;align-items:center;gap:8px}
+.demandrow .track{flex:1;height:10px;background:var(--bg3);border-radius:99px;overflow:hidden}
+.demandrow .track i{display:block;height:100%;background:linear-gradient(90deg,var(--warn),var(--hi));border-radius:99px}
+.demandrow .dn{width:150px;flex:none;text-align:right;font-family:"JetBrains Mono",monospace;font-size:13px;color:var(--ink2)}
+.demandrow .dn b{color:var(--hi)} .demandrow .dn .up{color:var(--good)}
+@media(max-width:640px){.demandrow .dl{width:130px;font-size:12.5px}.demandrow .dn{width:auto}}
+.bigstat{text-align:center;margin-bottom:8px}
+.bigstat b{font-family:"Archivo";font-weight:900;font-size:clamp(44px,8vw,72px);color:var(--hi);line-height:1;display:block}
+.bigstat span{font-family:"JetBrains Mono",monospace;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+
+/* feature rows with mockups */
+.feature{display:grid;grid-template-columns:1fr 1fr;gap:34px;align-items:center;padding:34px 0;border-top:1px solid var(--line)}
+.feature.rev .ftext{order:2}
+@media(max-width:820px){.feature{grid-template-columns:1fr;gap:20px}.feature.rev .ftext{order:0}}
+.feature .tagl{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--hi)}
+.feature h3{font-family:"Archivo";font-weight:800;text-transform:uppercase;font-size:clamp(22px,3vw,30px);letter-spacing:-.02em;margin:10px 0 10px}
+.feature p{color:var(--muted);font-size:15px}
+.feature ul{list-style:none;margin:16px 0 0;display:flex;flex-direction:column;gap:8px}
+.feature li{font-size:14px;color:var(--ink2);display:flex;gap:9px}
+.feature li::before{content:"→";color:var(--hi);font-weight:700}
+.mock{background:var(--panel);border:1px solid var(--line2);border-radius:14px;padding:18px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+.mock::before{content:"";position:absolute;top:0;left:0;right:0;height:34px;background:var(--bg3);border-bottom:1px solid var(--line)}
+.mock .dots{position:relative;display:flex;gap:6px;margin-bottom:18px}
+.mock .dots i{width:9px;height:9px;border-radius:50%;background:var(--line2)}
+.mock .mrow{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--line);font-size:13px}
+.mock .mrow .mono{color:var(--hi)}
+.mbar{height:8px;border-radius:99px;background:var(--bg3);overflow:hidden;margin:6px 0 14px}
+.mbar i{display:block;height:100%;background:var(--hi)}
+
+/* locations */
+.locgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:34px}
+@media(max-width:820px){.locgrid{grid-template-columns:1fr 1fr}}
+@media(max-width:520px){.locgrid{grid-template-columns:1fr}}
+.loccard{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px;transition:.16s;display:block}
+.loccard:hover{border-color:var(--hi);transform:translateY(-3px)}
+.loccard .lf{font-size:22px}
+.loccard h3{font-family:"Archivo";font-weight:700;text-transform:uppercase;font-size:16px;margin:8px 0 3px;letter-spacing:-.01em}
+.loccard .hub{color:var(--muted);font-size:12.5px}
+.loccard .lo{margin-top:12px;font-family:"JetBrains Mono",monospace;font-size:12.5px;color:var(--good)}
+.loccard .lch{display:flex;gap:5px;margin-top:10px;flex-wrap:wrap}
+
+/* recommendations */
+.rec{background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--hi);box-shadow:0 0 0 1px var(--hi-soft);border-radius:14px;padding:22px}
+.rec .rh{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.rec .rh .rk{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--hi)}
+.recgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media(max-width:760px){.recgrid{grid-template-columns:1fr}}
+.reccard{background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:14px}
+.reccard h5{font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin-bottom:8px}
+
+/* blog */
+.bloggrid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:34px}
+@media(max-width:820px){.bloggrid{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.bloggrid{grid-template-columns:1fr}}
+.blogcard{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:22px;transition:.16s;display:flex;flex-direction:column}
+.blogcard:hover{border-color:var(--hi);transform:translateY(-3px)}
+.blogcard .bt{display:flex;gap:8px;align-items:center;font-family:"JetBrains Mono",monospace;font-size:11px;color:var(--faint);margin-bottom:10px}
+.blogcard .bt .tg{color:var(--hi);border:1px solid #3a3400;background:var(--hi-soft);padding:2px 7px;border-radius:5px}
+.blogcard h3{font-family:"Archivo";font-weight:700;text-transform:uppercase;font-size:17px;line-height:1.15;letter-spacing:-.01em}
+.blogcard p{color:var(--muted);font-size:13.5px;margin:10px 0 14px;flex:1}
+.blogcard .rd{font-size:13px;color:var(--hi);font-weight:600}
+.article{max-width:720px;margin:0 auto}
+.article h1{font-family:"Archivo";font-weight:900;text-transform:uppercase;font-size:clamp(28px,4.5vw,44px);line-height:1.05;letter-spacing:-.02em;margin:14px 0}
+.article p{color:var(--ink2);font-size:16.5px;line-height:1.8;margin:16px 0}
+.article ul{margin:16px 0 16px 4px;display:flex;flex-direction:column;gap:10px}
+.article li{list-style:none;color:var(--ink2);font-size:15.5px;display:flex;gap:10px;line-height:1.6}
+.article li::before{content:"▸";color:var(--hi);flex:none}
+
+/* FAQ */
+.faq{max-width:760px;margin:30px auto 0}
+.faqi{border-bottom:1px solid var(--line)}
+.faqi summary{cursor:pointer;padding:18px 0;font-family:"Archivo";font-weight:600;font-size:16px;list-style:none;display:flex;justify-content:space-between;gap:12px}
+.faqi summary::-webkit-details-marker{display:none}
+.faqi summary::after{content:"+";color:var(--hi);font-size:20px}
+.faqi[open] summary::after{content:"–"}
+.faqi p{color:var(--muted);font-size:14.5px;padding:0 0 18px}
+
+/* apply=pro lock */
+.prolock{font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--hi);background:var(--hi-soft);border:1px solid #3a3400;padding:3px 8px;border-radius:5px;white-space:nowrap}
