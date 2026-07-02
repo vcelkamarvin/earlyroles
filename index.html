@@ -4,10 +4,10 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>EarlyRoles — Jobs you won't find on LinkedIn or Indeed</title>
-<meta name="description" content="EarlyRoles surfaces US remote jobs before the big boards — and AI reviews your LinkedIn, tailors your CV, and drafts your application." />
+<meta name="description" content="EarlyRoles surfaces live US remote jobs before they hit LinkedIn or Indeed — AI matches you to roles, tailors your CV, and drafts your application so you apply first." />
 <link rel="icon" href="favicon.svg" type="image/svg+xml" />
 <meta property="og:title" content="EarlyRoles — Jobs you won't find on LinkedIn or Indeed" />
-<meta property="og:description" content="US remote roles before the big boards. AI reviews your LinkedIn, tailors your CV, and drafts your application." />
+<meta property="og:description" content="US remote roles before the big boards. AI matches you, tailors your CV, and drafts your application." />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://earlyroles.com/" />
 <meta property="og:image" content="https://earlyroles.com/og-image.svg" />
@@ -20,7 +20,15 @@
 {"@context":"https://schema.org","@type":"WebSite","name":"EarlyRoles","url":"https://earlyroles.com/","potentialAction":{"@type":"SearchAction","target":"https://earlyroles.com/jobs.html?q={search_term_string}","query-input":"required name=search_term_string"}}
 </script>
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"Organization","name":"EarlyRoles","url":"https://earlyroles.com/","logo":"https://earlyroles.com/og-image.svg","email":"hello@earlyroles.com","contactPoint":{"@type":"ContactPoint","email":"hello@earlyroles.com","contactType":"customer support"},"description":"US remote jobs before they hit LinkedIn or Indeed — AI matches your profile, reviews your LinkedIn, and drafts your application."}
+{"@context":"https://schema.org","@type":"Organization","name":"EarlyRoles","url":"https://earlyroles.com/","logo":"https://earlyroles.com/og-image.svg","email":"hello@earlyroles.com","contactPoint":{"@type":"ContactPoint","email":"hello@earlyroles.com","contactType":"customer support"},"description":"US remote jobs before they hit LinkedIn or Indeed — AI matches your profile, tailors your CV, and drafts your application."}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"How is EarlyRoles different from LinkedIn or Indeed?","acceptedAnswer":{"@type":"Answer","text":"Most tools re-list jobs after they've gone public, so you're applicant #243. EarlyRoles reads roles straight from the hiring systems companies post with (Greenhouse, Ashby and more), so you see and apply while the posting is still fresh — then AI does the tailoring and applying."}},
+{"@type":"Question","name":"Are these really US remote jobs?","acceptedAnswer":{"@type":"Answer","text":"Yes. EarlyRoles focuses on US remote roles, sourced directly from company hiring systems — current, real, and linking straight to each company's own application page."}},
+{"@type":"Question","name":"How does AI Apply Assist work?","acceptedAnswer":{"@type":"Answer","text":"AI Apply Assist finds your best-matching live US roles, rewrites your CV for each posting, and drafts a ready-to-send application — you review and apply in one click. Fully hands-off auto-submit is rolling out to members."}},
+{"@type":"Question","name":"Can I cancel anytime?","acceptedAnswer":{"@type":"Answer","text":"Anytime, in two clicks. No lock-in and no hidden fees. Billing is handled securely by Stripe."}}
+]}
 </script>
 <link rel="stylesheet" href="styles.css" />
 <style>
@@ -48,7 +56,6 @@
     <a href="index.html" class="brand"><span class="mk">E</span> EarlyRoles</a>
     <div class="navlinks">
       <a href="jobs.html">Browse jobs</a>
-      <a href="roast.html">🔥 Roast</a>
       <a href="match.html">Match me</a>
       <a href="#auto">Auto-Apply</a>
       <a href="#pricing">Pricing</a>
@@ -77,11 +84,11 @@
       <button class="btn btn-accent hf-btn" type="submit">Find my roles →</button>
     </form>
     <div class="finder-chips"><span>Trending:</span><a href="jobs.html?q=engineer">Engineering</a><a href="jobs.html?q=product%20manager">Product</a><a href="jobs.html?q=sales">Sales</a><a href="jobs.html?q=designer">Design</a><a href="jobs.html?q=marketing">Marketing</a></div>
-    <p class="micro" style="margin-top:16px">Or <a href="match.html" style="color:var(--accent);font-weight:600">paste your LinkedIn / CV to get matched</a> · <a href="roast.html" style="color:var(--accent);font-weight:600">roast my LinkedIn 🔥</a></p>
+    <p class="micro" style="margin-top:16px">Or <a href="match.html" style="color:var(--accent);font-weight:600">paste your LinkedIn / CV to get matched instantly</a></p>
     <div class="strip">
-      <span>🇺🇸 <b>US</b> remote roles</span><span class="sep">·</span>
+      <span>🇺🇸 <b>US</b> · 🇨🇭 <b>Switzerland</b> · 🇮🇸 <b>Iceland</b></span><span class="sep">·</span>
       <span>From <b>live</b> hiring feeds</span><span class="sep">·</span>
-      <span><b>New</b> roles daily</span><span class="sep">·</span>
+      <span>🛂 <b>Visa-friendly</b> roles</span><span class="sep">·</span>
       <span><b>Free</b> to start</span>
     </div>
   </div>
@@ -110,7 +117,8 @@
 
 <!-- BROWSE BY (internal links / SEO) -->
 <style>
-.browsegrid{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin-top:22px}
+.browsegrid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:22px}
+@media(max-width:900px){.browsegrid{grid-template-columns:1fr 1fr}}
 .browsecol{border:1px solid #eceef1;border-radius:16px;padding:20px 22px;background:#fff}
 .browseh{font-weight:700;font-size:13px;letter-spacing:.04em;text-transform:uppercase;color:var(--faint);margin-bottom:12px}
 .browsecol a{display:block;padding:7px 0;color:var(--ink);text-decoration:none;font-weight:500;border-bottom:1px solid #f4f5f7}
@@ -127,6 +135,9 @@
         <div class="browseh">By role</div>
         <a href="remote-software-engineer-jobs.html">Remote software engineer jobs</a>
         <a href="remote-product-manager-jobs.html">Remote product manager jobs</a>
+        <a href="remote-data-analyst-jobs.html">Remote data &amp; analytics jobs</a>
+        <a href="remote-designer-jobs.html">Remote designer jobs</a>
+        <a href="remote-marketing-jobs.html">Remote marketing jobs</a>
         <a href="remote-sales-jobs.html">Remote sales jobs</a>
       </div>
       <div class="browsecol">
@@ -135,6 +146,15 @@
         <a href="jobs-at-coinbase.html">Remote jobs at Coinbase</a>
         <a href="jobs-at-databricks.html">Remote jobs at Databricks</a>
         <a href="jobs-at-ramp.html">Remote jobs at Ramp</a>
+        <a href="jobs-at-notion.html">Remote jobs at Notion</a>
+        <a href="jobs-at-figma.html">Remote jobs at Figma</a>
+      </div>
+      <div class="browsecol">
+        <div class="browseh">By location</div>
+        <a href="jobs-in-switzerland.html">🇨🇭 Jobs in Switzerland for foreigners</a>
+        <a href="remote-jobs-switzerland.html">🇨🇭 Remote jobs in Switzerland</a>
+        <a href="jobs-in-iceland-for-foreigners.html">🇮🇸 Jobs in Iceland for foreigners</a>
+        <a href="jobs.html?loc=usa">🇺🇸 US remote jobs</a>
       </div>
     </div>
   </div>
@@ -330,7 +350,7 @@
       <div class="jbtns"><button class="jsave ${sv?'saved':''}" data-id="${j.id}">${sv?'✓ Saved':'Save'}</button><button class="japply" type="button" data-url="${j.url||''}" data-title="${(j.title||'').replace(/"/g,'&quot;')}">View &amp; apply →</button></div></div></div>`;
   }
   function paint(list){ LIST=list; el.innerHTML=list.slice(0,6).map(row).join(''); }
-  paint(JOBS.slice(0,6).map(j=>({id:j.id,title:j.title,co:j.co,loc:j.loc,dept:j.dept,tags:j.tags,sal:j.sal,ago:j.ago,url:'jobs.html',initials:(j.co||'').slice(0,2).toUpperCase(),logo:(j.domain?logoURL(j.domain):'')})));
+  paint(JOBS.slice(0,6).map(j=>({id:j.id,title:j.title,co:j.co,loc:j.loc,dept:j.dept,tags:j.tags,sal:j.sal,ago:j.ago,url:j.url||'jobs.html',initials:(j.co||'').slice(0,2).toUpperCase(),logo:(j.domain?logoURL(j.domain):'')})));
   if(window.fetchRealJobs){ fetchRealJobs('',null,8).then(l=>{ if(l&&l.length) paint(l); }).catch(function(){}); }
   el.addEventListener('click',e=>{
     const ap=e.target.closest('.japply');

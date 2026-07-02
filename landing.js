@@ -9,13 +9,21 @@
   var countEl = document.getElementById('lcount');
   if(!board || !window.fetchRealJobs){ if(board) board.innerHTML='<div class="empty"><a href="jobs.html" style="color:var(--accent);font-weight:600">Browse the full board →</a></div>'; return; }
 
-  var ROLE_RX = L.q ? new RegExp(L.q, 'i') : null;
-  var LOC_RX = { usa:/usa|united states|u\.s|u\.s\.a/i, americas:/americas|north america|usa|united states|canada/i, worldwide:/worldwide|anywhere|global/i };
+  var LOC_RX = { usa:/usa|united states|u\.s|u\.s\.a/i, americas:/americas|north america|usa|united states|canada/i, worldwide:/worldwide|anywhere|global/i,
+    switzerland:/switzerland|schweiz|suisse|svizzera|z[üu]rich|geneva|gen[eè]ve|basel|bern|lausanne|zug|lugano/i,
+    iceland:/iceland|[íi]sland|reykjav[ií]k|k[óo]pavogur|akureyri/i };
+  var REGION_KEY={ switzerland:'ch', iceland:'is', usa:'us' };
+  function inRegion(j, key){ var rk=REGION_KEY[key]; if(rk && Array.isArray(j.regions)&&j.regions.length) return j.regions.indexOf(rk)>=0; return (LOC_RX[key]||/.*/).test(j.loc||''); }
+  function roleRx(){ try{ return L.q ? new RegExp(L.q, 'i') : null; }catch(e){ return null; } }
   function matches(j){
     if(L.type==='company') return String(j.token||'').toLowerCase()===String(L.token||'').toLowerCase() || (j.co||'').toLowerCase()===String(L.name||'').toLowerCase();
-    var hay=((j.title||'')+' '+(j.dept||'')+' '+(j.tags||[]).join(' ')).toLowerCase();
-    var ok = ROLE_RX ? ROLE_RX.test(hay) : true;
-    if(L.loc && LOC_RX[L.loc]) ok = ok && LOC_RX[L.loc].test(j.loc||'');
+    var hay=((j.title||'')+' '+(j.dept||'')+' '+(j.co||'')+' '+(j.tags||[]).join(' ')).toLowerCase();
+    var rx=roleRx();
+    var ok = rx ? rx.test(hay) : true;
+    if(L.region) ok = ok && inRegion(j, L.region);
+    else if(L.loc && LOC_RX[L.loc]) ok = ok && LOC_RX[L.loc].test(j.loc||'');
+    if(L.visa) ok = ok && (j.visa || (j.tags||[]).indexOf('Visa-friendly')>=0);
+    if(L.remoteOnly) ok = ok && (j.remote || /remote/i.test(j.loc||''));
     return ok;
   }
   function rowHTML(j){
@@ -64,8 +72,15 @@
     if(b){ var job=current.find(function(x){return String(x.id)===String(b.dataset.id);}); if(job&&Auth.rememberJob) Auth.rememberJob(job); var s=Auth.toggleSave(b.dataset.id); var on=s.includes(Number(b.dataset.id)); b.classList.toggle('saved',on); b.textContent=on?'✓ Saved':'Save'; return; }
     var rw = e.target.closest('.jrow'); if(rw && !e.target.closest('button')) location.href='jobs.html';
   });
+  /* sample fallback so region/company pages are never empty if the live feed is slow/quiet */
+  function sampleRows(){ if(typeof JOBS==='undefined') return []; return JOBS.map(function(j){ return {id:j.id,title:j.title,co:j.co,logo:j.domain?logoURL(j.domain):'',initials:(j.co||'').slice(0,2).toUpperCase(),loc:j.loc,dept:j.dept,type:j.lvl,tags:j.tags,sal:j.sal,ago:j.ago,url:j.url||'signup.html',visa:!!j.visa,remote:/remote/i.test(j.loc||'')}; }); }
+  var SAMPLE=sampleRows(), LIVE=[];
+  function source(){ return LIVE.length?LIVE:SAMPLE; }
+  /* let host pages re-apply filters (search / visa / remote toggles) live */
+  window.__landingRefilter=function(){ render(source().filter(matches)); };
+  render(SAMPLE.filter(matches));
   var rt = 0;
-  fetchRealJobs('', function(partial){ var now=Date.now(); if(now-rt>300){ rt=now; render(partial.filter(matches)); } })
-    .then(function(list){ var rows=(list||[]).filter(matches); render(rows); injectLD(rows); })
-    .catch(function(){ board.innerHTML='<div class="empty"><a href="jobs.html" style="color:var(--accent);font-weight:600">Browse the full board →</a></div>'; });
+  fetchRealJobs('', function(partial){ if(partial&&partial.length){ LIVE=partial; var now=Date.now(); if(now-rt>300){ rt=now; window.__landingRefilter(); } } })
+    .then(function(list){ if(list&&list.length) LIVE=list; var rows=source().filter(matches); render(rows); injectLD(rows); })
+    .catch(function(){ var rows=source().filter(matches); if(rows.length){ render(rows); } else { board.innerHTML='<div class="empty"><a href="jobs.html" style="color:var(--accent);font-weight:600">Browse the full board →</a></div>'; } });
 })();

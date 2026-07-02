@@ -69,10 +69,11 @@
         </div>
 
         <div class="dcard">
-          <h3>Auto-Apply</h3>
-          <div class="h-sub">Let the AI apply to matching roles for you.</div>
-          <div class="toggle"><span class="switch" id="aaSwitch"></span><span id="aaLabel">Off</span></div>
+          <h3 id="aaTitle">Auto-Apply</h3>
+          <div class="h-sub" id="aaSub">Let the AI apply to matching roles for you.</div>
+          <div class="toggle" id="aaToggleRow"><span class="switch" id="aaSwitch"></span><span id="aaLabel">Off</span></div>
           <p style="font-size:13px;color:var(--faint);margin-top:12px" id="aaNote"></p>
+          <div id="aaBody" style="margin-top:12px"></div>
         </div>
 
         <div class="dcard">
@@ -171,10 +172,65 @@
   });
   renderAlerts();
 
-  /* ----- Auto-Apply toggle ----- */
+  /* ----- Auto-Apply / Filter-and-Forward (tier aware) ----- */
   const sw=document.getElementById('aaSwitch'), lbl=document.getElementById('aaLabel'), note=document.getElementById('aaNote');
-  function paintAA(){const on=Auth.autoApply();sw.classList.toggle('on',on);lbl.textContent=on?'On':'Off';note.textContent=on?'On — the AI will apply to new US matches with a tailored resume + application.':'Turn on to auto-apply to new US matches with a tailored resume + application.';}
-  sw.addEventListener('click',()=>{Auth.setAutoApply(!Auth.autoApply());paintAA();});
+  const aaTitle=document.getElementById('aaTitle'), aaSub=document.getElementById('aaSub'), aaToggleRow=document.getElementById('aaToggleRow'), aaBody=document.getElementById('aaBody');
+  const esc=s=>String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const when=t=>{ const m=Math.floor((Date.now()-t)/60000); return m<1?'just now':m<60?m+'m ago':Math.floor(m/60)+'h ago'; };
+
+  function renderAutoLog(){
+    const log=Auth.autoLog(), q=Auth.autoQueue();
+    let html='';
+    if(q.length){
+      html+='<div style="font-weight:700;font-size:12.5px;margin:4px 0 8px">Applications queued for you ('+q.length+')</div>';
+      html+='<div class="arow"><a class="btn btn-accent btn-sm btn-block" id="aaOpenNext" href="#">Open next application →</a></div>';
+    }
+    if(log.length){
+      html+='<div style="font-weight:700;font-size:12.5px;margin:14px 0 6px">Recent auto-applies</div>';
+      html+=log.slice(0,6).map(e=>`<div class="arow"><span class="at">✅ ${esc(e.title)} · ${esc(e.co||'')}</span><span style="color:var(--faint);font-size:12px">${when(e.when)}</span></div>`).join('');
+    }
+    if(!q.length && !log.length) html+='<div class="empty" style="padding:14px">No auto-applies yet. Keep the toggle on — we sweep for new matches as roles go live.</div>';
+    aaBody.innerHTML=html;
+    const on=document.getElementById('aaOpenNext');
+    if(on) on.addEventListener('click',function(e){ e.preventDefault(); const item=Auth.autoQueue()[0]; if(!item){ renderAutoLog(); return; } if(item.url) window.open(item.url,'_blank','noopener'); Auth.removeAutoQueue(item.id); renderAutoLog(); });
+  }
+  function renderForwarded(){
+    const l=Auth.forwarded();
+    aaBody.innerHTML = l.length
+      ? ('<div style="font-weight:700;font-size:12.5px;margin:4px 0 8px">Matches forwarded to you ('+l.length+')</div>'
+         + l.slice(0,8).map(j=>`<div class="arow"><span class="at">📨 ${esc(j.title)} · ${esc(j.co||'')}</span>${(j.url&&j.url!=='signup.html')?`<a class="tview" href="${esc(j.url)}" target="_blank" rel="noopener" title="Open posting">↗</a>`:''}<button class="trm" data-fid="${j.id}" title="Dismiss">×</button></div>`).join(''))
+      : '<div class="empty" style="padding:14px">No matches forwarded yet. Save a search on <a href="jobs.html" style="color:var(--accent);font-weight:600">Browse jobs</a> and we\'ll forward new fits here.</div>';
+    aaBody.querySelectorAll('[data-fid]').forEach(b=>b.addEventListener('click',()=>{ Auth.removeForwarded(b.dataset.fid); renderForwarded(); }));
+  }
+
+  function paintAA(){
+    const auto = (typeof isAutoApply==='function' && isAutoApply());
+    const paid = (typeof isPaid==='function' && isPaid());
+    if(auto){
+      aaTitle.textContent='Auto-Apply with AI';
+      aaSub.textContent='On the Auto-Apply plan — the AI applies to your new matches and queues the postings for you to send.';
+      aaToggleRow.style.display='';
+      const on=Auth.autoApply();
+      sw.classList.toggle('on',on); lbl.textContent=on?'On':'Off';
+      note.textContent = on ? 'On — sweeping for fresh matches and applying on your behalf.' : 'Turn on to let the AI apply to new matches automatically.';
+      try{ if(on && typeof runAutoApplySweep==='function'){ const r=runAutoApplySweep(null,{max:6}); if(r.applied){ showToast('🤖 AI applied to '+r.applied+' new match'+(r.applied>1?'es':'')); renderTracker(); } } }catch(e){}
+      renderAutoLog();
+    } else if(paid){
+      aaTitle.textContent='Matches forwarded to you';
+      aaSub.textContent='On your plan we filter fresh roles to your profile and forward the best fits here. Upgrade to Auto-Apply to have AI apply for you.';
+      aaToggleRow.style.display='none';
+      note.innerHTML='Want it hands-off? <a href="index.html#pricing" style="color:var(--accent);font-weight:600">Upgrade to Auto-Apply →</a>';
+      try{ if(typeof runAutoApplySweep==='function') runAutoApplySweep(null,{max:8}); }catch(e){}
+      renderForwarded();
+    } else {
+      aaTitle.textContent='Auto-Apply with AI';
+      aaSub.textContent='Let AI match, tailor and apply to new US, Swiss & Icelandic roles for you — hands-off.';
+      aaToggleRow.style.display='none';
+      note.innerHTML='';
+      aaBody.innerHTML='<a href="index.html#pricing" class="btn btn-accent btn-block">Unlock Auto-Apply →</a>';
+    }
+  }
+  sw.addEventListener('click',()=>{ Auth.setAutoApply(!Auth.autoApply()); paintAA(); });
   paintAA();
 
   /* ----- Profile summary ----- */
