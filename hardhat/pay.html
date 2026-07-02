@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pay &amp; Rotation Explorer — HardHat</title>
+<meta name="description" content="What offshore and trades jobs really pay — entry vs experienced, day rates, rotations and tax notes across 8 no-degree sectors.">
+<link rel="icon" href="favicon.svg">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="hazbar"></div>
+<div id="nav"></div>
+
+<section>
+  <div class="wrap">
+    <div class="eyebrow">Pay &amp; rotation explorer</div>
+    <h2 class="sec" style="max-width:24ch">See what you could really earn</h2>
+    <p class="lead">Ranges are typical advertised pay, not guarantees. Many offshore/FIFO roles also cover camp, flights and meals — and some marine income is tax-advantaged.</p>
+
+    <div class="filters" style="justify-content:center;margin-top:24px">
+      <select id="secSel"></select>
+      <select id="expSel"><option value="entry">Entry level (no experience)</option><option value="exp">Experienced</option></select>
+    </div>
+
+    <div class="grid3" style="margin-top:8px">
+      <div class="dstat"><b id="payBig">—</b><span>typical annual pay</span></div>
+      <div class="dstat"><b id="payRate" style="font-size:22px">—</b><span>day / hourly rate</span></div>
+      <div class="dstat"><b id="payRota" style="font-size:20px">—</b><span>rotation</span></div>
+    </div>
+    <div class="notice" id="payNote" style="margin-top:16px"></div>
+    <div class="notice" id="taxNote" style="margin-top:10px;display:none">🧾 Tax note: some sea time may qualify for foreign-earned income exclusion / seafarer relief — check with a tax pro.</div>
+
+    <h3 class="display" style="font-size:20px;margin:36px 0 14px">All sectors compared</h3>
+    <div class="tblwrap">
+      <table class="tbl" id="allTbl">
+        <thead><tr><th>Sector</th><th>Entry</th><th>Experienced</th><th>Rate</th><th>Rotation</th><th>Tickets to start</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <div class="center" style="margin-top:30px"><a class="btn btn-hi btn-lg" href="start.html">Which pays best for me? →</a></div>
+  </div>
+</section>
+
+<div id="foot"></div>
+<script src="app.js"></script>
+<script>
+HH.mountChrome('pay.html');
+var sec=document.getElementById('secSel'), exp=document.getElementById('expSel');
+sec.innerHTML=HH_SECTORS.map(function(s){return '<option value="'+s.id+'">'+s.icon+' '+s.name+'</option>';}).join('');
+var intake=HH.Auth.intake(); if(intake&&intake.sector) sec.value=intake.sector;
+function render(){
+  var p=HH_PAY[sec.value];
+  document.getElementById('payBig').textContent=exp.value==='entry'?p.entry:p.exp;
+  document.getElementById('payRate').textContent=p.day;
+  document.getElementById('payRota').textContent=p.rota;
+  document.getElementById('payNote').textContent='💬 '+p.note;
+  document.getElementById('taxNote').style.display=p.tax?'block':'none';
+}
+sec.onchange=render; exp.onchange=render; render();
+document.querySelector('#allTbl tbody').innerHTML=HH_SECTORS.map(function(s){
+  var p=HH_PAY[s.id];
+  var req=(HH_TICKETS[s.id]||[]).filter(function(t){return t.req;}).map(function(t){return t.name.split(' /')[0].split(' (')[0];}).slice(0,3).join(', ');
+  return '<tr><td><b>'+s.icon+' '+s.name+'</b></td><td class="num">'+p.entry+'</td><td class="num">'+p.exp+'</td><td>'+p.day+'</td><td>'+p.rota+'</td><td style="color:var(--muted);font-size:12.5px">'+req+'</td></tr>';
+}).join('');
+</script>
+</body>
+</html>

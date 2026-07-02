@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Offshore &amp; Trades Job Board — HardHat</title>
+<meta name="description" content="High-paying offshore, oil rig, wind, diving, marine, mining, welding and CDL jobs — many with no experience required.">
+<link rel="icon" href="favicon.svg">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="hazbar"></div>
+<div id="nav"></div>
+
+<section>
+  <div class="wrap">
+    <div class="eyebrow">Job board</div>
+    <h2 class="sec" style="max-width:22ch">Live high-pay roles, no degree required</h2>
+    <p class="lead">Filter by sector, pay and experience. Roles matched to your Rig-Ready profile are flagged.</p>
+
+    <div class="filters" style="margin-top:24px">
+      <input id="q" placeholder="Search role or company…">
+      <select id="secF"><option value="all">All sectors</option></select>
+      <select id="expF"><option value="all">Any experience</option><option value="noexp">No experience OK</option></select>
+      <select id="payF"><option value="0">Any pay</option><option value="60000">$60k+</option><option value="80000">$80k+</option><option value="100000">$100k+</option></select>
+      <select id="sortF"><option value="match">Best match</option><option value="pay">Highest pay</option></select>
+    </div>
+
+    <div id="matchNote" class="notice" style="margin-bottom:16px;display:none"></div>
+    <div class="joblist" id="jobList"></div>
+    <p class="center" style="margin-top:22px"><button class="btn btn-ink" id="moreBtn">Load more</button></p>
+  </div>
+</section>
+
+<!-- job modal -->
+<div class="modal" id="jobModal"><div class="mbox" id="jobBox"></div></div>
+
+<div id="foot"></div>
+<script src="app.js"></script>
+<script>
+HH.mountChrome('jobs.html');
+var intake=HH.Auth.intake();
+var secF=document.getElementById('secF');
+HH_SECTORS.forEach(function(s){ var o=document.createElement('option'); o.value=s.id; o.textContent=s.icon+' '+s.name; secF.appendChild(o); });
+if(intake&&intake.sector) secF.value=intake.sector;
+var shown=8;
+
+function matchScore(j){
+  if(!intake) return 0;
+  var s=0; if(j.sector===intake.sector) s+=50;
+  var held=(intake.tickets||[]); var need=j.tickets||[];
+  var have=need.filter(function(t){return held.indexOf(t)>=0;}).length;
+  s+=need.length?Math.round(have/need.length*35):20;
+  if(j.noexp && intake.experience==='none') s+=15;
+  return Math.min(99,s);
+}
+function filtered(){
+  var q=document.getElementById('q').value.toLowerCase();
+  var sf=secF.value, ef=document.getElementById('expF').value, pf=+document.getElementById('payF').value, sort=document.getElementById('sortF').value;
+  var arr=HH_JOBS.filter(function(j){
+    if(q && (j.title+' '+j.co).toLowerCase().indexOf(q)<0) return false;
+    if(sf!=='all' && j.sector!==sf) return false;
+    if(ef==='noexp' && !j.noexp) return false;
+    if(j.payn<pf) return false;
+    return true;
+  });
+  arr.forEach(function(j){ j._m=matchScore(j); });
+  arr.sort(function(a,b){ return sort==='pay'?b.payn-a.payn:(b._m-a._m)||(b.payn-a.payn); });
+  return arr;
+}
+function render(){
+  var arr=filtered();
+  var mn=document.getElementById('matchNote');
+  if(intake){ mn.style.display='block'; mn.innerHTML='🎯 Showing matches for your <b>'+(HH.sector(intake.sector)||{}).name+'</b> profile. <a href="start.html" style="color:var(--hi)">Update</a>'; }
+  var saved=HH.Auth.saved();
+  document.getElementById('jobList').innerHTML=arr.slice(0,shown).map(function(j){
+    var sv=saved.indexOf(j.id)>=0;
+    var chips='<span class="jchip">'+j.loc+'</span><span class="jchip">'+j.rota+'</span>'+(j.noexp?'<span class="jchip" style="color:var(--hi)">No exp OK</span>':'')+(intake&&j._m>=60?'<span class="jchip" style="color:var(--good)">'+j._m+'% match</span>':'');
+    return '<div class="jrow" onclick="openJob(\''+j.id+'\')"><div class="jlogo">'+j.icon+'</div>'+
+      '<div class="jmain"><h3>'+j.title+'</h3><div class="jco">'+j.co+'</div><div class="jchips">'+chips+'</div></div>'+
+      '<div class="jpay"><b>'+j.pay+'</b><span>'+(sv?'★ saved':'per year')+'</span></div></div>';
+  }).join('') || '<p style="color:var(--muted);text-align:center;padding:30px">No roles match — widen your filters.</p>';
+  document.getElementById('moreBtn').style.display=arr.length>shown?'inline-flex':'none';
+}
+function openJob(id){
+  var j=HH_JOBS.filter(function(x){return x.id===id;})[0]; if(!j) return;
+  var saved=HH.Auth.saved(); var sv=saved.indexOf(id)>=0;
+  var tickets=(j.tickets||[]).map(function(tid){ var all=[]; Object.keys(HH_TICKETS).forEach(function(k){all=all.concat(HH_TICKETS[k]);}); var t=all.filter(function(x){return x.id===tid;})[0]; return t?('<div class="ticket" style="margin-bottom:8px"><div class="tinfo"><b>'+t.name+'</b><small>'+t.cost+' · '+t.days+'</small></div></div>'):''; }).join('');
+  document.getElementById('jobBox').innerHTML=
+    '<span class="mclose" onclick="closeJob()">×</span>'+
+    '<div style="font-size:34px">'+j.icon+'</div>'+
+    '<h3 class="display" style="font-size:24px;margin:8px 0 2px">'+j.title+'</h3>'+
+    '<p style="color:var(--muted)">'+j.co+' · '+j.loc+'</p>'+
+    '<div class="grid3" style="margin:16px 0"><div class="dstat"><b style="font-size:22px">'+j.pay+'</b><span>per year</span></div><div class="dstat"><b style="font-size:16px">'+j.rota+'</b><span>rotation</span></div><div class="dstat"><b style="font-size:16px">'+(j.noexp?'None':'Some')+'</b><span>experience</span></div></div>'+
+    '<div class="eyebrow" style="text-align:left">Tickets you’ll need</div><div style="margin:10px 0">'+(tickets||'<p style="color:var(--muted);font-size:14px">Check your roadmap.</p>')+'</div>'+
+    '<button class="btn btn-hi btn-block btn-lg" onclick="applyJob(\''+j.id+'\')">Apply through agency →</button>'+
+    '<button class="btn btn-out btn-block" style="margin-top:10px" onclick="saveJob(\''+j.id+'\')">'+(sv?'★ Saved':'☆ Save job')+'</button>';
+  document.getElementById('jobModal').classList.add('on');
+}
+function closeJob(){ document.getElementById('jobModal').classList.remove('on'); }
+function saveJob(id){
+  var saved=HH.Auth.saved();
+  if(!HH.Auth.isPaid() && saved.indexOf(id)<0 && saved.length>=3){ HH.showPaywall('Free accounts can save 3 jobs. Go Pro for unlimited saved jobs and alerts.'); return; }
+  var added=HH.Auth.toggleSave(id); HH.Auth.setApp(id,'saved'); HH.toast(added?'Saved to your dashboard':'Removed'); openJob(id); render();
+}
+function applyJob(id){
+  if(!HH.Auth.isPaid()){ HH.showPaywall('Unlock the crewing-agency contacts and application templates for this role with HardHat Pro.'); return; }
+  HH.Auth.setApp(id,'applied'); HH.Auth.toggleSave(id); HH.toast('Marked as applied — track it on your dashboard'); closeJob();
+  location.href='directory.html';
+}
+window.openJob=openJob; window.closeJob=closeJob; window.saveJob=saveJob; window.applyJob=applyJob;
+['q','secF','expF','payF','sortF'].forEach(function(id){ document.getElementById(id).addEventListener('input',function(){shown=8;render();}); });
+document.getElementById('moreBtn').onclick=function(){ shown+=8; render(); };
+render();
+</script>
+</body>
+</html>

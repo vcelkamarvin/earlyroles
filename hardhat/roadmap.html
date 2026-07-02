@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ticket &amp; Medical Roadmap — HardHat</title>
+<meta name="description" content="The exact certifications and medicals you need to work offshore or in the trades — with costs, timeframes and progress tracking.">
+<link rel="icon" href="favicon.svg">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="hazbar"></div>
+<div id="nav"></div>
+
+<section>
+  <div class="wrap">
+    <div class="eyebrow">Ticket &amp; medical roadmap</div>
+    <h2 class="sec" style="max-width:26ch">Exactly which tickets you need — and what they cost</h2>
+    <p class="lead">No degree required. These are the safety certifications and medicals that actually get you on the rig, the ship or the site. Tick them off as you go — your progress saves automatically.</p>
+
+    <div class="filters" style="justify-content:center;margin-top:26px">
+      <select id="secSel"></select>
+    </div>
+
+    <div class="grid2" style="margin-top:8px;align-items:start">
+      <div>
+        <div id="ticketList"></div>
+        <p class="micro" id="costLine" style="text-align:left;margin-top:14px"></p>
+      </div>
+      <div class="panel" style="position:sticky;top:80px">
+        <div class="eyebrow" style="text-align:left">Your progress</div>
+        <div class="ring" id="ring" style="margin:16px auto"><i><b id="pctN">0%</b><span>done</span></i></div>
+        <p id="progNote" style="color:var(--muted);font-size:14px;text-align:center"></p>
+        <div class="notice" style="margin-top:16px">💡 Required tickets are marked <span class="badge req">required</span>. Get those first — they’re what recruiters filter on.</div>
+        <a class="btn btn-hi btn-block" style="margin-top:16px" href="jobs.html">See jobs I qualify for →</a>
+        <a class="btn btn-ink btn-block" style="margin-top:10px" href="cv.html">Build my offshore CV →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div id="foot"></div>
+<script src="app.js"></script>
+<script>
+HH.mountChrome('roadmap.html');
+var sel=document.getElementById('secSel');
+sel.innerHTML=HH_SECTORS.map(function(s){return '<option value="'+s.id+'">'+s.icon+' '+s.name+'</option>';}).join('');
+var intake=HH.Auth.intake();
+var cur=(intake&&intake.sector)||'oil';
+sel.value=cur;
+sel.onchange=function(){ cur=sel.value; render(); };
+
+function render(){
+  var list=HH_TICKETS[cur]||[];
+  var done=HH.Auth.tickets();
+  document.getElementById('ticketList').innerHTML=list.map(function(t){
+    var d=!!done[t.id];
+    var badge=t.req?'<span class="badge req">required</span>':(t.type==='medical'?'<span class="badge med">medical</span>':'<span class="badge">optional</span>');
+    return '<div class="ticket'+(d?' done':'')+'" data-id="'+t.id+'" onclick="toggle(\''+t.id+'\')">'+
+      '<div class="cbox">'+(d?'✓':'')+'</div>'+
+      '<div class="tinfo"><b>'+t.name+'</b> '+badge+'<small>'+t.desc+' · ~'+t.days+'</small></div>'+
+      '<div class="cost">'+t.cost+'</div></div>';
+  }).join('');
+  // progress
+  var total=list.length, dn=list.filter(function(t){return done[t.id];}).length;
+  var pct=total?Math.round(dn/total*100):0;
+  document.getElementById('ring').style.setProperty('--v',pct);
+  document.getElementById('pctN').textContent=pct+'%';
+  document.getElementById('progNote').textContent=dn+' of '+total+' tickets complete'+(dn===total&&total?' — you’re ready to apply!':'');
+  var reqLeft=list.filter(function(t){return t.req&&!done[t.id];}).length;
+  document.getElementById('costLine').textContent=reqLeft?('You still need '+reqLeft+' required ticket'+(reqLeft>1?'s':'')+' before most employers will look at you.'):'All required tickets done — start applying.';
+}
+function toggle(id){ HH.Auth.toggleTicket(id); render(); HH.toast('Progress saved'); }
+window.toggle=toggle;
+render();
+</script>
+</body>
+</html>

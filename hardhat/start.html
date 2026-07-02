@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Rig-Ready Assessment — HardHat</title>
+<meta name="description" content="Answer 6 quick questions and get your Rig-Ready Score plus a personalized roadmap into a high-paying offshore or trades job.">
+<link rel="icon" href="favicon.svg">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="hazbar"></div>
+<div id="nav"></div>
+
+<section>
+  <div class="wrap wiz">
+    <!-- WIZARD -->
+    <div id="wizard">
+      <div class="progress"><i id="bar"></i></div>
+      <div class="pmeta"><span id="stepLbl">Step 1 of 6</span><span id="pctLbl">0%</span></div>
+
+      <!-- 1 SECTOR -->
+      <div class="qstep on" data-step="0">
+        <h2 class="qh">Which kind of work?</h2>
+        <p class="qsub">Pick the one that pulls you most — you can change later.</p>
+        <div class="opts" id="sectorOpts"></div>
+      </div>
+
+      <!-- 2 EXPERIENCE -->
+      <div class="qstep" data-step="1">
+        <h2 class="qh">Where are you starting from?</h2>
+        <p class="qsub">Honest answer — most people start with none. That’s fine.</p>
+        <div class="opts" data-key="experience">
+          <button class="opt" data-val="none"><span class="oi">🧢</span><span class="ot">No relevant experience<small>Never done this kind of work — starting fresh</small></span><span class="chk">✓</span></button>
+          <button class="opt" data-val="trade"><span class="oi">🔧</span><span class="ot">Some trade / manual experience<small>Construction, warehouse, mechanic, labourer, military…</small></span><span class="chk">✓</span></button>
+          <button class="opt" data-val="offshore"><span class="oi">⚓</span><span class="ot">Already worked offshore / on-site<small>I’ve done rotational or field work before</small></span><span class="chk">✓</span></button>
+        </div>
+      </div>
+
+      <!-- 3 TICKETS + MEDICAL -->
+      <div class="qstep" data-step="2">
+        <h2 class="qh">Which tickets do you already hold?</h2>
+        <p class="qsub">Select any you have. None? Skip it — that’s what the roadmap is for.</p>
+        <div class="opts" id="ticketOpts" data-multi="1"></div>
+        <div class="field" style="margin-top:18px">
+          <label>Do you have a current work / offshore medical?</label>
+          <div class="opts two" data-key="medical">
+            <button class="opt" data-val="valid"><span class="ot">Yes, valid</span><span class="chk">✓</span></button>
+            <button class="opt" data-val="no"><span class="ot">No / expired</span><span class="chk">✓</span></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4 LOGISTICS -->
+      <div class="qstep" data-step="3">
+        <h2 class="qh">The logistics</h2>
+        <p class="qsub">These roles mean travel and time away — how do you feel about it?</p>
+        <div class="field">
+          <label>Right to work where you want a job?</label>
+          <div class="opts two" data-key="rightwork">
+            <button class="opt" data-val="yes"><span class="ot">Yes</span><span class="chk">✓</span></button>
+            <button class="opt" data-val="no"><span class="ot">Need visa/sponsorship</span><span class="chk">✓</span></button>
+          </div>
+        </div>
+        <div class="field">
+          <label>Willing to relocate for the right job?</label>
+          <div class="opts two" data-key="relocate">
+            <button class="opt" data-val="yes"><span class="ot">Yes, anywhere</span><span class="chk">✓</span></button>
+            <button class="opt" data-val="no"><span class="ot">Local only</span><span class="chk">✓</span></button>
+          </div>
+        </div>
+        <div class="field">
+          <label>OK working rotations offshore / away (weeks at a time)?</label>
+          <div class="opts two" data-key="travel">
+            <button class="opt" data-val="yes"><span class="ot">Yes — that’s the point</span><span class="chk">✓</span></button>
+            <button class="opt" data-val="no"><span class="ot">Prefer home nightly</span><span class="chk">✓</span></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5 PHYSICAL / AVAILABILITY -->
+      <div class="qstep" data-step="4">
+        <h2 class="qh">Readiness</h2>
+        <p class="qsub">This is physical, safety-critical work. Straight answers only.</p>
+        <div class="field">
+          <label>Physically fit for heavy, outdoor, shift work?</label>
+          <div class="opts two" data-key="fit">
+            <button class="opt" data-val="yes"><span class="ot">Yes</span><span class="chk">✓</span></button>
+            <button class="opt" data-val="working"><span class="ot">Working on it</span><span class="chk">✓</span></button>
+          </div>
+        </div>
+        <div class="field">
+          <label>Able to pass a drug &amp; alcohol test?</label>
+          <div class="opts two" data-key="drug">
+            <button class="opt" data-val="yes"><span class="ot">Yes</span><span class="chk">✓</span></button>
+            <button class="opt" data-val="no"><span class="ot">Not right now</span><span class="chk">✓</span></button>
+          </div>
+        </div>
+        <div class="field">
+          <label>When can you start?</label>
+          <select class="inp" data-key="start">
+            <option value="asap">As soon as possible</option>
+            <option value="1-3">1–3 months</option>
+            <option value="3-6">3–6 months</option>
+            <option value="explore">Just exploring</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- 6 CONTACT -->
+      <div class="qstep" data-step="5">
+        <h2 class="qh">Where do we send your plan?</h2>
+        <p class="qsub">We’ll build your Rig-Ready plan and save your progress to this account.</p>
+        <div class="field"><label>First name</label><input class="inp" id="fName" placeholder="e.g. Jordan"></div>
+        <div class="field"><label>Email</label><input class="inp" id="fEmail" type="email" placeholder="you@email.com"></div>
+        <div class="field"><label>Phone (optional — for job alerts)</label><input class="inp" id="fPhone" type="tel" placeholder="+1…"></div>
+        <p class="micro" style="text-align:left">By continuing you agree to our terms. No spam — unsubscribe anytime.</p>
+      </div>
+
+      <div class="wnav">
+        <button class="btn btn-out" id="backBtn" style="visibility:hidden" onclick="prev()">← Back</button>
+        <button class="btn btn-hi" id="nextBtn" onclick="next()" disabled>Continue →</button>
+      </div>
+    </div>
+
+    <!-- RESULT -->
+    <div id="result" class="result" style="display:none">
+      <div class="center">
+        <div class="eyebrow">Your Rig-Ready Score</div>
+        <div class="ring" id="ring" style="margin-top:18px"><i><b id="scoreN">0</b><span>rig-ready</span></i></div>
+        <h2 class="qh" style="margin-top:20px" id="resTitle"></h2>
+        <p class="qsub" id="resBlurb" style="max-width:46ch;margin-left:auto;margin-right:auto"></p>
+      </div>
+
+      <div style="margin-top:22px">
+        <div class="eyebrow" style="text-align:left">Your 3-step path in</div>
+        <div class="planlist" id="planList"></div>
+      </div>
+
+      <div class="locked" id="lockBox">
+        <div class="lk">🔒</div>
+        <h3 class="display" style="font-size:20px;margin:8px 0 6px">Unlock your full roadmap + matched jobs</h3>
+        <p style="color:var(--muted);font-size:14px;max-width:44ch;margin:0 auto 16px">See every ticket you need with costs & where to get them, the exact jobs you already qualify for, and the crewing agencies hiring right now.</p>
+        <a class="btn btn-hi btn-lg" href="pricing.html">Unlock HardHat Pro →</a>
+        <p class="micro">$29/mo · cancel anytime</p>
+      </div>
+
+      <div class="grid2" style="margin-top:18px">
+        <a class="btn btn-ink btn-block" href="roadmap.html">See my ticket roadmap →</a>
+        <a class="btn btn-ink btn-block" href="jobs.html">See matched jobs →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div id="foot"></div>
+<script src="app.js"></script>
+<script>
+HH.mountChrome('');
+var TOTAL=6, step=0;
+var data={ sector:null, tickets:[], experience:null, medical:null, rightwork:null, relocate:null, travel:null, fit:null, drug:null, start:'asap' };
+
+// preselect sector from ?sector=
+var qs=new URLSearchParams(location.search); var pre=qs.get('sector');
+
+// build sector options
+document.getElementById('sectorOpts').innerHTML=HH_SECTORS.map(function(s){
+  return '<button class="opt" data-val="'+s.id+'"><span class="oi">'+s.icon+'</span><span class="ot">'+s.name+'<small>'+s.pay+' · '+s.blurb+'</small></span><span class="chk">✓</span></button>';
+}).join('');
+
+function buildTickets(){
+  var list=HH_TICKETS[data.sector]||[];
+  document.getElementById('ticketOpts').innerHTML=list.map(function(t){
+    return '<button class="opt" data-val="'+t.id+'"><span class="oi">'+(t.type==='medical'?'🩺':t.type==='doc'?'📄':'🎓')+'</span><span class="ot">'+t.name+'<small>'+t.desc+'</small></span><span class="chk">✓</span></button>';
+  }).join('')+'<button class="opt" data-val="__none"><span class="oi">🚫</span><span class="ot">None yet<small>I don’t hold any of these</small></span><span class="chk">✓</span></button>';
+  wireSingle(document.getElementById('ticketOpts'), true);
+}
+
+// single-select groups
+function wireSingle(container, multi){
+  container.querySelectorAll('.opt').forEach(function(btn){
+    btn.onclick=function(){
+      if(multi){
+        if(btn.dataset.val==='__none'){ container.querySelectorAll('.opt').forEach(function(b){b.classList.remove('sel');}); btn.classList.add('sel'); }
+        else { container.querySelector('[data-val="__none"]') && container.querySelector('[data-val="__none"]').classList.remove('sel'); btn.classList.toggle('sel'); }
+      } else {
+        container.querySelectorAll('.opt').forEach(function(b){b.classList.remove('sel');}); btn.classList.add('sel');
+      }
+      collect(); validate();
+    };
+  });
+}
+// wire sector (single) + all data-key groups
+wireSingle(document.getElementById('sectorOpts'), false);
+document.querySelectorAll('.opts[data-key]').forEach(function(c){ wireSingle(c,false); });
+document.querySelectorAll('select[data-key],input').forEach(function(el){ el.addEventListener('input',function(){collect();validate();}); });
+
+if(pre){ var b=document.querySelector('#sectorOpts [data-val="'+pre+'"]'); if(b){ b.click(); } }
+
+function collect(){
+  var sec=document.querySelector('#sectorOpts .opt.sel'); if(sec) data.sector=sec.dataset.val;
+  document.querySelectorAll('.opts[data-key]').forEach(function(c){
+    var sel=c.querySelector('.opt.sel'); if(sel) data[c.dataset.key]=sel.dataset.val;
+  });
+  document.querySelectorAll('select[data-key]').forEach(function(s){ data[s.dataset.key]=s.value; });
+  var tk=[]; document.querySelectorAll('#ticketOpts .opt.sel').forEach(function(b){ if(b.dataset.val!=='__none') tk.push(b.dataset.val); });
+  data.tickets=tk;
+}
+function stepValid(){
+  if(step===0) return !!data.sector;
+  if(step===1) return !!data.experience;
+  if(step===2) return !!data.medical; // tickets optional
+  if(step===3) return data.rightwork&&data.relocate&&data.travel;
+  if(step===4) return data.fit&&data.drug;
+  if(step===5) return document.getElementById('fName').value.trim() && /.+@.+\..+/.test(document.getElementById('fEmail').value);
+  return true;
+}
+function validate(){ document.getElementById('nextBtn').disabled=!stepValid(); }
+function render(){
+  document.querySelectorAll('.qstep').forEach(function(q){ q.classList.toggle('on', +q.dataset.step===step); });
+  var pct=Math.round((step/TOTAL)*100);
+  document.getElementById('bar').style.width=(step===TOTAL-1?100:pct)+'%';
+  document.getElementById('stepLbl').textContent='Step '+(step+1)+' of '+TOTAL;
+  document.getElementById('pctLbl').textContent=(step===TOTAL-1?100:pct)+'%';
+  document.getElementById('backBtn').style.visibility=step===0?'hidden':'visible';
+  document.getElementById('nextBtn').textContent=step===TOTAL-1?'Get my plan →':'Continue →';
+  if(step===2 && document.getElementById('ticketOpts').children.length===0) buildTickets();
+  validate();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function next(){
+  if(!stepValid()) return;
+  if(step===0) buildTickets();
+  HH.ga('funnel_step',{step:step+1,sector:data.sector});
+  if(step<TOTAL-1){ step++; render(); } else { finish(); }
+}
+function prev(){ if(step>0){ step--; render(); } }
+window.next=next; window.prev=prev;
+
+function finish(){
+  collect();
+  var name=document.getElementById('fName').value.trim();
+  var email=document.getElementById('fEmail').value.trim();
+  var phone=document.getElementById('fPhone').value.trim();
+  data.name=name; data.email=email; data.phone=phone; data.ts=Date.now();
+  HH.Auth.signup(name,email);
+  HH.Auth.setIntake(data);
+  // seed roadmap: mark held tickets done
+  var done={}; data.tickets.forEach(function(id){ done[id]=true; }); HH.set('tickets_done',done);
+  HH.ga('generate_lead',{sector:data.sector});
+  showResult();
+}
+function showResult(){
+  document.getElementById('wizard').style.display='none';
+  document.getElementById('result').style.display='block';
+  var r=HH.rigReadyScore(data);
+  // animate ring
+  var ring=document.getElementById('ring'); var n=document.getElementById('scoreN'); var i=0;
+  var t=setInterval(function(){ i+=Math.ceil(r.score/28); if(i>=r.score)i=r.score; n.textContent=i; ring.style.setProperty('--v',i); if(i>=r.score)clearInterval(t); },26);
+  var sec=HH.sector(data.sector);
+  document.getElementById('resTitle').textContent=sec?sec.name:'Your path';
+  document.getElementById('resBlurb').textContent=r.blurb;
+  // 3-step plan
+  var need=(HH_TICKETS[data.sector]||[]).filter(function(t){return t.req;}).filter(function(t){return data.tickets.indexOf(t.id)<0;});
+  var s1=need.length?('Get your required tickets: '+need.slice(0,2).map(function(t){return t.name;}).join(' + ')+(need.length>2?' +'+(need.length-2)+' more':'')):'You already hold the mandatory tickets — big head start.';
+  var steps=[
+    {h:'Get certified', p:s1},
+    {h:'Build your offshore CV & match jobs', p:'We format your CV the way rig & vessel recruiters expect and match you to '+ (HH_JOBS.filter(function(j){return j.sector===data.sector;}).length||'several') +' live roles in '+(sec?sec.name:'your sector')+'.'},
+    {h:'Apply through the right agencies', p:'These jobs come from crewing agencies, not job boards. Get the shortlist for '+(sec?sec.name:'your sector')+' and templates that get replies.'}
+  ];
+  document.getElementById('planList').innerHTML=steps.map(function(st,ix){
+    var lock=ix>0?' lock':'';
+    return '<div class="plitem'+lock+'"><div class="n">'+(ix+1)+'</div><div><h4>'+st.h+'</h4><p>'+st.p+'</p></div></div>';
+  }).join('');
+  if(HH.Auth.isPaid()) document.getElementById('lockBox').style.display='none';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+render();
+</script>
+</body>
+</html>

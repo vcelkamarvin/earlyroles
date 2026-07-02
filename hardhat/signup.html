@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Create your HardHat account</title>
+<link rel="icon" href="favicon.svg">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="hazbar"></div>
+<div id="nav"></div>
+<section>
+  <div class="wrap" style="max-width:440px">
+    <div class="panel">
+      <h2 class="display" style="font-size:26px">Create your account</h2>
+      <p style="color:var(--muted);font-size:14px;margin:6px 0 18px" id="sub">Save your Rig-Ready plan and progress.</p>
+      <div class="field"><label>First name</label><input class="inp" id="name" placeholder="Jordan"></div>
+      <div class="field"><label>Email</label><input class="inp" id="email" type="email" placeholder="you@email.com"></div>
+      <div class="field"><label>Password</label><input class="inp" id="pw" type="password" placeholder="••••••••"></div>
+      <button class="btn btn-hi btn-block btn-lg" onclick="doSignup()">Create account →</button>
+      <p style="text-align:center;margin-top:14px;font-size:14px;color:var(--muted)">Already have one? <a href="login.html" style="color:var(--hi)">Log in</a></p>
+    </div>
+  </div>
+</section>
+<div id="foot"></div>
+<script src="app.js"></script>
+<script>
+HH.mountChrome('');
+var qs=new URLSearchParams(location.search); var plan=qs.get('plan');
+if(plan){ document.getElementById('sub').textContent='Create your account to continue to checkout.'; }
+var iu=HH.Auth.intake(); if(iu){ document.getElementById('name').value=iu.name||''; document.getElementById('email').value=iu.email||''; }
+function doSignup(){
+  var n=document.getElementById('name').value.trim(), e=document.getElementById('email').value.trim();
+  if(!n||!/.+@.+\..+/.test(e)){ HH.toast('Enter a name and valid email'); return; }
+  HH.Auth.signup(n,e);
+  if(plan){ HH.checkout(plan); } else { location.href='dashboard.html'; }
+}
+window.doSignup=doSignup;
+</script>
+</body>
+</html>

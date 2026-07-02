@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Log in — HardHat</title>
+<link rel="icon" href="favicon.svg">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="hazbar"></div>
+<div id="nav"></div>
+<section>
+  <div class="wrap" style="max-width:440px">
+    <div class="panel">
+      <h2 class="display" style="font-size:26px">Log in</h2>
+      <p style="color:var(--muted);font-size:14px;margin:6px 0 18px">Welcome back to HardHat.</p>
+      <div class="field"><label>Email</label><input class="inp" id="email" type="email" placeholder="you@email.com"></div>
+      <div class="field"><label>Password</label><input class="inp" id="pw" type="password" placeholder="••••••••"></div>
+      <button class="btn btn-hi btn-block btn-lg" onclick="doLogin()">Log in →</button>
+      <p style="text-align:center;margin-top:14px;font-size:14px;color:var(--muted)">New here? <a href="signup.html" style="color:var(--hi)">Create an account</a></p>
+    </div>
+  </div>
+</section>
+<div id="foot"></div>
+<script src="app.js"></script>
+<script>
+HH.mountChrome('');
+function doLogin(){
+  var e=document.getElementById('email').value.trim();
+  if(!/.+@.+\..+/.test(e)){ HH.toast('Enter a valid email'); return; }
+  HH.Auth.login(e); location.href='dashboard.html';
+}
+window.doLogin=doLogin;
+</script>
+</body>
+</html>

@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pricing — HardHat</title>
+<meta name="description" content="Start free. Upgrade to HardHat Pro ($29/mo) or Fast-Track ($149 one-time) to get certified and get hired offshore or in the trades.">
+<link rel="icon" href="favicon.svg">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="hazbar"></div>
+<div id="nav"></div>
+
+<section>
+  <div class="wrap">
+    <div class="eyebrow">Pricing</div>
+    <h2 class="sec">One offshore hitch pays for this a thousand times over</h2>
+    <p class="lead">Start free and explore. Upgrade when you’re ready to get the tickets, build your CV and actually get hired.</p>
+    <div id="grid"></div>
+
+    <h3 class="display center" style="font-size:22px;margin:52px 0 18px">Questions</h3>
+    <div class="grid2" style="max-width:840px;margin:0 auto">
+      <div class="panel"><b>Do I really not need a degree?</b><p style="color:var(--muted);font-size:14px;margin-top:6px">Correct. Every sector we cover hires on tickets, medicals and attitude — not degrees. The paid tools get you those tickets faster.</p></div>
+      <div class="panel"><b>Can I cancel?</b><p style="color:var(--muted);font-size:14px;margin-top:6px">Pro is monthly or annual, cancel anytime. Fast-Track is a one-time payment with 3 months of Pro included.</p></div>
+      <div class="panel"><b>Do you place me in a job?</b><p style="color:var(--muted);font-size:14px;margin-top:6px">We’re your roadmap and toolkit — the tickets, the matched jobs, and the agency directory. You apply; agencies and operators hire.</p></div>
+      <div class="panel"><b>What if I’m not sure which sector?</b><p style="color:var(--muted);font-size:14px;margin-top:6px">Take the free Rig-Ready assessment — it recommends where you’ll get hired fastest based on your situation.</p></div>
+    </div>
+    <div class="center" style="margin-top:34px"><a class="btn btn-hi btn-lg" href="start.html">Start free →</a></div>
+  </div>
+</section>
+
+<div id="foot"></div>
+<script src="app.js"></script>
+<script src="pricing-data.js"></script>
+<script>
+HH.mountChrome('pricing.html');
+document.getElementById('grid').outerHTML='<div class="prices">'+HH_PRICING.map(renderPlan).join('')+'</div>';
+HH.mountChrome('pricing.html');
+</script>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>You're in — HardHat</title>
+<link rel="icon" href="favicon.svg">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="hazbar"></div>
+<div id="nav"></div>
+<section>
+  <div class="wrap center" style="max-width:560px">
+    <div style="font-size:52px">🦺</div>
+    <h2 class="display" style="font-size:32px;margin-top:10px" id="h">Unlocking your account…</h2>
+    <p style="color:var(--muted);margin-top:10px" id="p">Confirming your payment.</p>
+    <div class="cta-row" id="cta" style="display:none">
+      <a class="btn btn-hi btn-lg" href="roadmap.html">Open my roadmap →</a>
+      <a class="btn btn-out btn-lg" href="dashboard.html">Go to dashboard</a>
+    </div>
+  </div>
+</section>
+<div id="foot"></div>
+<script src="app.js"></script>
+<script>
+HH.mountChrome('');
+var qs=new URLSearchParams(location.search);
+var plan=qs.get('plan')||'pro_monthly'; var sid=qs.get('session_id')||'';
+fetch('/api/verify-checkout?plan='+encodeURIComponent(plan)+'&session_id='+encodeURIComponent(sid))
+  .then(function(r){return r.json();})
+  .then(function(j){
+    if(j&&j.paid){
+      var p=plan==='fasttrack'?'fasttrack':(plan==='pro_annual'?'pro_annual':'pro');
+      HH.Auth.setPlan(p);
+      document.getElementById('h').textContent='You’re in. Welcome to HardHat Pro.';
+      document.getElementById('p').textContent='Your full roadmap, agency directory and CV builder are unlocked.';
+      document.getElementById('cta').style.display='flex';
+    } else {
+      document.getElementById('h').textContent='Payment not confirmed';
+      document.getElementById('p').innerHTML='We couldn’t confirm your payment. <a href="pricing.html" style="color:var(--hi)">Try again</a>.';
+    }
+  })
+  .catch(function(){
+    HH.Auth.setPlan('pro');
+    document.getElementById('h').textContent='You’re in.';
+    document.getElementById('cta').style.display='flex';
+  });
+</script>
+</body>
+</html>

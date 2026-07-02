@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Crewing Agency &amp; Operator Directory — HardHat</title>
+<meta name="description" content="The crewing agencies and operators that actually hire for offshore and trades jobs — because these roles aren't on the usual job boards.">
+<link rel="icon" href="favicon.svg">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="hazbar"></div>
+<div id="nav"></div>
+
+<section>
+  <div class="wrap">
+    <div class="eyebrow">Where the jobs actually come from</div>
+    <h2 class="sec" style="max-width:26ch">The crewing agencies &amp; operators hiring right now</h2>
+    <p class="lead">Offshore and trades jobs rarely appear on LinkedIn or Indeed — they’re filled through specialist crewing agencies and direct operators. This is that list.</p>
+
+    <div class="filters" style="justify-content:center;margin-top:24px">
+      <select id="secSel"><option value="all">All sectors</option></select>
+    </div>
+
+    <div id="dirList" class="joblist"></div>
+
+    <div class="locked" id="lockBox" style="display:none">
+      <div class="lk">🔒</div>
+      <h3 class="display" style="font-size:20px;margin:8px 0 6px">See the full directory + direct contacts</h3>
+      <p style="color:var(--muted);font-size:14px;max-width:44ch;margin:0 auto 16px">Free shows a preview. HardHat Pro unlocks every agency and operator with links, regions and how to approach them.</p>
+      <a class="btn btn-hi btn-lg" href="pricing.html">Unlock full directory →</a>
+    </div>
+  </div>
+</section>
+
+<div id="foot"></div>
+<script src="app.js"></script>
+<script>
+HH.mountChrome('directory.html');
+var paid=HH.Auth.isPaid();
+var sel=document.getElementById('secSel');
+HH_SECTORS.forEach(function(s){ var o=document.createElement('option'); o.value=s.id; o.textContent=s.icon+' '+s.name; sel.appendChild(o); });
+var intake=HH.Auth.intake(); if(intake&&intake.sector) sel.value=intake.sector;
+function render(){
+  var f=sel.value;
+  var rows=HH_AGENCIES.filter(function(a){ return f==='all'||a.sector===f; });
+  var shown=paid?rows:rows.slice(0,3);
+  document.getElementById('dirList').innerHTML=shown.map(function(a){
+    var s=HH.sector(a.sector);
+    var link=paid&&a.url&&a.url!=='#'?('<a class="btn btn-ink btn-sm" href="'+a.url+'" target="_blank" rel="noopener">Visit →</a>'):'<span class="badge">Pro</span>';
+    return '<div class="jrow" style="cursor:default"><div class="jlogo">'+(s?s.icon:'🏢')+'</div>'+
+      '<div class="jmain"><h3>'+a.name+'</h3><div class="jco">'+a.type+'</div>'+
+      '<div class="jchips"><span class="jchip">'+(s?s.name:'')+'</span><span class="jchip">'+a.region+'</span></div></div>'+
+      '<div style="flex:none">'+link+'</div></div>';
+  }).join('');
+  document.getElementById('lockBox').style.display=paid?'none':(rows.length>3?'block':'none');
+}
+sel.onchange=render; render();
+</script>
+</body>
+</html>

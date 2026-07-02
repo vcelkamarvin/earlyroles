@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Offshore CV Builder — HardHat</title>
+<meta name="description" content="Turn your background into an offshore/trades CV recruiters expect — tickets, medicals, rotations and safety record up top.">
+<link rel="icon" href="favicon.svg">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="hazbar"></div>
+<div id="nav"></div>
+
+<section>
+  <div class="wrap" style="max-width:820px">
+    <div class="eyebrow">AI offshore CV builder</div>
+    <h2 class="sec" style="max-width:24ch">A CV that reads like a rig recruiter’s checklist</h2>
+    <p class="lead">Offshore &amp; trades CVs aren’t like office CVs — tickets, medicals, sea time and safety record go first. Paste your background and we’ll restructure it.</p>
+
+    <div class="panel" style="margin-top:26px">
+      <div class="field"><label>Your work history &amp; skills (paste anything — jobs, dates, what you did)</label>
+        <textarea class="inp" id="src" rows="7" placeholder="e.g. 3 years warehouse + forklift, 1 year construction labourer, fit and reliable, hold a driving licence, willing to work away..."></textarea>
+      </div>
+      <div class="grid2">
+        <div class="field"><label>Target sector</label><select class="inp" id="secSel"></select></div>
+        <div class="field"><label>Experience level</label><select class="inp" id="lvlSel"><option value="entry">Entry / no experience</option><option value="some">Some experience</option><option value="exp">Experienced</option></select></div>
+      </div>
+      <button class="btn btn-hi btn-block btn-lg" id="genBtn" onclick="gen()">Build my offshore CV →</button>
+      <p class="micro" id="status" style="text-align:center"></p>
+    </div>
+
+    <div class="panel" id="out" style="margin-top:16px;display:none">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <div class="eyebrow" style="text-align:left">Your offshore CV</div>
+        <button class="btn btn-ink btn-sm" onclick="copyCv()">Copy</button>
+      </div>
+      <div id="cvText" class="mono" style="white-space:pre-wrap;font-size:13px;color:var(--ink2);line-height:1.7"></div>
+    </div>
+  </div>
+</section>
+
+<div id="foot"></div>
+<script src="app.js"></script>
+<script>
+HH.mountChrome('');
+var intake=HH.Auth.intake();
+var sec=document.getElementById('secSel');
+sec.innerHTML=HH_SECTORS.map(function(s){return '<option value="'+s.id+'">'+s.name+'</option>';}).join('');
+if(intake&&intake.sector) sec.value=intake.sector;
+
+function gen(){
+  if(!HH.Auth.isPaid()){ HH.showPaywall('The AI offshore CV builder is a Pro feature. Unlock it to get a recruiter-ready CV.'); return; }
+  var text=document.getElementById('src').value.trim();
+  if(text.length<20){ HH.toast('Add a bit more about your background'); return; }
+  var btn=document.getElementById('genBtn'); btn.disabled=true;
+  document.getElementById('status').textContent='Building your CV…';
+  fetch('/api/cv',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:text,sector:sec.options[sec.selectedIndex].text,level:document.getElementById('lvlSel').value})})
+    .then(function(r){return r.json();})
+    .then(function(j){
+      btn.disabled=false; document.getElementById('status').textContent=j.engine==='heuristic'?'Draft built (AI keys not set — using template).':'';
+      document.getElementById('out').style.display='block';
+      document.getElementById('cvText').textContent=j.cv||'Could not build CV — try again.';
+      HH.ga('cv_built',{sector:sec.value});
+    })
+    .catch(function(){ btn.disabled=false; document.getElementById('status').textContent='Something went wrong — try again.'; });
+}
+function copyCv(){ navigator.clipboard.writeText(document.getElementById('cvText').textContent); HH.toast('Copied'); }
+window.gen=gen; window.copyCv=copyCv;
+</script>
+</body>
+</html>
