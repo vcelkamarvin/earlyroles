@@ -182,17 +182,21 @@
     const log=Auth.autoLog(), q=Auth.autoQueue();
     let html='';
     if(q.length){
-      html+='<div style="font-weight:700;font-size:12.5px;margin:4px 0 8px">Applications queued for you ('+q.length+')</div>';
-      html+='<div class="arow"><a class="btn btn-accent btn-sm btn-block" id="aaOpenNext" href="#">Open next application →</a></div>';
+      html+='<div style="font-weight:700;font-size:12.5px;margin:4px 0 8px">Ready to send ('+q.length+') — AI prepared these for you</div>';
+      html+='<div class="arow"><a class="btn btn-accent btn-sm btn-block" id="aaOpenNext" href="#">Open &amp; send next application →</a></div>';
     }
     if(log.length){
-      html+='<div style="font-weight:700;font-size:12.5px;margin:14px 0 6px">Recent auto-applies</div>';
-      html+=log.slice(0,6).map(e=>`<div class="arow"><span class="at">✅ ${esc(e.title)} · ${esc(e.co||'')}</span><span style="color:var(--faint);font-size:12px">${when(e.when)}</span></div>`).join('');
+      html+='<div style="font-weight:700;font-size:12.5px;margin:14px 0 6px">Prepared by AI</div>';
+      html+=log.slice(0,6).map(e=>`<div class="arow"><span class="at">📝 ${esc(e.title)} · ${esc(e.co||'')}</span><span style="color:var(--faint);font-size:12px">${when(e.when)}</span></div>`).join('');
     }
-    if(!q.length && !log.length) html+='<div class="empty" style="padding:14px">No auto-applies yet. Keep the toggle on — we sweep for new matches as roles go live.</div>';
+    if(!q.length && !log.length) html+='<div class="empty" style="padding:14px">Nothing prepared yet. Keep the toggle on — AI tailors &amp; queues new matches as roles go live, ready for you to send.</div>';
     aaBody.innerHTML=html;
     const on=document.getElementById('aaOpenNext');
-    if(on) on.addEventListener('click',function(e){ e.preventDefault(); const item=Auth.autoQueue()[0]; if(!item){ renderAutoLog(); return; } if(item.url) window.open(item.url,'_blank','noopener'); Auth.removeAutoQueue(item.id); renderAutoLog(); });
+    if(on) on.addEventListener('click',function(e){ e.preventDefault(); const item=Auth.autoQueue()[0]; if(!item){ renderAutoLog(); return; }
+      /* the real apply happens here — the user opens the posting and we mark it Applied */
+      if(item.url) window.open(item.url,'_blank','noopener');
+      Auth.setApplication(item.id,'Applied'); Auth.removeAutoQueue(item.id); renderAutoLog(); renderTracker();
+    });
   }
   function renderForwarded(){
     const l=Auth.forwarded();
@@ -208,12 +212,12 @@
     const paid = (typeof isPaid==='function' && isPaid());
     if(auto){
       aaTitle.textContent='Auto-Apply with AI';
-      aaSub.textContent='On the Auto-Apply plan — the AI applies to your new matches and queues the postings for you to send.';
+      aaSub.textContent='On the Auto-Apply plan — AI finds your new matches, tailors each application and queues it, ready for you to send in one click.';
       aaToggleRow.style.display='';
       const on=Auth.autoApply();
       sw.classList.toggle('on',on); lbl.textContent=on?'On':'Off';
-      note.textContent = on ? 'On — sweeping for fresh matches and applying on your behalf.' : 'Turn on to let the AI apply to new matches automatically.';
-      try{ if(on && typeof runAutoApplySweep==='function'){ const r=runAutoApplySweep(null,{max:6}); if(r.applied){ showToast('🤖 AI applied to '+r.applied+' new match'+(r.applied>1?'es':'')); renderTracker(); } } }catch(e){}
+      note.textContent = on ? 'On — finding fresh matches and preparing applications for you to send.' : 'Turn on and AI will tailor & queue applications for your new matches automatically.';
+      try{ if(on && typeof runAutoApplySweep==='function'){ const r=runAutoApplySweep(null,{max:6}); if(r.prepared){ showToast('🤖 AI prepared '+r.prepared+' application'+(r.prepared>1?'s':'')+' — ready to send'); } } }catch(e){}
       renderAutoLog();
     } else if(paid){
       aaTitle.textContent='Matches forwarded to you';
@@ -224,7 +228,7 @@
       renderForwarded();
     } else {
       aaTitle.textContent='Auto-Apply with AI';
-      aaSub.textContent='Let AI match, tailor and apply to new US, Swiss & Icelandic roles for you — hands-off.';
+      aaSub.textContent='Let AI match, tailor and queue applications to new US, Swiss & Icelandic roles — you send each with one click.';
       aaToggleRow.style.display='none';
       note.innerHTML='';
       aaBody.innerHTML='<a href="index.html#pricing" class="btn btn-accent btn-block">Unlock Auto-Apply →</a>';

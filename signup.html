@@ -397,13 +397,13 @@
   $('next5').addEventListener('click',()=>finishBoost(true));
   $('skip5').addEventListener('click',e=>{ e.preventDefault(); finishBoost(false); });
 
-  /* paywall — the conversion step */
+  /* paywall — the conversion step. Access is granted only after verified payment
+     (success.html), not on click, so goCheckout records the intent + routes to Stripe. */
   document.querySelectorAll('[data-plan]').forEach(b=>b.addEventListener('click',function(){
     const plan=this.getAttribute('data-plan');
-    if(Auth.setPlan) Auth.setPlan(plan);
     persist();
-    if(window.gtag) gtag('event','begin_checkout',{plan,from:'onboarding'});
-    location.href = PAY[plan] || 'dashboard.html';
+    if(window.goCheckout){ goCheckout(plan, 'onboarding'); }
+    else { location.href = PAY[plan] || 'dashboard.html'; }
   }));
   $('startFree').addEventListener('click',function(e){ e.preventDefault(); persist(); if(window.gtag) gtag('event','onboarding_complete',{plan:'free'}); location.href='dashboard.html'; });
 

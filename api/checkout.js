@@ -11,7 +11,8 @@ module.exports = async (req, res) => {
   let body = req.body;
   if (typeof body === 'string') { try { body = JSON.parse(body); } catch (e) { body = {}; } }
   if (!body || typeof body !== 'object') body = {};
-  const plan = String(body.plan || '').toLowerCase();
+  const planRaw = String(body.plan || '').trim();      // canonical label, e.g. "Auto-Apply"
+  const plan = planRaw.toLowerCase();
 
   const key = process.env.STRIPE_SECRET_KEY;
   const prices = {
@@ -29,7 +30,8 @@ module.exports = async (req, res) => {
   form.append('line_items[0][price]', price);
   form.append('line_items[0][quantity]', '1');
   form.append('allow_promotion_codes', 'true');
-  form.append('success_url', origin + '/dashboard.html?checkout=success');
+  // Route through success.html so /api/verify-checkout confirms payment before access is granted.
+  form.append('success_url', origin + '/success.html?plan=' + encodeURIComponent(planRaw) + '&session={CHECKOUT_SESSION_ID}');
   form.append('cancel_url', origin + '/index.html#pricing');
 
   try {
