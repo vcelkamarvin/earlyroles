@@ -84,7 +84,7 @@
       <button class="btn btn-accent hf-btn" type="submit">Find my roles →</button>
     </form>
     <div class="finder-chips"><span>Trending:</span><a href="jobs.html?q=engineer">Engineering</a><a href="jobs.html?q=product%20manager">Product</a><a href="jobs.html?q=sales">Sales</a><a href="jobs.html?q=designer">Design</a><a href="jobs.html?q=marketing">Marketing</a></div>
-    <p class="micro" style="margin-top:16px">Or <a href="signup.html" style="color:var(--accent);font-weight:600">create your free profile and let AI match &amp; apply for you</a></p>
+    <p class="micro" style="margin-top:16px">Or <a href="signup.html" style="color:var(--accent);font-weight:600">create your free profile and let AI match, tailor &amp; queue applications for you</a></p>
     <div class="strip">
       <span>🇺🇸 <b>US</b> · 🇨🇭 <b>Switzerland</b> · 🇮🇸 <b>Iceland</b></span><span class="sep">·</span>
       <span>From <b>live</b> hiring feeds</span><span class="sep">·</span>
@@ -176,7 +176,7 @@
     <div class="steps">
       <div class="step"><div class="k">01</div><h3>Straight from company career pages</h3><p>We pull roles directly from top companies' own hiring systems (Greenhouse, Ashby &amp; more), so you see them before they reach the big job boards.</p></div>
       <div class="step"><div class="k">02</div><h3>Filter to exactly your role</h3><p>Slice by title, salary, seniority, department and timezone. Save a search and get alerted the moment a match goes live.</p></div>
-      <div class="step"><div class="k">03</div><h3>Let the AI apply</h3><p>AI matches you, tailors your resume and pre-fills the application on the real career page. You review, it sends.</p></div>
+      <div class="step"><div class="k">03</div><h3>AI preps, you send</h3><p>AI matches you, tailors your resume and drafts the application on the real career page, queued and ready. You review and send in one click.</p></div>
     </div>
   </div>
 </section>
@@ -376,20 +376,13 @@
 /* LinkedIn matcher + CV upload */
 (function(){ var hf=document.getElementById('heroFinder'); if(!hf) return; hf.addEventListener('submit',function(e){ e.preventDefault(); var q=(document.getElementById('heroQ').value||'').trim(); var locEl=document.getElementById('heroLoc'); var loc=locEl?locEl.value:''; if(window.gtag) gtag('event','hero_search',{q:q,loc:loc}); var p=[]; if(q)p.push('q='+encodeURIComponent(q)); if(loc)p.push('loc='+encodeURIComponent(loc)); location.href='jobs.html'+(p.length?('?'+p.join('&')):''); }); })();
 
-/* pricing → remember chosen plan, then go sign up */
+/* pricing → start checkout (access is granted only after verified payment on success.html) */
 (function(){
-  const PAY={
-    'Monthly':'https://buy.stripe.com/5kQ7sD3ZR5PP99b5Ua63K03',
-    'Annual':'https://buy.stripe.com/fZu7sDfIzba9adfeqG63K04',
-    'Auto-Apply':'https://buy.stripe.com/5kQ9AL8g7ced713beu63K05'
-  };
   document.querySelectorAll('[data-plan]').forEach(a=>{
     a.addEventListener('click',function(e){
       e.preventDefault();
-      const plan=this.getAttribute('data-plan');
-      Auth.setPlan(plan);
-      if(window.gtag) gtag('event','begin_checkout',{plan});
-      location.href = PAY[plan] || 'signup.html';   // real Stripe Payment Link
+      if(window.goCheckout){ goCheckout(this.getAttribute('data-plan'), 'pricing'); }
+      else { location.href='signup.html'; }
     });
   });
 })();

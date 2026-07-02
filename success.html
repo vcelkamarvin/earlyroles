@@ -47,12 +47,17 @@
 (function(){
   var p=new URLSearchParams(location.search);
   var plan=(p.get('plan')||'').trim();
-  var session=(p.get('session')||'').trim();
+  var session=(p.get('session')||p.get('session_id')||'').trim();
+  /* fall back to the plan the user intended at checkout (set by goCheckout) */
+  if(!plan && window.Auth && Auth.pending) plan=Auth.pending();
   function finish(ok){
     var t=document.getElementById('sTitle'), m=document.getElementById('sMsg'),
         a=document.getElementById('sActions'), n=document.getElementById('sNote');
     if(ok){
-      if(plan && window.Auth && Auth.setPlan) Auth.setPlan(plan);
+      /* Access is granted ONLY here — after verify-checkout confirms payment (or
+         optimistically when Stripe isn't wired server-side yet). Clicking a plan no
+         longer unlocks anything on its own. */
+      if(plan && window.Auth && Auth.setPlan){ Auth.setPlan(plan); if(Auth.setPending) Auth.setPending(''); }
       if(window.gtag) gtag('event','purchase',{plan:plan});
       document.querySelector('.authcard div').textContent='🎉';
       t.textContent="You're in!";

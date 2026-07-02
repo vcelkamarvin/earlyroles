@@ -27,6 +27,21 @@ functions can read them. `.env.example` in the repo just documents *which* keys 
 - Until you add it, checkout still works (the app trusts the post-payment redirect); adding the
   key upgrades it to *verified & secure*.
 
+## Enforced paid access (important)
+Selecting a plan no longer unlocks anything — the app grants access **only** on `/success.html`
+after `/api/verify-checkout` confirms the payment. For that to be *strict* (not optimistic):
+
+- **Preferred:** set `STRIPE_SECRET_KEY` + `STRIPE_PRICE_MONTHLY` / `STRIPE_PRICE_ANNUAL` /
+  `STRIPE_PRICE_AUTOAPPLY`. Then purchases use a server-created Checkout Session whose success URL
+  is `/success.html?plan=…&session={CHECKOUT_SESSION_ID}`, and access is granted only when Stripe
+  reports the session as paid.
+- **If you keep the hosted Payment Links** (`buy.stripe.com/…`): in the Stripe dashboard set each
+  link's post-payment redirect to `https://earlyroles.com/success.html?plan=Monthly` (and Annual /
+  Auto-Apply respectively). Without a `session_id`, verification stays *optimistic* (trusts the
+  redirect) — set the secret key above to make it fully verified.
+
+Until a key is set, `/api/verify-checkout` returns optimistic `ok` so real payers are never blocked.
+
 ## After adding the keys
 - **AI:** open `/profile.html` (Optimize with AI) or `/match.html`, paste a profile — the result
   will say "Optimized by AI" instead of the built-in heuristic.

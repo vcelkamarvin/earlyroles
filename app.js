@@ -203,7 +203,12 @@ Object.assign(Auth, {
   profile(){ try{return JSON.parse(localStorage.getItem(this.profileKey))||{}}catch(e){return {}} },
   setProfile(p){ localStorage.setItem(this.profileKey,JSON.stringify(p)); return p; },
   plan(){ return localStorage.getItem(this.planKey)||""; },
+  /* setPlan GRANTS access — only call after payment is verified (success.html). */
   setPlan(p){ localStorage.setItem(this.planKey,p||""); },
+  /* pending = the plan the user intends to buy, set before checkout. Does NOT grant access. */
+  pendingKey:"unlisted_pending_plan",
+  pending(){ return localStorage.getItem(this.pendingKey)||""; },
+  setPending(p){ localStorage.setItem(this.pendingKey,p||""); },
   /* persist a snapshot of any job the user saves/applies to, so the CRM can show it */
   jobsKey:"unlisted_jobsdata",
   jobData(){ try{return JSON.parse(localStorage.getItem(this.jobsKey))||{}}catch(e){return {}} },
@@ -353,16 +358,23 @@ function runAutoApplySweep(list, opts){
   const seen=new Set(Auth.autoSeen()); const done=Auth.applications();
   const fresh=scored.map(x=>x.j).filter(j=>j&&j.id!=null && !seen.has(Number(j.id)) && !done[Number(j.id)]);
   const take=fresh.slice(0, opts.max||8);
-  if(!take.length) return {applied:0,forwarded:0};
-  let applied=0, forwarded=0;
+  if(!take.length) return {prepared:0,forwarded:0};
+  let prepared=0, forwarded=0;
   take.forEach(j=>{ Auth.rememberJob(j);
-    if(auto){ Auth.setApplication(j.id,'Applied'); if(!Auth.saved().includes(Number(j.id))) Auth.toggleSave(j.id); if(j.url&&j.url!=='signup.html'&&j.url!=='jobs.html') Auth.addAutoQueue(j); Auth.pushAutoLog({id:j.id,title:j.title,co:j.co}); applied++; }
+    if(auto){
+      /* Honest behavior: AI *prepares & queues* each application (saves it + adds to the
+         send queue). It is NOT marked "Applied" until the user actually opens & sends it
+         from the dashboard — we never claim to have applied on someone's behalf. */
+      if(!Auth.saved().includes(Number(j.id))) Auth.toggleSave(j.id);
+      if(j.url&&j.url!=='signup.html'&&j.url!=='jobs.html') Auth.addAutoQueue(j);
+      Auth.pushAutoLog({id:j.id,title:j.title,co:j.co}); prepared++;
+    }
     else { Auth.addForwarded(j); forwarded++; }
   });
   Auth.markAutoSeen(take.map(j=>j.id));
-  if(applied&&window.gtag) gtag('event','auto_apply_run',{count:applied});
+  if(prepared&&window.gtag) gtag('event','auto_apply_prepared',{count:prepared});
   if(forwarded&&window.gtag) gtag('event','matches_forwarded',{count:forwarded});
-  return {applied,forwarded};
+  return {prepared,forwarded};
 }
 window.runAutoApplySweep = runAutoApplySweep;
 const PAYWALL_PAY = {
@@ -370,6 +382,18 @@ const PAYWALL_PAY = {
   'Annual':'https://buy.stripe.com/fZu7sDfIzba9adfeqG63K04',
   'Auto-Apply':'https://buy.stripe.com/5kQ9AL8g7ced713beu63K05'
 };
+/* Single entry point for starting a purchase. IMPORTANT: it records the *intended*
+   plan (pending) but does NOT grant access — access is only granted on success.html
+   after /api/verify-checkout confirms payment. Prefers the server-created Checkout
+   Session (verifiable) and falls back to the hosted Payment Link when Stripe isn't
+   configured server-side yet. */
+async function goCheckout(plan, from){
+  if(window.Auth && Auth.setPending) Auth.setPending(plan);
+  if(window.gtag) gtag('event','begin_checkout',{plan, from:from||''});
+  try{ const ok = await startCheckout(plan); if(ok) return; }catch(e){}
+  location.href = PAYWALL_PAY[plan] || 'signup.html';
+}
+window.goCheckout = goCheckout;
 function injectPaywallCSS(){
   if(document.getElementById('pw-style')) return;
   const s=document.createElement('style'); s.id='pw-style';
@@ -433,9 +457,7 @@ function showPaywall(jobTitle){
   ov.querySelector('.modal-x').onclick=close;
   ov.onclick=e=>{ if(e.target===ov) close(); };
   ov.querySelectorAll('[data-pw]').forEach(b=>b.addEventListener('click',function(){
-    const plan=this.getAttribute('data-pw'); if(window.Auth&&Auth.setPlan) Auth.setPlan(plan);
-    if(window.gtag) gtag('event','begin_checkout',{plan, from:'paywall'});
-    location.href = PAYWALL_PAY[plan] || 'signup.html';
+    goCheckout(this.getAttribute('data-pw'), 'paywall');
   }));
 }
 window.showPaywall = showPaywall;
