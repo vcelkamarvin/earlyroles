@@ -56,9 +56,11 @@ function render(){
   document.getElementById('ticketList').innerHTML=list.map(function(t){
     var d=!!done[t.id];
     var badge=t.req?'<span class="badge req">required</span>':(t.type==='medical'?'<span class="badge med">medical</span>':'<span class="badge">optional</span>');
+    var provs=HH.providers(t.id);
+    var provHTML=provs.length?('<div class="provs">Where to get it: '+provs.map(function(p){return '<a href="'+p.url+'" target="_blank" rel="noopener" onclick="event.stopPropagation()">'+p.name+' ↗</a>';}).join('<span class="sep">·</span>')+'</div>'):'';
     return '<div class="ticket'+(d?' done':'')+'" data-id="'+t.id+'" onclick="toggle(\''+t.id+'\')">'+
       '<div class="cbox">'+(d?'✓':'')+'</div>'+
-      '<div class="tinfo"><b>'+t.name+'</b> '+badge+'<small>'+t.desc+' · ~'+t.days+'</small></div>'+
+      '<div class="tinfo"><b>'+t.name+'</b> '+badge+'<small>'+t.desc+' · ~'+t.days+'</small>'+provHTML+'</div>'+
       '<div class="cost">'+t.cost+'</div></div>';
   }).join('');
   // progress

@@ -58,16 +58,18 @@ function matchScore(j){
   if(j.noexp && intake.experience==='none') s+=15;
   return Math.min(99,s);
 }
-function jobLogo(j){
-  var img=HH.logo(j.logo,j.co);
-  return '<div class="jlogo">'+img+'</div>';
-}
 function rowHTML(j){
   var saved=HH.Auth.saved(); var sv=saved.indexOf(j.id)>=0;
-  var chips='<span class="jchip">'+j.loc+'</span><span class="jchip">'+j.rota+'</span>'+(j.noexp?'<span class="jchip" style="color:var(--hi)">No exp OK</span>':'')+(intake&&j._m>=60?'<span class="jchip" style="color:var(--good)">'+j._m+'% match</span>':'');
-  return '<div class="jrow" onclick="openJob(\''+j.id+'\')">'+jobLogo(j)+
+  var chips='<span class="jchip">'+j.type+'</span><span class="jchip">'+j.level+'</span>'+
+    (j.noexp?'<span class="jchip hi">No exp OK</span>':'')+
+    (intake&&j._m>=60?'<span class="jchip good">'+j._m+'% match</span>':'');
+  return '<div class="jrow" onclick="openJob(\''+j.id+'\')">'+
+    '<div class="jlogo">'+HH.logo(j.logo,j.co)+'</div>'+
     '<div class="jmain"><h3>'+j.title+'</h3><div class="jco">'+j.co+'</div><div class="jchips">'+chips+'</div></div>'+
-    '<div class="jpay"><b>'+j.pay+'</b><span>'+(sv?'★ saved':'per year')+'</span></div></div>';
+    '<div class="jloc">'+j.loc+'<span class="jtime">'+j.posted+' ago</span></div>'+
+    '<div class="jpay"><b>'+j.pay+'</b><span>per year</span></div>'+
+    '<button class="jbookmark'+(sv?' on':'')+'" title="Save" onclick="event.stopPropagation();saveJob(\''+j.id+'\')">'+(sv?'★':'☆')+'</button>'+
+    '</div>';
 }
 function filtered(){
   var q=document.getElementById('q').value.toLowerCase();
@@ -119,7 +121,9 @@ function closeJob(){ document.getElementById('jobModal').classList.remove('on');
 function saveJob(id){
   var saved=HH.Auth.saved();
   if(!HH.Auth.isPaid() && saved.indexOf(id)<0 && saved.length>=3){ HH.showPaywall('Free accounts can save 3 jobs. Go Pro for unlimited saved jobs and alerts.'); return; }
-  var added=HH.Auth.toggleSave(id); HH.Auth.setApp(id,'saved'); HH.toast(added?'Saved to your dashboard':'Removed'); openJob(id); render();
+  var added=HH.Auth.toggleSave(id); HH.Auth.setApp(id,'saved'); HH.toast(added?'Saved to your dashboard':'Removed');
+  if(document.getElementById('jobModal').classList.contains('on')) openJob(id);
+  render();
 }
 function applyJob(id){
   if(!HH.Auth.isPaid()){ HH.showPaywall('Applying is a HardHat Pro feature. Unlock the crewing-agency contacts and application templates for this role.'); return; }

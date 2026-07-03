@@ -163,21 +163,22 @@ window.HH_COMPANIES = COMPANIES;
 /* CREWING AGENCIES / OPERATORS directory                              */
 /* ------------------------------------------------------------------ */
 var AGENCIES = [
-  { sector:'oil',    name:'Airswift',           type:'Global energy staffing', region:'Global',   url:'https://www.airswift.com' },
-  { sector:'oil',    name:'Orion Group',        type:'Oil & gas recruitment',  region:'UK/Global',url:'https://www.orionjobs.com' },
-  { sector:'oil',    name:'NES Fircroft',       type:'Energy manpower',        region:'Global',   url:'https://www.nesfircroft.com' },
-  { sector:'wind',   name:'Renewable Energy Group','type':'Offshore wind staffing', region:'EU/US', url:'#' },
-  { sector:'wind',   name:'Taylor Hopkinson',   type:'Renewables recruitment', region:'Global',   url:'https://www.taylorhopkinson.com' },
-  { sector:'diving', name:'Cal Dive / Subsea 7','type':'Subsea & diving',      region:'Global',   url:'#' },
-  { sector:'marine', name:'Crowley Maritime',   type:'US vessel operator',     region:'US',       url:'https://www.crowley.com' },
-  { sector:'marine', name:'Maersk Crewing',     type:'Merchant fleet',         region:'Global',   url:'#' },
-  { sector:'mining', name:'Hays Mining',        type:'Mining recruitment',     region:'AU/Global',url:'https://www.hays.com' },
-  { sector:'mining', name:'WorkPac',            type:'FIFO labour hire',       region:'Australia', url:'https://www.workpac.com' },
-  { sector:'weld',   name:'Aerotek',            type:'Skilled trades staffing',region:'US',       url:'https://www.aerotek.com' },
-  { sector:'weld',   name:'Tradesmen Int’l', type:'Construction trades',  region:'US',       url:'#' },
-  { sector:'wtt',    name:'Airswift Renewables', type:'Wind tech staffing',    region:'Global',   url:'#' },
-  { sector:'cdl',    name:'TransForce',         type:'CDL driver staffing',    region:'US',       url:'#' },
-  { sector:'cdl',    name:'Schlumberger/SLB Logistics','type':'Oilfield haul', region:'US/Global',url:'#' }
+  { sector:'oil',    name:'Airswift',          type:'Global energy staffing',   region:'Global',    url:'https://www.airswift.com' },
+  { sector:'oil',    name:'Orion Group',       type:'Oil & gas recruitment',    region:'UK/Global', url:'https://www.orionjobs.com' },
+  { sector:'oil',    name:'NES Fircroft',      type:'Energy manpower',          region:'Global',    url:'https://www.nesfircroft.com' },
+  { sector:'wind',   name:'Taylor Hopkinson',  type:'Renewables recruitment',   region:'Global',    url:'https://www.taylorhopkinson.com' },
+  { sector:'wind',   name:'Airswift Renewables',type:'Offshore wind staffing',  region:'EU/US',     url:'https://www.airswift.com' },
+  { sector:'diving', name:'Faststream',        type:'Maritime & subsea',        region:'Global',    url:'https://www.faststream.com' },
+  { sector:'diving', name:'Subsea 7 careers',  type:'Subsea & diving operator', region:'Global',    url:'https://www.subsea7.com/en/careers.html' },
+  { sector:'marine', name:'Crowley Maritime',  type:'US vessel operator',       region:'US',        url:'https://www.crowley.com/careers' },
+  { sector:'marine', name:'Faststream Marine', type:'Merchant fleet crewing',   region:'Global',    url:'https://www.faststream.com' },
+  { sector:'mining', name:'Hays Mining',       type:'Mining recruitment',       region:'AU/Global', url:'https://www.hays.com.au' },
+  { sector:'mining', name:'WorkPac',           type:'FIFO labour hire',         region:'Australia', url:'https://www.workpac.com' },
+  { sector:'weld',   name:'Aerotek',           type:'Skilled trades staffing',  region:'US',        url:'https://www.aerotek.com' },
+  { sector:'weld',   name:'Airswift',          type:'Fabrication & construction',region:'Global',   url:'https://www.airswift.com' },
+  { sector:'wtt',    name:'Taylor Hopkinson',  type:'Wind tech staffing',       region:'Global',    url:'https://www.taylorhopkinson.com' },
+  { sector:'cdl',    name:'Aerotek / Actalent',type:'Driver & oilfield staffing',region:'US',       url:'https://www.aerotek.com' },
+  { sector:'cdl',    name:'Roehl Transport',   type:'CDL carrier (paid training)',region:'US',      url:'https://www.roehl.jobs' }
 ];
 window.HH_AGENCIES = AGENCIES;
 
@@ -210,7 +211,47 @@ var JOBS = [
   { id:'j23', title:'Drilling Roughneck', co:'Chevron', logo:'chevron.com', sector:'oil', icon:'🛢️', loc:'Santos Basin, Brazil', locId:'brazil', rota:'14/21', pay:'$96,000', payn:96000, noexp:true, tickets:['bosiet','ogukmed'] },
   { id:'j24', title:'Maintenance Welder — Shutdown', co:'Wood', logo:'woodplc.com', sector:'weld', icon:'🔥', loc:'Rotterdam, NL', locId:'northsea', rota:'shutdown', pay:'$90,000', payn:90000, noexp:false, tickets:['weldcert','osha'] }
 ];
+// enrich jobs with Woo-style display fields (type / level / posted)
+JOBS.forEach(function(j,i){
+  j.type = /shutdown|project/i.test(j.rota) ? 'Contract' : (/\/|on |roster|rota/i.test(j.rota) ? 'Rotational' : 'Full-time');
+  j.level = j.noexp ? 'Entry level' : 'Experienced';
+  j.posted = ['2h','5h','9h','14h','1d','1d','2d','3d','4d','5d','6d','1w'][i % 12];
+});
 window.HH_JOBS = JOBS;
+
+/* ------------------------------------------------------------------ */
+/* PROVIDERS — accredited training providers per ticket (REAL links)   */
+/* Shown free on the roadmap ("Where to get it →").                    */
+/* ------------------------------------------------------------------ */
+var PROVIDERS = {
+  bosiet:   [{name:'OPITO', url:'https://opito.com'},{name:'RelyOn Nutec', url:'https://www.relyonnutec.com'},{name:'Survivex', url:'https://www.survivex.com'}],
+  ogukmed:  [{name:'OEUK / OGUK medical providers', url:'https://oeuk.org.uk'}],
+  mist:     [{name:'OPITO (MIST)', url:'https://opito.com'}],
+  rigpass:  [{name:'SafeGulf / SafeLandUSA', url:'https://www.safelandusa.org'}],
+  twic:     [{name:'TSA Universal Enrollment', url:'https://universalenroll.dhs.gov'}],
+  gwobst:   [{name:'Global Wind Organisation', url:'https://www.globalwindorg.org'},{name:'Maersk Training', url:'https://www.maersktraining.com'},{name:'RelyOn Nutec', url:'https://www.relyonnutec.com'}],
+  gwobtt:   [{name:'Global Wind Organisation', url:'https://www.globalwindorg.org'}],
+  huet:     [{name:'RelyOn Nutec', url:'https://www.relyonnutec.com'},{name:'Survivex', url:'https://www.survivex.com'}],
+  offmed:   [{name:'OEUK / ENG1 providers', url:'https://oeuk.org.uk'}],
+  gwoheights:[{name:'Global Wind Organisation', url:'https://www.globalwindorg.org'}],
+  wttmed:   [{name:'Occupational health / climb medical', url:'https://oeuk.org.uk'}],
+  stcw:     [{name:'MITAGS', url:'https://www.mitags.org'},{name:'MPT Maritime', url:'https://www.mptusa.com'}],
+  mmc:      [{name:'USCG National Maritime Center', url:'https://www.dco.uscg.mil/nmc'}],
+  twicm:    [{name:'TSA Universal Enrollment', url:'https://universalenroll.dhs.gov'}],
+  marmed:   [{name:'USCG-approved medical examiners', url:'https://www.dco.uscg.mil/nmc'}],
+  dmt:      [{name:'CDA Technical Institute', url:'https://www.commercialdivingacademy.com'},{name:'The Underwater Centre', url:'https://www.theunderwatercentre.com'}],
+  divemed:  [{name:'ADCI dive-medical directory', url:'https://www.adc-int.org'}],
+  weldcert: [{name:'American Welding Society (AWS)', url:'https://www.aws.org'}],
+  osha:     [{name:'OSHA Outreach training', url:'https://www.osha.gov/training'}],
+  rigging:  [{name:'NCCCO rigger certification', url:'https://www.nccco.org'}],
+  cdla:     [{name:'FMCSA Training Provider Registry', url:'https://tpr.fmcsa.dot.gov'}],
+  hazmat:   [{name:'FMCSA hazmat endorsement', url:'https://www.fmcsa.dot.gov'}],
+  dotmed:   [{name:'FMCSA National Registry', url:'https://nationalregistry.fmcsa.dot.gov'}],
+  induction:[{name:'RIIWHS / Standard 11 providers', url:'https://training.gov.au'}],
+  medm:     [{name:'Pre-employment medical clinics', url:'https://training.gov.au'}],
+  wc:       [{name:'Working at heights / confined space RTOs', url:'https://training.gov.au'}]
+};
+window.HH_PROVIDERS = PROVIDERS;
 
 /* ------------------------------------------------------------------ */
 /* BLOG — SEO / guidance articles                                      */
@@ -342,6 +383,7 @@ function recommendations(intake){
   return { sector:sec, nextTickets:nextTickets, jobs:jobs, locations:locs };
 }
 window.HH.recommendations = recommendations;
+window.HH.providers = function(id){ return PROVIDERS[id] || []; };
 
 /* ------------------------------------------------------------------ */
 /* PAYWALL                                                             */
