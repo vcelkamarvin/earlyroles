@@ -438,7 +438,7 @@ function showPaywall(jobTitle){
       <div class="pw-plan pop">
         <span class="pw-tag">Most popular</span>
         <div class="pw-name">Auto-Apply with AI</div>
-        <div class="pw-desc">The AI matches, tailors and applies for you.</div>
+        <div class="pw-desc">AI matches, tailors and queues each application — you send in one click.</div>
         <div class="pw-amt">$62<span> /mo</span></div>
         <button class="btn btn-accent btn-block" data-pw="Auto-Apply">Let AI apply — $62/mo</button>
       </div>
