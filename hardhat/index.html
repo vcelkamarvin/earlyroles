@@ -14,44 +14,28 @@
 
 <!-- HERO -->
 <header class="hero">
-  <div class="wrap">
-    <div style="display:flex;justify-content:center;gap:14px;flex-wrap:wrap;margin-bottom:26px">
-      <span class="avatars"><span class="av"><span>JR</span><span>MK</span><span>DA</span><span>+</span></span> <b>10,000+</b>&nbsp;workers hired worldwide</span>
-      <span class="rating"><span class="stars">★★★★★</span> <b>4.8</b> · 2,300+ members</span>
+  <div class="wrap herowrap">
+    <div class="herotext">
+      <span class="avatars"><span class="av"><span>JR</span><span>MK</span><span>DA</span><span>+</span></span> <b>10,000+</b>&nbsp;hired worldwide · ★ 4.8</span>
+      <h1 class="hero-h1">Find the job. Get qualified. <em>Get hired.</em></h1>
+      <p class="sub">$70k–$250k offshore and trades jobs. No degree. No experience needed to start.</p>
+      <form class="heroform" onsubmit="return heroRegister(event)">
+        <input class="inp" id="heroEmail" type="email" placeholder="Enter your email" required>
+        <button class="btn btn-hi" type="submit">Get started free →</button>
+      </form>
+      <div class="trustrow" style="justify-content:flex-start;margin-top:16px">
+        <span><span class="ok">✓</span> Free to join</span>
+        <span><span class="ok">✓</span> <span id="stOpen">39,000+</span> roles</span>
+        <span class="urgency"><span class="pulse"></span> 1,240 hired this month</span>
+      </div>
     </div>
-    <h1 class="hero-h1">Find the job. Get qualified. <em>Get hired.</em></h1>
-    <p class="sub">Oil rigs, wind farms, diving, ships, mining and welding. These jobs pay <b class="hi">$70k to $250k</b> and none of them need a degree. We show you what to do, from your first safety ticket to a signed contract, anywhere in the world.</p>
-    <div class="cta-row">
-      <a class="btn btn-hi btn-lg" href="start.html">Get my Rig-Ready plan →</a>
-      <a class="btn btn-out btn-lg" href="jobs.html">Browse jobs</a>
-    </div>
-    <div class="trustrow">
-      <span><span class="ok">✓</span> No degree required</span>
-      <span><span class="ok">✓</span> <span id="stOpen">39,000+</span> roles worldwide</span>
-      <span><span class="ok">✓</span> Real crewing agencies</span>
-      <span class="urgency"><span class="pulse"></span> 1,240 hired this month</span>
-    </div>
-    <div class="herocards">
-      <div class="hcard">
+    <div class="heromedia">
+      <img class="herophoto" src="img/rig.jpg" alt="Offshore oil platform at sea" loading="eager">
+      <div class="floatcard">
         <div class="hh"><small>Rig-Ready Score</small><span class="mono" style="color:var(--hi)">◆</span></div>
-        <div class="big hi">72<span style="font-size:16px;color:var(--muted)">/100</span></div>
-        <div class="mbar" style="margin:12px 0 14px"><i style="width:72%"></i></div>
-        <div class="hr"><span>Blockers left</span><span class="mono">2</span></div>
+        <div class="big hi">72<span style="font-size:15px;color:var(--muted)">/100</span></div>
+        <div class="mbar" style="margin:10px 0 12px"><i style="width:72%"></i></div>
         <div class="hr"><span>Matched roles</span><span class="mono">7</span></div>
-      </div>
-      <div class="hcard lift">
-        <div class="hh"><small>Matched jobs</small><span class="mono">🎯</span></div>
-        <div class="hr"><span>Roughneck · BP</span><span class="mono">$92k</span></div>
-        <div class="hr"><span>Wind Tech · Ørsted</span><span class="mono">$86k</span></div>
-        <div class="hr"><span>FIFO Op · BHP</span><span class="mono">$118k</span></div>
-        <div class="hr"><span>Sat Diver · Subsea7</span><span class="mono">$210k</span></div>
-      </div>
-      <div class="hcard">
-        <div class="hh"><small>Your tickets</small><span class="mono">🎓</span></div>
-        <div class="hr"><span>BOSIET</span><span class="mono" style="color:var(--good)">✓ done</span></div>
-        <div class="hr"><span>Offshore medical</span><span class="mono" style="color:var(--warn)">needed</span></div>
-        <div class="hr"><span>MIST</span><span class="mono" style="color:var(--good)">✓ done</span></div>
-        <div class="mbar" style="margin-top:12px"><i style="width:66%"></i></div>
       </div>
     </div>
   </div>
@@ -176,6 +160,16 @@
   </div>
 </section>
 
+<!-- FIELD PHOTO BAND -->
+<section class="photoband" style="padding:0">
+  <img src="img/rig-sea.jpg" alt="Offshore platform in the North Sea">
+  <div class="pb">
+    <h2>This is the office.</h2>
+    <p>Two weeks on, three weeks off. Big pay, meals and travel covered. No degree required.</p>
+    <a class="btn btn-hi btn-lg" href="start.html">See if you qualify →</a>
+  </div>
+</section>
+
 <!-- PAY PROOF -->
 <section>
   <div class="wrap">
@@ -280,6 +274,15 @@
   HH.mountChrome('');
   HH.mountTicker();
   HH.mountPopup();
+
+  function heroRegister(e){
+    e.preventDefault();
+    var em=(document.getElementById('heroEmail').value||'').trim();
+    if(!/.+@.+\..+/.test(em)) return false;
+    HH.Auth.signup('', em); HH.set('nl', em); HH.ga('sign_up',{method:'hero_email'});
+    location.href='start.html'; return false;
+  }
+  window.heroRegister=heroRegister;
 
   // logo walls (companies + agencies)
   document.getElementById('logorow').innerHTML = HH_COMPANIES.slice(0,14).map(function(c){ return HH.logo(c.domain,c.name); }).join('');

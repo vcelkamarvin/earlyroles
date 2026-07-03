@@ -212,11 +212,39 @@ var JOBS = [
   { id:'j23', title:'Drilling Roughneck', co:'Chevron', logo:'chevron.com', sector:'oil', icon:'🛢️', loc:'Santos Basin, Brazil', locId:'brazil', rota:'14/21', pay:'$96,000', payn:96000, noexp:true, tickets:['bosiet','ogukmed'] },
   { id:'j24', title:'Maintenance Welder — Shutdown', co:'Wood', logo:'woodplc.com', sector:'weld', icon:'🔥', loc:'Rotterdam, NL', locId:'northsea', rota:'shutdown', pay:'$90,000', payn:90000, noexp:false, tickets:['weldcert','osha'] }
 ];
-// enrich jobs with Woo-style display fields (type / level / posted)
+// short job descriptions (shown on the listing + modal)
+var JOBDESC = {
+  j1:'Deck crew on a drilling rig: cleaning, moving equipment and helping the crew. No experience needed, full training on the job.',
+  j2:'Work the drill floor handling pipe and machinery on a North Sea platform. Physical, well-paid, 2 weeks on / 3 off.',
+  j3:'Service and repair offshore wind turbines. GWO-certified techs climb, inspect and fix. Trades background helps, not required.',
+  j4:'Entry-level onshore wind tech. Learn to service turbines with paid training and travel across sites.',
+  j5:'Deckhand on supply and support vessels: mooring, cargo and deck maintenance. STCW ticket gets you started.',
+  j6:'Support commercial divers from the surface as a tender, the first step toward becoming a diver yourself.',
+  j7:'Drive haul trucks moving ore on a remote FIFO mine site. Camp, flights and meals covered. No experience needed.',
+  j8:'Run processing plant equipment on a FIFO roster. Steady shifts, strong pay, full site training provided.',
+  j9:'Certified 6G pipe welder for high-pressure pipeline work. Top-tier pay for qualified hands.',
+  j10:'Structural welding and fitting in a fabrication yard. Steady project work with overtime.',
+  j11:'Haul hazmat and frac fluids for oilfield operators. CDL-A plus hazmat endorsement required.',
+  j12:'Saturation diving on deepwater projects: the top of the pay scale for experienced commercial divers.',
+  j13:'Roustabout on a fixed platform: general labour, maintenance and deck work on a 2-on / 4-off rota.',
+  j14:'Able Seaman on ocean-going vessels handling watch, cargo and deck duties. Credential and sea time required.',
+  j15:'Pull and terminate subsea cables on offshore wind installs. GWO basic safety gets you on the boat.',
+  j16:'Haul frac sand to well sites, home most weekends. CDL-A required, oilfield pays a premium.',
+  j17:'Roustabout on a jack-up rig in the Gulf. Entry-level deck work with international rotation.',
+  j18:'Offshore fabrication welder on major energy projects in Qatar. Certified welders on strong rosters.',
+  j19:'Trainee ROV pilot tech: launch, pilot and maintain remote subsea vehicles. Fast-growing, well-paid path.',
+  j20:'Deck crew on an FPSO producing offshore Guyana, one of the fastest-growing oil regions in the world.',
+  j21:'Trades assistant supporting maintenance crews on a Pilbara mine. Entry-level with a clear path up.',
+  j22:'Experienced offshore wind technician on North Sea farms. GWO + medical required, excellent day rates.',
+  j23:'Drilling roughneck in Brazil’s Santos Basin. Physical rig work with international rotation.',
+  j24:'Maintenance welder on refinery and plant shutdowns. Short, intense, high-paying project work.'
+};
+// enrich jobs with Woo-style display fields (type / level / posted / desc)
 JOBS.forEach(function(j,i){
   j.type = /shutdown|project/i.test(j.rota) ? 'Contract' : (/\/|on |roster|rota/i.test(j.rota) ? 'Rotational' : 'Full-time');
   j.level = j.noexp ? 'Entry level' : 'Experienced';
   j.posted = ['2h','5h','9h','14h','1d','1d','2d','3d','4d','5d','6d','1w'][i % 12];
+  j.desc = JOBDESC[j.id] || '';
 });
 window.HH_JOBS = JOBS;
 
@@ -424,9 +452,31 @@ function finishGate(){
   else if(mode === 'pro'){ HH.checkout(plan); }
 }
 window.HH.closeGate = function(){ var m=document.getElementById('gateModal'); if(m) m.classList.remove('on'); };
+function loadGSI(cb){
+  if(window.google && window.google.accounts){ cb(); return; }
+  var s=document.createElement('script'); s.src='https://accounts.google.com/gsi/client'; s.async=true; s.defer=true;
+  s.onload=cb; s.onerror=function(){ cb(); }; document.head.appendChild(s);
+}
+function googleReal(cid){
+  loadGSI(function(){
+    if(!(window.google && google.accounts && google.accounts.id)){ googleMock(); return; }
+    google.accounts.id.initialize({
+      client_id: cid,
+      callback: function(resp){
+        var name='', email='';
+        try{ var p=JSON.parse(atob(resp.credential.split('.')[1])); name=p.name||''; email=p.email||''; }catch(e){}
+        Auth.signup(name, email); ga('sign_up',{method:'google'}); finishGate();
+      }
+    });
+    google.accounts.id.prompt(function(n){
+      if(n.isNotDisplayed && n.isNotDisplayed() || n.isSkippedMoment && n.isSkippedMoment()){ /* user closed one-tap */ }
+    });
+  });
+}
+function googleMock(){ Auth.signup('Crew','you@gmail.com'); ga('sign_up',{method:'google'}); HH.toast('Signed in with Google (demo)'); finishGate(); }
 window.HH.authGoogle = function(){
-  // Real Google Identity Services when CONFIG.GOOGLE_CLIENT_ID is set; otherwise a mock account (demo-grade, like the rest of auth).
-  Auth.signup('Crew', 'you@gmail.com'); ga('sign_up', { method:'google' }); HH.toast('Signed in with Google'); finishGate();
+  var cid = CONFIG.GOOGLE_CLIENT_ID;
+  if(cid){ googleReal(cid); } else { googleMock(); }   // real GSI when a Client ID is configured, else demo account
 };
 window.HH.authEmail = function(){
   var e = (document.getElementById('gateEmail')||{}).value || '';
@@ -488,7 +538,7 @@ function footHTML(){
     '<div class="fcol"><h5>Explore</h5><a href="jobs.html">Job board</a><a href="locations.html">Locations</a><a href="roadmap.html">Ticket roadmap</a><a href="pay.html">Pay explorer</a><a href="directory.html">Agencies</a></div>'+
     '<div class="fcol"><h5>Product</h5><a href="start.html">Rig-Ready assessment</a><a href="cv.html">Offshore CV builder</a><a href="blog.html">Blog</a><a href="pricing.html">Pricing</a><a href="dashboard.html">Dashboard</a></div>'+
     '<div class="fcol"><h5>Company</h5><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="mailto:hello@hardhatjobs.co">Contact</a></div>'+
-    '</div><div class="wrap" style="margin-top:28px;font-size:12px;color:var(--faint);line-height:1.7">© 2026 HardHat. <b style="color:var(--muted)">Independent platform — not affiliated with, endorsed by, or partnered with any company named on this site.</b> Company names and logos are the trademarks of their respective owners, shown only to indicate sectors and employers that hire for these roles. Job listings, pay ranges and demand figures are illustrative industry estimates, not live vacancies or guarantees. Work offshore and in the trades carries real physical risk — always complete accredited safety training.</div></footer>';
+    '</div><div class="wrap" style="margin-top:28px;font-size:12px;color:var(--faint);line-height:1.7">© 2026 HardHat. <b style="color:var(--muted)">Independent platform — not affiliated with, endorsed by, or partnered with any company named on this site.</b> Company names and logos are the trademarks of their respective owners, shown only to indicate sectors and employers that hire for these roles. Job listings, pay ranges and demand figures are illustrative industry estimates, not live vacancies or guarantees. Work offshore and in the trades carries real physical risk; always complete accredited safety training. Photos: Wikimedia Commons &amp; Unsplash.</div></footer>';
 }
 window.HH.mountChrome = function(active){
   var n=document.getElementById('nav'); if(n) n.innerHTML=navHTML(active);

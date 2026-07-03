@@ -71,6 +71,27 @@ h2.sec{font-family:"Space Grotesk",sans-serif;font-weight:800;font-size:clamp(28
 h1.hero-h1{font-family:"Space Grotesk",sans-serif;font-weight:900;font-size:clamp(40px,7.6vw,80px);line-height:.96;letter-spacing:-.025em;max-width:16ch;margin:0 auto}
 h1.hero-h1 em{font-style:normal;color:var(--hi)}
 .sub{color:var(--ink2);font-size:clamp(16px,2vw,19px);max-width:58ch;margin:22px auto 0}
+/* split hero (photo + register) */
+.herowrap{display:grid;grid-template-columns:1.05fr .95fr;gap:44px;align-items:center;text-align:left}
+@media(max-width:900px){.herowrap{grid-template-columns:1fr;text-align:center;gap:30px}}
+.herotext h1.hero-h1{margin:16px 0 0;max-width:none}
+.herotext .sub{margin:16px 0 0;max-width:46ch}
+@media(max-width:900px){.herotext .sub{margin-left:auto;margin-right:auto}}
+.heroform{display:flex;gap:10px;max-width:460px;margin-top:26px}
+@media(max-width:900px){.heroform{margin-left:auto;margin-right:auto}}
+@media(max-width:480px){.heroform{flex-direction:column}}
+.heroform .inp{flex:1;background:var(--panel);border:1px solid var(--line2);border-radius:12px;padding:14px 16px;color:var(--ink);font-family:inherit;font-size:15px}
+.heroform .inp:focus{outline:none;border-color:var(--hi)}
+.heroform .btn{white-space:nowrap}
+.heromedia{position:relative}
+.herophoto{width:100%;height:auto;max-height:480px;object-fit:cover;border-radius:22px;box-shadow:var(--shadow)}
+.floatcard{position:absolute;left:-16px;bottom:20px;background:var(--panel);border:1px solid var(--line2);border-radius:16px;padding:16px 18px;box-shadow:var(--shadow);width:212px;text-align:left}
+.floatcard .hh{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.floatcard .hh small{font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint)}
+.floatcard .big{font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:30px;line-height:1}
+.floatcard .hr{display:flex;justify-content:space-between;font-size:12.5px;color:var(--ink2)}
+@media(max-width:900px){.floatcard{left:14px;bottom:14px}}
+@media(max-width:480px){.floatcard{display:none}}
 .cta-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:30px}
 .micro{margin-top:14px;font-size:12.5px;color:var(--faint);font-family:"JetBrains Mono",monospace}
 .strip{display:flex;flex-wrap:wrap;justify-content:center;gap:12px 26px;margin-top:42px}
@@ -198,6 +219,8 @@ h1.hero-h1 em{font-style:normal;color:var(--hi)}
 .jrow .jmain{flex:1;min-width:0}
 .jrow .jmain h3{font-family:"Space Grotesk",sans-serif;font-weight:600;font-size:16px;letter-spacing:-.01em}
 .jrow .jmain .jco{color:var(--muted);font-size:13px;margin-top:1px}
+.jrow .jmain .jdesc{color:var(--ink2);font-size:13px;margin-top:6px;max-width:60ch;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden}
+@media(max-width:640px){.jrow .jmain .jdesc{display:none}}
 .jrow .jchips{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px}
 .jchip{font-size:12px;color:var(--ink2);background:var(--bg3);border:1px solid var(--line);padding:4px 10px;border-radius:999px}
 .jchip.hi{color:var(--hi);border-color:var(--hi-soft);background:var(--hi-soft)}
@@ -249,6 +272,29 @@ h1.hero-h1 em{font-style:normal;color:var(--hi)}
 .gatelist{list-style:none;margin:0 0 16px;display:flex;flex-direction:column;gap:8px}
 .gatelist li{font-size:13.5px;color:var(--ink2);display:flex;gap:9px}
 .gatelist li::before{content:"✓";color:var(--good);font-weight:700;flex:none}
+
+/* full-bleed field photo band */
+.photoband{position:relative;min-height:340px;display:grid;place-items:center;text-align:center;color:#fff;overflow:hidden;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.photoband img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.photoband::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(6,12,20,.55),rgba(6,12,20,.72))}
+.photoband .pb{position:relative;z-index:2;padding:56px 22px;max-width:640px}
+.photoband h2{font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:clamp(26px,4vw,40px);letter-spacing:-.02em}
+.photoband p{color:rgba(255,255,255,.85);margin:12px auto 20px;font-size:16px;max-width:44ch}
+.photoband .btn-hi{background:#fff;color:var(--onyx);border-color:#fff}
+
+/* onboarding split (funnel) */
+.onboard{display:grid;grid-template-columns:.82fr 1.18fr;gap:0;align-items:stretch;border:1px solid var(--line);border-radius:22px;overflow:hidden;box-shadow:var(--shadow);background:var(--panel)}
+@media(max-width:860px){.onboard{grid-template-columns:1fr}}
+.onboard .orail{position:relative;color:#fff;min-height:100%;display:flex;flex-direction:column;justify-content:flex-end;padding:28px}
+.onboard .orail img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.onboard .orail::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(6,12,20,.35),rgba(6,12,20,.82))}
+.onboard .orail .oc{position:relative;z-index:2}
+.onboard .orail h3{font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:22px;line-height:1.15}
+.onboard .orail ul{list-style:none;margin:14px 0 0;display:flex;flex-direction:column;gap:9px}
+.onboard .orail li{font-size:13.5px;color:rgba(255,255,255,.9);display:flex;gap:9px}
+.onboard .orail li::before{content:"✓";color:#7fe0a8;font-weight:700}
+.onboard .obody{padding:30px}
+@media(max-width:860px){.onboard .orail{min-height:180px}.onboard .obody{padding:24px}}
 
 /* conversion popup */
 .modal.popup{opacity:0;transition:opacity .2s}

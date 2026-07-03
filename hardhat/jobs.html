@@ -65,7 +65,7 @@ function rowHTML(j){
     (intake&&j._m>=60?'<span class="jchip good">'+j._m+'% match</span>':'');
   return '<div class="jrow" onclick="openJob(\''+j.id+'\')">'+
     '<div class="jlogo">'+HH.logo(j.logo,j.co)+'</div>'+
-    '<div class="jmain"><h3>'+j.title+'</h3><div class="jco">'+j.co+'</div><div class="jchips">'+chips+'</div></div>'+
+    '<div class="jmain"><h3>'+j.title+'</h3><div class="jco">'+j.co+'</div>'+(j.desc?'<div class="jdesc">'+j.desc+'</div>':'')+'<div class="jchips">'+chips+'</div></div>'+
     '<div class="jloc">'+j.loc+'<span class="jtime">'+j.posted+' ago</span></div>'+
     '<div class="jpay"><b>'+j.pay+'</b><span>per year</span></div>'+
     '<button class="jbookmark'+(sv?' on':'')+'" title="Save" onclick="event.stopPropagation();saveJob(\''+j.id+'\')">'+(sv?'★':'☆')+'</button>'+
@@ -111,6 +111,7 @@ function openJob(id){
   document.getElementById('jobBox').innerHTML=
     '<span class="mclose" onclick="closeJob()">×</span>'+
     '<div style="display:flex;gap:14px;align-items:center"><div class="jlogo" style="width:54px;height:54px">'+HH.logo(j.logo,j.co)+'</div><div><h3 class="display" style="font-size:22px;margin-bottom:2px">'+j.title+'</h3><p style="color:var(--muted)">'+j.co+' · '+j.loc+'</p></div></div>'+
+    (j.desc?'<p style="color:var(--ink2);font-size:14.5px;margin:14px 0 4px">'+j.desc+'</p>':'')+
     '<div class="grid3" style="margin:16px 0"><div class="dstat"><b style="font-size:22px">'+j.pay+'</b><span>per year</span></div><div class="dstat"><b style="font-size:16px">'+j.rota+'</b><span>rotation</span></div><div class="dstat"><b style="font-size:16px">'+(j.noexp?'None':'Some')+'</b><span>experience</span></div></div>'+
     '<div class="eyebrow" style="text-align:left">Tickets you’ll need</div><div style="margin:10px 0">'+(tickets||'<p style="color:var(--muted);font-size:14px">Check your roadmap.</p>')+'</div>'+
     '<button class="btn btn-hi btn-block btn-lg" onclick="applyJob(\''+j.id+'\')">'+(paid?'Apply through agency →':'🔒 Apply — unlock with Pro')+'</button>'+
