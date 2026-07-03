@@ -61,6 +61,7 @@ function gen(){
       btn.disabled=false; document.getElementById('status').textContent=j.engine==='heuristic'?'Draft built (AI keys not set — using template).':'';
       document.getElementById('out').style.display='block';
       document.getElementById('cvText').textContent=j.cv||'Could not build CV — try again.';
+      HH.set('cv_built',1);
       HH.ga('cv_built',{sector:sec.value});
     })
     .catch(function(){ btn.disabled=false; document.getElementById('status').textContent='Something went wrong — try again.'; });

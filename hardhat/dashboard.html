@@ -30,6 +30,19 @@
       <!-- NEXT STEP -->
       <div id="nextStep"></div>
 
+      <!-- COMPLETE YOUR PROFILE CHECKLIST -->
+      <div class="panel checkcard" id="checkCard" style="margin-top:18px">
+        <div class="checkhead">
+          <div>
+            <div class="eyebrow" style="text-align:left">Complete your profile</div>
+            <p id="checkSub" style="color:var(--muted);font-size:13.5px;margin:4px 0 0">Workers who finish every step are 3× more likely to get hired.</p>
+          </div>
+          <div class="checkring" id="checkRing"><i><b id="checkN">0/6</b></i></div>
+        </div>
+        <div class="progbar" style="margin:14px 0 4px"><i id="checkBar" style="width:0%"></i></div>
+        <div id="checkRows" style="margin-top:12px"></div>
+      </div>
+
       <!-- STATS -->
       <div class="dstats" style="margin-top:18px">
         <div class="dstat"><b id="stTickets">0</b><span>tickets done</span></div>
@@ -126,6 +139,28 @@ else {
     '<a class="btn btn-ink btn-block btn-sm" style="margin-top:12px" href="roadmap.html">Open my roadmap →</a>';
   document.getElementById('missBox').innerHTML=missHtml;
 
+  // COMPLETE YOUR PROFILE checklist
+  var u2=HH.Auth.user()||{};
+  var items=[
+    {k:'assess', label:'Take the Rig-Ready assessment', done:true, href:'start.html', cta:'Redo'},
+    {k:'tickets', label:'Complete your required tickets', done:missing.length===0, href:'roadmap.html', cta:'Do it'},
+    {k:'cv', label:'Build your offshore CV', done:!!HH.get('cv_built'), href:'cv.html', cta:'Do it'},
+    {k:'phone', label:'Add your phone for job alerts', done:!!(u2.phone&&(''+u2.phone).length>=6), href:'#', cta:'Add', act:'phone'},
+    {k:'save', label:'Save your first job', done:saved.length>0, href:'jobs.html', cta:'Do it'},
+    {k:'apply', label:'Apply to your first job', done:appliedN>0, href:'jobs.html', cta:'Do it'}
+  ];
+  var doneCount=items.filter(function(x){return x.done;}).length;
+  var cpct=Math.round(doneCount/items.length*100);
+  document.getElementById('checkN').textContent=doneCount+'/'+items.length;
+  document.getElementById('checkBar').style.width=cpct+'%';
+  document.getElementById('checkRing').style.setProperty('--v',cpct);
+  if(doneCount===items.length){ document.getElementById('checkSub').textContent='All set — your profile is complete. Keep applying and stay ticket-current.'; document.getElementById('checkCard').classList.add('checkdone'); }
+  document.getElementById('checkRows').innerHTML=items.map(function(x){
+    if(x.done) return '<div class="checkrow done"><span class="cl"><span class="cbox">✓</span>'+x.label+'</span></div>';
+    var link=x.act==='phone'?'<a href="javascript:void(0)" onclick="addPhone()">'+x.cta+' →</a>':'<a href="'+x.href+'">'+x.cta+' →</a>';
+    return '<div class="checkrow"><span class="cl"><span class="cbox"></span>'+x.label+'</span>'+link+'</div>';
+  }).join('');
+
   // NEXT STEP banner — single most important action
   var ns;
   if(missing.length){
@@ -174,6 +209,12 @@ else {
 
   document.getElementById('upsell').style.display=paid?'none':'block';
 }
+function addPhone(){
+  var v=prompt('Enter your mobile number for job alerts (with country code):','');
+  if(v&&v.replace(/\D/g,'').length>=6){ HH.Auth.setPhone(v.trim()); HH.toast&&HH.toast('Phone saved'); location.reload(); }
+  else if(v!==null){ alert('Please enter a valid phone number.'); }
+}
+window.addPhone=addPhone;
 </script>
 </body>
 </html>

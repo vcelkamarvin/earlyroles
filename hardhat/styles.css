@@ -388,6 +388,21 @@ h1.hero-h1 em{font-style:normal;color:var(--hi)}
 .progbar{height:9px;background:var(--bg3);border-radius:99px;overflow:hidden;margin:6px 0 2px}
 .progbar i{display:block;height:100%;background:var(--good);border-radius:99px;transition:.5s}
 
+/* complete-your-profile checklist */
+.checkcard{border:1.5px solid var(--line)}
+.checkcard.checkdone{border-color:var(--good);background:linear-gradient(135deg,rgba(31,157,97,.06),var(--panel))}
+.checkhead{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.checkring{--v:0;width:64px;height:64px;flex:none;border-radius:50%;background:conic-gradient(var(--good) calc(var(--v)*1%),var(--line) 0);display:grid;place-items:center}
+.checkring i{width:50px;height:50px;border-radius:50%;background:var(--panel);display:grid;place-items:center}
+.checkring b{font-family:"Space Grotesk",sans-serif;font-size:15px;font-weight:800;color:var(--ink)}
+.checkrow{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px solid var(--line)}
+.checkrow:last-child{border-bottom:none}
+.checkrow .cl{display:flex;align-items:center;gap:11px;font-size:14px;min-width:0}
+.checkrow .cbox{width:20px;height:20px;flex:none;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;font-size:12px;color:transparent}
+.checkrow.done .cl{color:var(--muted)}
+.checkrow.done .cbox{background:var(--good);border-color:var(--good);color:#fff}
+.checkrow a{color:var(--hi);font-size:13px;font-weight:700;white-space:nowrap}
+
 /* modal */
 .modal{position:fixed;inset:0;background:rgba(0,0,0,.72);backdrop-filter:blur(3px);z-index:100;display:none;align-items:center;justify-content:center;padding:20px}
 .modal.on{display:flex}

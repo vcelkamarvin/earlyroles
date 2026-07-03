@@ -371,6 +371,7 @@ var Auth = {
   signup: function(name, email){ var u={name:name||'Crew',email:email||'',ts:Date.now()}; set('user',u); ga('sign_up',{}); saveLead(); return u; },
   login: function(email){ var u=get('user')||{name:'Crew'}; u.email=email||u.email; set('user',u); return u; },
   logout: function(){ del('user'); },
+  setPhone: function(phone){ var u=get('user')||{name:'Crew',email:'',ts:Date.now()}; u.phone=phone||''; set('user',u); return u; },
   plan: function(){ return get('plan','free'); },
   setPlan: function(p){ set('plan',p); ga('plan_set',{plan:p}); },
   isPaid: function(){ var p=get('plan','free'); return p==='pro'||p==='pro_annual'||p==='fasttrack'; },
