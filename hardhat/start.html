@@ -133,6 +133,34 @@
       </div>
     </div>
 
+    <!-- OFFER (paywall before the plan) -->
+    <div id="offer" class="result" style="display:none">
+      <div class="center">
+        <div class="popbadge">✓ Assessment complete</div>
+        <h2 class="qh" style="margin-top:14px">Your plan is ready<span id="offName"></span>.</h2>
+        <div class="ring" id="offRing" style="margin:16px auto"><i><b id="offScore">0</b><span>rig-ready</span></i></div>
+        <p class="qsub" id="offBlurb" style="max-width:44ch;margin:0 auto"></p>
+      </div>
+      <div class="offerbox">
+        <div class="popbadge">HardHat Pro</div>
+        <h3 class="display" style="font-size:22px;margin:8px 0 4px">Unlock your full path to a $70k+ job</h3>
+        <p style="color:var(--muted);font-size:14px;margin-bottom:14px">Everything you need to go from today to a signed contract:</p>
+        <ul class="valuestack">
+          <li><span>✓ Full ticket &amp; medical roadmap</span><b>$120</b></li>
+          <li><span>✓ AI offshore CV builder</span><b>$90</b></li>
+          <li><span>✓ Crewing-agency shortlist + contacts</span><b>$150</b></li>
+          <li><span>✓ Apply to every matched job</span><b>$140</b></li>
+          <li><span>✓ Personalized recommendations &amp; alerts</span><b>incl.</b></li>
+        </ul>
+        <div class="valuetotal"><span>Total value</span><b><s>$500+</s></b></div>
+        <div class="offerprice"><b>$38</b><span>/month</span></div>
+        <button class="btn btn-hi btn-block btn-lg" onclick="offerUnlock('pro_monthly')">Unlock my plan →</button>
+        <p class="guarantee">🔒 Secure checkout · Cancel anytime · <span class="hi">1,240 hired this month</span></p>
+        <div class="offertesti">“Had an offer in 6 weeks at $92k. The roadmap told me exactly what to get.” — Marcus T., Roughneck</div>
+        <button class="linkbtn" onclick="offerSkip()">No thanks, show my limited plan →</button>
+      </div>
+    </div>
+
     <!-- RESULT -->
     <div id="result" class="result" style="display:none">
       <div class="center">
@@ -265,10 +293,29 @@ function finish(method){
   // seed roadmap: mark held tickets done
   var done={}; data.tickets.forEach(function(id){ done[id]=true; }); HH.set('tickets_done',done);
   HH.ga('generate_lead',{sector:data.sector});
-  showResult();
+  revealPlan();
 }
+function revealPlan(){
+  document.getElementById('wizard').style.display='none';
+  if(HH.Auth.isPaid()){ showResult(); } else { showOffer(); }
+}
+function showOffer(){
+  var o=document.getElementById('offer'); o.style.display='block';
+  var r=HH.rigReadyScore(data);
+  var u=HH.Auth.user()||{}; var nm=(u.name||'').split(' ')[0];
+  document.getElementById('offName').textContent = nm ? (', '+nm) : '';
+  document.getElementById('offBlurb').textContent=r.blurb;
+  var ring=document.getElementById('offRing'), n=document.getElementById('offScore'), i=0;
+  var t=setInterval(function(){ i+=Math.ceil(r.score/28); if(i>=r.score)i=r.score; n.textContent=i; ring.style.setProperty('--v',i); if(i>=r.score)clearInterval(t); },26);
+  window.scrollTo({top:0,behavior:'smooth'});
+  HH.ga('offer_view',{sector:data.sector});
+}
+function offerUnlock(plan){ HH.ga('offer_unlock',{plan:plan||'pro_monthly'}); HH.checkout(plan||'pro_monthly'); }
+function offerSkip(){ HH.ga('offer_skip',{}); document.getElementById('offer').style.display='none'; showResult(); }
+window.offerUnlock=offerUnlock; window.offerSkip=offerSkip;
 function showResult(){
   document.getElementById('wizard').style.display='none';
+  document.getElementById('offer').style.display='none';
   document.getElementById('result').style.display='block';
   var r=HH.rigReadyScore(data);
   // animate ring
