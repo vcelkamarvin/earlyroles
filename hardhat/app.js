@@ -522,10 +522,11 @@ window.HH.checkout = function(plan){
   ga('begin_checkout',{plan:plan});
   var link = CONFIG.PAY[plan];
   if(link){ location.href=link; return; }
+  function fallback(){ location.href = Auth.signedIn() ? 'dashboard.html' : ('signup.html?plan='+encodeURIComponent(plan)); }
   fetch('/api/checkout',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({plan:plan})})
     .then(function(r){return r.json();})
-    .then(function(j){ if(j&&j.url){ location.href=j.url; } else { location.href='signup.html?plan='+encodeURIComponent(plan); } })
-    .catch(function(){ location.href='signup.html?plan='+encodeURIComponent(plan); });
+    .then(function(j){ if(j&&j.url){ location.href=j.url; } else { fallback(); } })
+    .catch(fallback);
 };
 
 /* ------------------------------------------------------------------ */

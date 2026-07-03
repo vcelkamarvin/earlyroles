@@ -268,8 +268,8 @@ h1.hero-h1 em{font-style:normal;color:var(--hi)}
 .hcard .hr .mono{color:var(--hi)}
 
 /* auth gate: Continue with Google + divider */
-.gbtn{width:100%;display:flex;align-items:center;justify-content:center;gap:10px;background:#fff;color:#1f2937;border:1px solid var(--line2);border-radius:11px;padding:13px 16px;font-family:"Space Grotesk",sans-serif;font-weight:600;font-size:14.5px;cursor:pointer;transition:.14s}
-.gbtn:hover{border-color:#b7bdc7;box-shadow:0 6px 18px -12px rgba(15,23,42,.3)}
+.gbtn{width:100%;display:flex;align-items:center;justify-content:center;gap:10px;background:#fff;color:#1f2937;border:1.5px solid #d0d5dd;border-radius:11px;padding:13px 16px;font-family:"Space Grotesk",sans-serif;font-weight:600;font-size:14.5px;cursor:pointer;transition:.14s;box-shadow:0 2px 6px -1px rgba(15,23,42,.12)}
+.gbtn:hover{border-color:#9aa2ad;background:#fafbfc;box-shadow:0 8px 20px -10px rgba(15,23,42,.28)}
 .ordiv{display:flex;align-items:center;gap:12px;margin:14px 0;color:var(--faint);font-size:12px}
 .ordiv::before,.ordiv::after{content:"";flex:1;height:1px;background:var(--line)}
 .gatelist{list-style:none;margin:0 0 16px;display:flex;flex-direction:column;gap:8px}
