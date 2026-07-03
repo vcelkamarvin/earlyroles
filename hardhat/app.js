@@ -9,6 +9,8 @@ var CONFIG = {
   BRAND: 'HardHat',
   GA_MEASUREMENT_ID: '',              // set to enable GA4
   GOOGLE_CLIENT_ID: '',               // set to enable real "Continue with Google"
+  SUPABASE_URL: 'https://ossyctgqycfkcdcncpgg.supabase.co',   // durable lead capture (Supabase REST)
+  SUPABASE_KEY: 'sb_publishable_GQGwqejtKqPBwUXOQe0E0w_d4iHupij', // publishable key (safe in client)
   // Stripe Payment Links (fastest path). Leave '' to use /api/checkout.
   PAY: { pro_monthly:'', pro_annual:'', fasttrack:'' }
 };
@@ -19,6 +21,27 @@ function ga(ev, params){
   try{ if(window.gtag) window.gtag('event', ev, params||{}); }catch(e){}
 }
 window.hhTrack = ga;
+
+/* Durable lead capture -> Supabase (best-effort, never blocks the UI) */
+function saveLead(){
+  try{
+    var url = CONFIG.SUPABASE_URL, key = CONFIG.SUPABASE_KEY;
+    if(!url || !key) return;
+    var u = get('user') || {}, ik = get('intake') || {};
+    if(!u.email) return;
+    fetch(url.replace(/\/$/,'') + '/rest/v1/hardhat_leads', {
+      method:'POST',
+      headers:{ 'Content-Type':'application/json', 'apikey':key, 'Authorization':'Bearer '+key, 'Prefer':'return=minimal' },
+      body: JSON.stringify({
+        email: u.email, name: u.name || '',
+        sector: ik.sector || null, experience: ik.experience || null,
+        plan: get('plan','free'), source: (typeof location!=='undefined' ? location.pathname : ''),
+        payload: ik
+      })
+    }).catch(function(){});
+  }catch(e){}
+}
+window.HH_saveLead = saveLead;
 
 /* ------------------------------------------------------------------ */
 /* SECTORS — the 8 verticals                                           */
@@ -345,7 +368,7 @@ function del(k){ try{ localStorage.removeItem('hh_'+k); }catch(e){} }
 var Auth = {
   user: function(){ return get('user'); },
   signedIn: function(){ return !!get('user'); },
-  signup: function(name, email){ var u={name:name||'Crew',email:email||'',ts:Date.now()}; set('user',u); ga('sign_up',{}); return u; },
+  signup: function(name, email){ var u={name:name||'Crew',email:email||'',ts:Date.now()}; set('user',u); ga('sign_up',{}); saveLead(); return u; },
   login: function(email){ var u=get('user')||{name:'Crew'}; u.email=email||u.email; set('user',u); return u; },
   logout: function(){ del('user'); },
   plan: function(){ return get('plan','free'); },
@@ -432,7 +455,7 @@ function authGate(opts){
   m.innerHTML =
     '<div class="mbox" style="max-width:430px">'+
       '<span class="mclose" onclick="HH.closeGate()">×</span>'+
-      '<div class="popbadge">'+(pro ? 'HardHat Pro · $29/mo' : 'Free account')+'</div>'+
+      '<div class="popbadge">'+(pro ? 'HardHat Pro · $38/mo' : 'Free account')+'</div>'+
       '<h3 class="display" style="font-size:24px;margin:10px 0 6px">'+(opts.title || (pro ? 'Unlock this with HardHat Pro' : 'Create your free account'))+'</h3>'+
       '<p style="color:var(--muted);font-size:14.5px;margin-bottom:18px">'+(opts.reason || 'Register to continue — it takes 10 seconds and saves your progress.')+'</p>'+
       (pro ? '<ul class="gatelist"><li>Apply to jobs + real agency contacts</li><li>Full ticket roadmap & AI offshore CV</li><li>Unlimited saved jobs & alerts</li></ul>' : '')+

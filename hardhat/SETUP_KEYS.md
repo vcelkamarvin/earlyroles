@@ -22,7 +22,7 @@ Until these are set, `/api/checkout` returns `not_configured` and the site route
 | `STRIPE_PRICE_FASTTRACK` | Price ID for Fast-Track ($149, one-time payment) |
 
 ### Quick alternative: Stripe Payment Links (fastest — no secret key)
-Create three Payment Links in the Stripe dashboard and paste the URLs into `app.js` → `CONFIG.PAY`:
+Create three Payment Links in the Stripe dashboard (Pro $38/mo, Pro $290/yr, Fast-Track $190 one-time) and paste the URLs into `app.js` → `CONFIG.PAY`:
 ```
 PAY: { pro_monthly:'https://buy.stripe.com/…', pro_annual:'https://buy.stripe.com/…', fasttrack:'https://buy.stripe.com/…' }
 ```

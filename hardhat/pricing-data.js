@@ -1,21 +1,7 @@
 /* HardHat — shared pricing data + renderer */
 var HH_PRICING = [
   {
-    id:'free', name:'Deckhand', price:'$0', per:'forever', note:'Get started, no card',
-    plan:null, cta:'Start free', href:'start.html', feat:false,
-    features:[
-      {t:'Browse the full job board worldwide', on:true},
-      {t:'Pay & rotation explorer', on:true},
-      {t:'Rig-Ready Score + step 1 of your plan', on:true},
-      {t:'Save up to 3 jobs', on:true},
-      {t:'Agency directory (preview only)', on:true},
-      {t:'Apply to jobs + agency contacts', on:false},
-      {t:'Full ticket & medical roadmap', on:false},
-      {t:'AI offshore CV builder', on:false}
-    ]
-  },
-  {
-    id:'pro', name:'HardHat Pro', price:'$29', per:'/month', note:'or $190/yr — save 45%',
+    id:'pro', name:'HardHat Pro', price:'$38', per:'/month', note:'or $290/yr — save 36%',
     plan:'pro_monthly', cta:'Go Pro', href:'#', feat:true,
     features:[
       {t:'Everything in Deckhand', on:true},
@@ -29,7 +15,7 @@ var HH_PRICING = [
     ]
   },
   {
-    id:'fasttrack', name:'Fast-Track', price:'$149', per:'one-time', note:'Hired-in-90-days push',
+    id:'fasttrack', name:'Fast-Track', price:'$190', per:'one-time', note:'Hired-in-90-days push',
     plan:'fasttrack', cta:'Get Fast-Track', href:'#', feat:false,
     features:[
       {t:'Everything in Pro for 3 months', on:true},

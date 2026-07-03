@@ -152,7 +152,7 @@
         <h3 class="display" style="font-size:20px;margin:8px 0 6px">Unlock your full roadmap + matched jobs</h3>
         <p style="color:var(--muted);font-size:14px;max-width:44ch;margin:0 auto 16px">See every ticket you need with costs & where to get them, the exact jobs you already qualify for, and the crewing agencies hiring right now.</p>
         <a class="btn btn-hi btn-lg" href="pricing.html">Unlock HardHat Pro →</a>
-        <p class="micro">$29/mo · cancel anytime</p>
+        <p class="micro">$38/mo · cancel anytime</p>
       </div>
 
       <div class="grid2" style="margin-top:18px">
@@ -260,8 +260,8 @@ function finish(method){
   var name=(document.getElementById('fName').value||'').trim();
   var email=(document.getElementById('fEmail').value||'').trim();
   data.name=name; data.email=email; data.ts=Date.now();
-  HH.Auth.signup(name,email);
   HH.Auth.setIntake(data);
+  HH.Auth.signup(name,email);
   // seed roadmap: mark held tickets done
   var done={}; data.tickets.forEach(function(id){ done[id]=true; }); HH.set('tickets_done',done);
   HH.ga('generate_lead',{sector:data.sector});
