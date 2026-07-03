@@ -119,6 +119,7 @@ function openJob(id){
 }
 function closeJob(){ document.getElementById('jobModal').classList.remove('on'); }
 function saveJob(id){
+  if(!HH.Auth.signedIn()){ HH.requireAuth(function(){ saveJob(id); }, 'Create a free account to save jobs and track your applications.', 'Save this job'); return; }
   var saved=HH.Auth.saved();
   if(!HH.Auth.isPaid() && saved.indexOf(id)<0 && saved.length>=3){ HH.showPaywall('Free accounts can save 3 jobs. Go Pro for unlimited saved jobs and alerts.'); return; }
   var added=HH.Auth.toggleSave(id); HH.Auth.setApp(id,'saved'); HH.toast(added?'Saved to your dashboard':'Removed');

@@ -15,6 +15,8 @@
     <div class="panel">
       <h2 class="display" style="font-size:26px">Create your account</h2>
       <p style="color:var(--muted);font-size:14px;margin:6px 0 18px" id="sub">Save your Rig-Ready plan and progress.</p>
+      <button class="gbtn" onclick="googleSignup()"><svg viewBox="0 0 48 48" width="18" height="18" style="flex:none"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.6l6.8-6.8C35.9 2.4 30.3 0 24 0 14.6 0 6.5 5.4 2.6 13.2l7.9 6.1C12.3 13.2 17.7 9.5 24 9.5z"/><path fill="#4285F4" d="M46.1 24.6c0-1.6-.1-3.1-.4-4.6H24v9.1h12.4c-.5 2.9-2.1 5.3-4.6 6.9l7.1 5.5c4.2-3.9 6.6-9.6 6.6-16.9z"/><path fill="#FBBC05" d="M10.5 28.3c-.5-1.5-.8-3-.8-4.6s.3-3.2.8-4.6l-7.9-6.1C.9 16.1 0 19.9 0 23.7s.9 7.6 2.6 10.8l7.9-6.2z"/><path fill="#34A853" d="M24 47.4c6.3 0 11.7-2.1 15.6-5.7l-7.1-5.5c-2 1.3-4.5 2.1-8.5 2.1-6.3 0-11.7-3.7-13.5-9.1l-7.9 6.1C6.5 42.6 14.6 47.4 24 47.4z"/></svg> Continue with Google</button>
+      <div class="ordiv"><span>or</span></div>
       <div class="field"><label>First name</label><input class="inp" id="name" placeholder="Jordan"></div>
       <div class="field"><label>Email</label><input class="inp" id="email" type="email" placeholder="you@email.com"></div>
       <div class="field"><label>Password</label><input class="inp" id="pw" type="password" placeholder="••••••••"></div>
@@ -30,6 +32,11 @@ HH.mountChrome('');
 var qs=new URLSearchParams(location.search); var plan=qs.get('plan');
 if(plan){ document.getElementById('sub').textContent='Create your account to continue to checkout.'; }
 var iu=HH.Auth.intake(); if(iu){ document.getElementById('name').value=iu.name||''; document.getElementById('email').value=iu.email||''; }
+function googleSignup(){
+  HH.Auth.signup('Crew','you@gmail.com'); HH.ga('sign_up',{method:'google'});
+  if(plan){ HH.checkout(plan); } else { location.href='dashboard.html'; }
+}
+window.googleSignup=googleSignup;
 function doSignup(){
   var n=document.getElementById('name').value.trim(), e=document.getElementById('email').value.trim();
   if(!n||!/.+@.+\..+/.test(e)){ HH.toast('Enter a name and valid email'); return; }

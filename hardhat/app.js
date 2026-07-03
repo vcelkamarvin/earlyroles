@@ -8,7 +8,8 @@
 var CONFIG = {
   BRAND: 'HardHat',
   GA_MEASUREMENT_ID: '',              // set to enable GA4
-  // Stripe Payment Links (optional quick path). Leave '' to use /api/checkout.
+  GOOGLE_CLIENT_ID: '',               // set to enable real "Continue with Google"
+  // Stripe Payment Links (fastest path). Leave '' to use /api/checkout.
   PAY: { pro_monthly:'', pro_annual:'', fasttrack:'' }
 };
 window.HH_CONFIG = CONFIG;
@@ -386,29 +387,61 @@ window.HH.recommendations = recommendations;
 window.HH.providers = function(id){ return PROVIDERS[id] || []; };
 
 /* ------------------------------------------------------------------ */
-/* PAYWALL                                                             */
+/* AUTH GATE — register (Continue with Google) + paywall               */
+/* Everything requires an account. Google is offered after the paywall.*/
 /* ------------------------------------------------------------------ */
-function showPaywall(reason){
-  ga('paywall_view',{reason:reason||''});
-  var m = document.getElementById('pwModal');
-  if(!m){
-    m = document.createElement('div'); m.id='pwModal'; m.className='modal';
-    m.innerHTML =
-      '<div class="mbox">'+
-      '<span class="mclose" onclick="HH.closePaywall()">×</span>'+
-      '<div class="eyebrow" style="text-align:left">Unlock HardHat Pro</div>'+
-      '<h3 class="display" style="font-size:26px;margin:8px 0 6px">Get the full path to a $60k+ job</h3>'+
-      '<p style="color:var(--muted);font-size:14.5px">'+(reason||'Unlock your complete ticket roadmap, matched jobs, the crewing-agency directory and the AI offshore CV builder.')+'</p>'+
-      '<div class="pw-price" style="margin-top:16px">$29<span style="font-size:15px;color:var(--muted)">/mo</span></div>'+
-      '<p style="font-size:13px;color:var(--faint);margin-bottom:16px">or $190/yr · cancel anytime</p>'+
-      '<a class="btn btn-hi btn-block btn-lg" href="pricing.html">See plans →</a>'+
-      '<button class="btn btn-out btn-block" style="margin-top:10px" onclick="HH.closePaywall()">Not yet</button>'+
-      '</div>';
-    document.body.appendChild(m);
-  }
+var GOOG_SVG = '<svg viewBox="0 0 48 48" width="18" height="18" style="flex:none"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.6l6.8-6.8C35.9 2.4 30.3 0 24 0 14.6 0 6.5 5.4 2.6 13.2l7.9 6.1C12.3 13.2 17.7 9.5 24 9.5z"/><path fill="#4285F4" d="M46.1 24.6c0-1.6-.1-3.1-.4-4.6H24v9.1h12.4c-.5 2.9-2.1 5.3-4.6 6.9l7.1 5.5c4.2-3.9 6.6-9.6 6.6-16.9z"/><path fill="#FBBC05" d="M10.5 28.3c-.5-1.5-.8-3-.8-4.6s.3-3.2.8-4.6l-7.9-6.1C.9 16.1 0 19.9 0 23.7s.9 7.6 2.6 10.8l7.9-6.2z"/><path fill="#34A853" d="M24 47.4c6.3 0 11.7-2.1 15.6-5.7l-7.1-5.5c-2 1.3-4.5 2.1-8.5 2.1-6.3 0-11.7-3.7-13.5-9.1l-7.9 6.1C6.5 42.6 14.6 47.4 24 47.4z"/></svg>';
+var _gate = { next:null, mode:'register', plan:'pro_monthly' };
+function authGate(opts){
+  opts = opts || {};
+  _gate.next = opts.next || null;
+  _gate.mode = opts.mode || 'register';
+  _gate.plan = opts.plan || 'pro_monthly';
+  ga('auth_gate_view', { mode:_gate.mode });
+  var pro = _gate.mode === 'pro';
+  var m = document.getElementById('gateModal');
+  if(!m){ m = document.createElement('div'); m.id='gateModal'; m.className='modal'; document.body.appendChild(m); }
+  m.innerHTML =
+    '<div class="mbox" style="max-width:430px">'+
+      '<span class="mclose" onclick="HH.closeGate()">×</span>'+
+      '<div class="popbadge">'+(pro ? 'HardHat Pro · $29/mo' : 'Free account')+'</div>'+
+      '<h3 class="display" style="font-size:24px;margin:10px 0 6px">'+(opts.title || (pro ? 'Unlock this with HardHat Pro' : 'Create your free account'))+'</h3>'+
+      '<p style="color:var(--muted);font-size:14.5px;margin-bottom:18px">'+(opts.reason || 'Register to continue — it takes 10 seconds and saves your progress.')+'</p>'+
+      (pro ? '<ul class="gatelist"><li>Apply to jobs + real agency contacts</li><li>Full ticket roadmap & AI offshore CV</li><li>Unlimited saved jobs & alerts</li></ul>' : '')+
+      '<button class="gbtn" onclick="HH.authGoogle()">'+GOOG_SVG+' Continue with Google</button>'+
+      '<div class="ordiv"><span>or</span></div>'+
+      '<input class="inp" id="gateEmail" type="email" placeholder="you@email.com" style="margin-bottom:10px" onkeydown="if(event.key===\'Enter\')HH.authEmail()">'+
+      '<button class="btn btn-hi btn-block btn-lg" onclick="HH.authEmail()">Continue with email →</button>'+
+      '<p style="text-align:center;margin-top:12px;font-size:12px;color:var(--faint)">Free to join.'+(pro ? ' Choose a plan after you sign in.' : ' No spam, unsubscribe anytime.')+'</p>'+
+    '</div>';
   m.classList.add('on');
 }
-window.HH.closePaywall = function(){ var m=document.getElementById('pwModal'); if(m)m.classList.remove('on'); };
+function finishGate(){
+  HH.closeGate();
+  var next = _gate.next, mode = _gate.mode, plan = _gate.plan;
+  _gate.next = null;
+  if(typeof next === 'function'){ try{ next(); }catch(e){} }
+  else if(mode === 'pro'){ HH.checkout(plan); }
+}
+window.HH.closeGate = function(){ var m=document.getElementById('gateModal'); if(m) m.classList.remove('on'); };
+window.HH.authGoogle = function(){
+  // Real Google Identity Services when CONFIG.GOOGLE_CLIENT_ID is set; otherwise a mock account (demo-grade, like the rest of auth).
+  Auth.signup('Crew', 'you@gmail.com'); ga('sign_up', { method:'google' }); HH.toast('Signed in with Google'); finishGate();
+};
+window.HH.authEmail = function(){
+  var e = (document.getElementById('gateEmail')||{}).value || '';
+  if(!/.+@.+\..+/.test(e)){ HH.toast('Enter a valid email'); return; }
+  Auth.signup('', e); ga('sign_up', { method:'email' }); finishGate();
+};
+window.HH.authGate = authGate;
+/* require a signed-in account before running an action */
+window.HH.requireAuth = function(next, reason, title){
+  if(Auth.signedIn()){ return next(); }
+  authGate({ mode:'register', reason:reason, title:title, next:next });
+};
+/* paywall = pro-mode auth gate (Continue with Google shown here, after the paywall) */
+function showPaywall(reason){ authGate({ mode:'pro', reason:reason, plan:'pro_monthly' }); }
+window.HH.closePaywall = window.HH.closeGate;
 window.HH.showPaywall = showPaywall;
 
 /* checkout: prefer Payment Link, else /api/checkout, else signup */
@@ -436,19 +469,22 @@ function navHTML(active){
     '<div class="navr">'+right+'</div>'+
     '</div></nav>';
 }
-/* company logo with graceful text-wordmark fallback (works offline) */
+/* company logo: real logo -> favicon -> text wordmark (always renders something) */
 function logo(domain, name, cls){
-  var safe = (name||'').replace(/"/g,'');
-  var wm = '<span class="wm">'+safe+'</span>';
-  if(!domain) return wm;
-  return '<img class="'+(cls||'lg')+'" src="https://logo.clearbit.com/'+domain+'" alt="'+safe+'" loading="lazy" '+
-         'onerror="this.outerHTML=&quot;<span class=\\&quot;wm\\&quot;>'+safe+'</span>&quot;">';
+  var safe = (name||'').replace(/"/g,'').replace(/'/g,'');
+  if(!domain) return '<span class="wm">'+safe+'</span>';
+  return '<img class="'+(cls||'lg')+'" src="https://logo.clearbit.com/'+domain+'?size=200" alt="'+safe+'" loading="lazy" '+
+         'onerror="HH.logoFallback(this,\''+domain+'\',\''+safe+'\')">';
 }
 window.HH.logo = logo;
+window.HH.logoFallback = function(img, domain, name){
+  if(!img.dataset.stage){ img.dataset.stage='1'; img.src='https://www.google.com/s2/favicons?domain='+domain+'&sz=128'; }
+  else { var s=document.createElement('span'); s.className='wm'; s.textContent=name; if(img.parentNode) img.parentNode.replaceChild(s,img); }
+};
 function footHTML(){
   return '<footer><div class="wrap foot">'+
     '<div style="max-width:280px"><div class="brand" style="margin-bottom:10px"><span class="mk">⛏</span>HardHat</div>'+
-    '<p>Find the job. Get qualified. Get hired. The no-degree path to high-paying offshore &amp; trades work — worldwide.</p></div>'+
+    '<p>Find the job, get qualified, and get hired. The no-degree route into high-paying offshore and trades work, worldwide.</p></div>'+
     '<div class="fcol"><h5>Explore</h5><a href="jobs.html">Job board</a><a href="locations.html">Locations</a><a href="roadmap.html">Ticket roadmap</a><a href="pay.html">Pay explorer</a><a href="directory.html">Agencies</a></div>'+
     '<div class="fcol"><h5>Product</h5><a href="start.html">Rig-Ready assessment</a><a href="cv.html">Offshore CV builder</a><a href="blog.html">Blog</a><a href="pricing.html">Pricing</a><a href="dashboard.html">Dashboard</a></div>'+
     '<div class="fcol"><h5>Company</h5><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="mailto:hello@hardhatjobs.co">Contact</a></div>'+
@@ -483,5 +519,46 @@ window.HH.mountTicker=function(){
 
 /* fmt helper */
 window.HH.fmt = function(n){ return '$'+Number(n).toLocaleString(); };
+
+/* ------------------------------------------------------------------ */
+/* CONVERSION POP-UP — email capture, once per browser                 */
+/* ------------------------------------------------------------------ */
+window.HH.mountPopup = function(opts){
+  opts = opts || {};
+  if(get('popup_seen')) return;            // already shown once
+  if(Auth.intake()) return;                // already a lead
+  var shown = false;
+  function build(){
+    if(shown) return; shown = true; set('popup_seen', 1);
+    var m = document.createElement('div'); m.className = 'modal popup'; m.id = 'hhPopup';
+    m.innerHTML =
+      '<div class="mbox pop">'+
+        '<span class="mclose" onclick="HH.closePopup()">×</span>'+
+        '<div class="popbadge">Free · 2 minutes</div>'+
+        '<h3 class="display" style="font-size:24px;margin:10px 0 8px">Not sure where to start?</h3>'+
+        '<p style="color:var(--muted);font-size:14.5px;margin-bottom:16px">Answer 6 quick questions and get a personalised plan: the jobs you qualify for, the tickets to get, and who to apply to.</p>'+
+        '<input class="inp" id="popEmail" type="email" placeholder="you@email.com" style="margin-bottom:10px">'+
+        '<button class="btn btn-hi btn-block btn-lg" onclick="HH.popupGo()">Build my free plan →</button>'+
+        '<p style="text-align:center;margin-top:10px;font-size:12px;color:var(--faint)">No spam. Unsubscribe anytime.</p>'+
+      '</div>';
+    document.body.appendChild(m);
+    requestAnimationFrame(function(){ m.classList.add('on'); });
+    ga('popup_view',{});
+  }
+  // trigger: exit-intent OR after 18s
+  document.addEventListener('mouseout', function(e){ if(e.clientY<=0) build(); });
+  var t = setTimeout(build, opts.delay || 18000);
+  window.HH._popupTimer = t;
+};
+window.HH.closePopup = function(){ var m=document.getElementById('hhPopup'); if(m){ m.classList.remove('on'); setTimeout(function(){ m.remove(); },200); } };
+window.HH.popupGo = function(){
+  try{
+    var el = document.getElementById('popEmail');
+    var e = el ? el.value : '';
+    if(e && /.+@.+\..+/.test(e)){ set('nl', e); Auth.signup('', e); }
+    ga('popup_submit',{});
+  }catch(_){}
+  window.location.href = 'start.html';
+};
 
 })();
