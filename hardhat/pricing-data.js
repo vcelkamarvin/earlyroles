@@ -1,7 +1,7 @@
 /* HardHat — shared pricing data + renderer */
 var HH_PRICING = [
   {
-    id:'pro', name:'HardHat Pro', price:'$48', per:'/month', note:'or $390/yr — save 32%',
+    id:'pro', name:'HardHat Pro', price:'$48', per:'/month', note:'or $290/yr — save 50%',
     plan:'pro_monthly', cta:'Go Pro', href:'#', feat:true,
     features:[
       {t:'Everything in Deckhand', on:true},
