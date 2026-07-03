@@ -13,15 +13,33 @@
 
 <section>
   <div class="wrap">
-    <div class="eyebrow">Your dashboard</div>
-    <h2 class="sec" id="hi" style="max-width:26ch">Welcome back</h2>
+    <div class="dtophead">
+      <div>
+        <div class="eyebrow" style="text-align:left">Your dashboard</div>
+        <h2 class="sec" id="hi" style="text-align:left;margin:6px 0 0;max-width:none">Welcome back</h2>
+      </div>
+      <span class="planpill" id="planPill">Free plan</span>
+    </div>
 
     <div id="noIntake" class="notice" style="max-width:640px;margin:22px auto;display:none;text-align:center">
       You haven’t taken the Rig-Ready assessment yet. <a href="start.html" style="color:var(--hi)">Take it now →</a>
     </div>
 
     <div id="board" style="display:none">
-      <div class="grid2" style="margin-top:26px;align-items:start">
+
+      <!-- NEXT STEP -->
+      <div id="nextStep"></div>
+
+      <!-- STATS -->
+      <div class="dstats" style="margin-top:18px">
+        <div class="dstat"><b id="stTickets">0</b><span>tickets done</span></div>
+        <div class="dstat"><b id="stSaved">0</b><span>saved jobs</span></div>
+        <div class="dstat"><b id="stApplied">0</b><span>applied</span></div>
+        <div class="dstat"><b id="stInterview">0</b><span>interviews</span></div>
+      </div>
+
+      <!-- SCORE + WHAT YOU'RE MISSING -->
+      <div class="grid2" style="margin-top:16px;align-items:start">
         <div class="panel center">
           <div class="eyebrow">Rig-Ready Score</div>
           <div class="ring" id="ring" style="margin:16px auto"><i><b id="scoreN">0</b><span>rig-ready</span></i></div>
@@ -29,28 +47,26 @@
           <a class="btn btn-hi btn-block" style="margin-top:14px" href="roadmap.html">Work my roadmap →</a>
         </div>
         <div class="panel">
-          <div class="eyebrow" style="text-align:left">Ticket progress</div>
-          <div id="ticketProg" style="margin-top:14px"></div>
-          <a class="btn btn-ink btn-block" style="margin-top:10px" href="roadmap.html">Update tickets →</a>
+          <div class="eyebrow" style="text-align:left">What you’re missing</div>
+          <div id="missBox" style="margin-top:12px"></div>
         </div>
       </div>
 
-      <div class="dstats" style="margin-top:16px">
-        <div class="dstat"><b id="stSaved">0</b><span>saved jobs</span></div>
-        <div class="dstat"><b id="stApplied">0</b><span>applied</span></div>
-        <div class="dstat"><b id="stTickets">0</b><span>tickets done</span></div>
-        <div class="dstat"><b id="stPlan" style="font-size:18px">Free</b><span>plan</span></div>
+      <!-- WHERE YOU'VE APPLIED -->
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin:32px 0 10px">
+        <h3 class="display" style="font-size:20px">Where you’ve applied</h3>
+        <a href="jobs.html" style="color:var(--hi);font-size:13.5px;font-weight:600">Find more jobs →</a>
       </div>
+      <div class="panel" style="padding:8px 18px" id="appsBox"></div>
 
-      <div id="recBox" style="margin-top:24px"></div>
+      <!-- RECOMMENDED -->
+      <div id="recBox" style="margin-top:26px"></div>
 
-      <h3 class="display" style="font-size:20px;margin:30px 0 12px">Application pipeline</h3>
-      <div class="pipe" id="pipe"></div>
-
-      <div class="panel" id="upsell" style="margin-top:24px;display:none">
+      <!-- UPSELL -->
+      <div class="panel" id="upsell" style="margin-top:24px;display:none;background:linear-gradient(135deg,var(--hi-soft),var(--panel))">
         <div class="grid2" style="align-items:center">
-          <div><h3 class="display" style="font-size:20px">Ready to actually get hired?</h3><p style="color:var(--muted);font-size:14px;margin-top:6px">Unlock the full roadmap, agency directory, AI CV builder and unlimited saved jobs.</p></div>
-          <div><a class="btn btn-hi btn-block btn-lg" href="pricing.html">Upgrade to Pro →</a></div>
+          <div><h3 class="display" style="font-size:20px">Ready to actually get hired?</h3><p style="color:var(--muted);font-size:14px;margin-top:6px">Unlock the full roadmap, agency contacts, AI CV builder and the ability to apply.</p></div>
+          <div><a class="btn btn-go btn-block btn-lg" href="pricing.html">Get me hired →</a></div>
         </div>
       </div>
     </div>
@@ -62,28 +78,87 @@
 <script>
 HH.mountChrome('dashboard.html');
 var u=HH.Auth.user(); var intake=HH.Auth.intake();
-document.getElementById('hi').textContent='Welcome back'+(u&&u.name?', '+u.name.split(' ')[0]:'');
+document.getElementById('hi').textContent='Welcome back'+(u&&u.name&&u.name!=='Crew'?', '+u.name.split(' ')[0]:'');
+var paid=HH.Auth.isPaid();
+document.getElementById('planPill').textContent=paid?(HH.Auth.plan()==='fasttrack'?'Fast-Track':'HardHat Pro'):'Free plan';
+if(paid) document.getElementById('planPill').className='planpill pro';
+
 if(!intake){ document.getElementById('noIntake').style.display='block'; }
 else {
   document.getElementById('board').style.display='block';
+  var sec=HH.sector(intake.sector);
+  var list=HH_TICKETS[intake.sector]||[]; var done=HH.Auth.tickets();
+  var apps=HH.Auth.apps(); var saved=HH.Auth.saved();
   var r=HH.rigReadyScore(intake);
+
+  // score ring
   var n=document.getElementById('scoreN'), ring=document.getElementById('ring'), i=0;
   var t=setInterval(function(){ i+=Math.ceil(r.score/26); if(i>=r.score)i=r.score; n.textContent=i; ring.style.setProperty('--v',i); if(i>=r.score)clearInterval(t); },26);
   document.getElementById('scoreBlurb').textContent=r.blurb;
-  // ticket progress bars
-  var list=HH_TICKETS[intake.sector]||[]; var done=HH.Auth.tickets();
-  document.getElementById('ticketProg').innerHTML=list.map(function(tk){
-    var d=!!done[tk.id];
-    return '<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--line);font-size:13.5px"><span'+(d?' style="color:var(--good)"':'')+'>'+(d?'✓ ':'○ ')+tk.name+'</span><span class="badge'+(tk.req?' req':'')+'">'+(tk.req?'required':'optional')+'</span></div>';
-  }).join('');
+
   // stats
-  var saved=HH.Auth.saved(), apps=HH.Auth.apps();
+  var ticketsDone=list.filter(function(tk){return done[tk.id];}).length;
+  var appliedN=Object.keys(apps).filter(function(k){return ['applied','responded','interview','offer'].indexOf(apps[k])>=0;}).length;
+  var interviewN=Object.keys(apps).filter(function(k){return ['interview','offer'].indexOf(apps[k])>=0;}).length;
+  document.getElementById('stTickets').textContent=ticketsDone+'/'+list.length;
   document.getElementById('stSaved').textContent=saved.length;
-  var appliedN=Object.keys(apps).filter(function(k){return apps[k]==='applied'||apps[k]==='responded'||apps[k]==='interview'||apps[k]==='offer';}).length;
   document.getElementById('stApplied').textContent=appliedN;
-  document.getElementById('stTickets').textContent=list.filter(function(tk){return done[tk.id];}).length;
-  document.getElementById('stPlan').textContent=HH.Auth.isPaid()?(HH.Auth.plan()==='fasttrack'?'Fast-Track':'Pro'):'Free';
-  // recommendations
+  document.getElementById('stInterview').textContent=interviewN;
+
+  // WHAT YOU'RE MISSING — required tickets not done + medical
+  var missing=list.filter(function(tk){return tk.req && !done[tk.id];});
+  var medMissing = intake.medical!=='valid' && !list.some(function(tk){return tk.type==='medical'&&done[tk.id];});
+  var missHtml='';
+  if(missing.length){
+    missHtml=missing.map(function(tk){
+      var provs=HH.providers(tk.id);
+      var link=provs.length?provs[0].url:'roadmap.html';
+      return '<div class="missrow"><span class="ml"><span class="mdot"></span>'+tk.name+' <span class="badge req" style="margin-left:4px">required</span></span>'+
+        '<a href="'+(provs.length?link:'roadmap.html')+'"'+(provs.length?' target="_blank" rel="noopener"':'')+'>Get it →</a></div>';
+    }).join('');
+  } else {
+    missHtml='<div class="missdone">✓ You hold every required ticket for '+(sec?sec.name:'your sector')+'.</div>';
+  }
+  // progress bar
+  var pct=list.length?Math.round(ticketsDone/list.length*100):0;
+  missHtml+='<div style="margin-top:14px"><div style="display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted)"><span>Roadmap progress</span><span>'+pct+'%</span></div>'+
+    '<div class="progbar"><i style="width:'+pct+'%"></i></div></div>'+
+    '<a class="btn btn-ink btn-block btn-sm" style="margin-top:12px" href="roadmap.html">Open my roadmap →</a>';
+  document.getElementById('missBox').innerHTML=missHtml;
+
+  // NEXT STEP banner — single most important action
+  var ns;
+  if(missing.length){
+    ns={ic:'🎓', h:'Get your next ticket: '+missing[0].name, p:'This is the #1 thing between you and applying. It takes '+(missing[0].days||'a few days')+' and costs '+(missing[0].cost||'—')+'.', cta:'Get certified →', href:'roadmap.html', cls:''};
+  } else if(!paid){
+    ns={ic:'🔓', h:'You’re ready to apply', p:'Unlock the agency contacts and apply to the jobs you already qualify for.', cta:'Get me hired →', href:'pricing.html', cls:'ready'};
+  } else if(appliedN===0){
+    ns={ic:'🎯', h:'Start applying', p:'You’re qualified. Apply to your matched jobs and reach the crewing agencies hiring now.', cta:'See matched jobs →', href:'jobs.html', cls:'ready'};
+  } else {
+    ns={ic:'✅', h:'You’re on track', p:'You’ve applied to '+appliedN+' role'+(appliedN>1?'s':'')+'. Keep your tickets current and follow up with agencies.', cta:'Find more jobs →', href:'jobs.html', cls:'ready'};
+  }
+  document.getElementById('nextStep').outerHTML='<div class="nextstep '+ns.cls+'" id="nextStep"><div class="ns-l"><div class="ns-ic">'+ns.ic+'</div><div><h4>'+ns.h+'</h4><p>'+ns.p+'</p></div></div><a class="btn '+(ns.cls?'btn-go':'btn-hi')+'" href="'+ns.href+'">'+ns.cta+'</a></div>';
+
+  // WHERE YOU'VE APPLIED — table of saved/applied jobs with status
+  var labels={saved:'Saved',applied:'Applied',responded:'Responded',interview:'Interviewing',offer:'Offer',rejected:'Closed'};
+  var appIds=Object.keys(apps);
+  // sort: active applications first
+  var order={offer:0,interview:1,responded:2,applied:3,saved:4,rejected:5};
+  appIds.sort(function(a,b){return (order[apps[a]]||9)-(order[apps[b]]||9);});
+  if(appIds.length){
+    var rows=appIds.map(function(id){
+      var j=HH_JOBS.filter(function(x){return x.id===id;})[0]; if(!j) return '';
+      var st=apps[id];
+      return '<tr><td><b>'+j.icon+' '+j.title+'</b><div class="at-co">'+j.co+' · '+j.loc+'</div></td>'+
+        '<td class="at-pay">'+j.pay+'</td>'+
+        '<td style="text-align:right"><span class="stchip st-'+st+'">'+(labels[st]||st)+'</span></td></tr>';
+    }).join('');
+    document.getElementById('appsBox').innerHTML='<table class="apptable"><tbody>'+rows+'</tbody></table>';
+  } else {
+    document.getElementById('appsBox').innerHTML='<div class="emptyst">You haven’t applied to any jobs yet.<br><a class="btn btn-hi btn-sm" style="margin-top:12px" href="jobs.html">Browse matched jobs →</a></div>';
+  }
+
+  // RECOMMENDATIONS
   var rec=HH.recommendations(intake);
   if(rec){
     var recTickets=rec.nextTickets.length?rec.nextTickets.map(function(t){return t.name;}).join(' + '):'You hold the required tickets';
@@ -96,14 +171,8 @@ else {
       '<div style="margin-top:14px"><div class="eyebrow" style="text-align:left;margin-bottom:8px">Jobs you qualify for</div>'+recJobs+
       '<a class="btn btn-hi btn-sm" style="margin-top:8px" href="jobs.html">See all matched jobs →</a></div></div>';
   }
-  // pipeline
-  var stages=[['saved','Saved'],['applied','Applied'],['responded','Responded'],['interview','Interviewing'],['offer','Offer'],['rejected','Closed']];
-  document.getElementById('pipe').innerHTML=stages.map(function(st){
-    var ids=Object.keys(apps).filter(function(k){return apps[k]===st[0];});
-    var cards=ids.map(function(id){ var j=HH_JOBS.filter(function(x){return x.id===id;})[0]; return j?'<div class="jchip" style="display:block;margin-bottom:6px">'+j.icon+' '+j.title+'</div>':''; }).join('');
-    return '<div class="pcol"><h4>'+st[1]+' ('+ids.length+')</h4>'+cards+'</div>';
-  }).join('');
-  document.getElementById('upsell').style.display=HH.Auth.isPaid()?'none':'block';
+
+  document.getElementById('upsell').style.display=paid?'none':'block';
 }
 </script>
 </body>
