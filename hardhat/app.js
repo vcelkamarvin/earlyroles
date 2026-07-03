@@ -455,7 +455,7 @@ function authGate(opts){
   m.innerHTML =
     '<div class="mbox" style="max-width:430px">'+
       '<span class="mclose" onclick="HH.closeGate()">×</span>'+
-      '<div class="popbadge">'+(pro ? 'HardHat Pro · $38/mo' : 'Free account')+'</div>'+
+      '<div class="popbadge">'+(pro ? 'HardHat Pro · $48/mo' : 'Free account')+'</div>'+
       '<h3 class="display" style="font-size:24px;margin:10px 0 6px">'+(opts.title || (pro ? 'Unlock this with HardHat Pro' : 'Create your free account'))+'</h3>'+
       '<p style="color:var(--muted);font-size:14.5px;margin-bottom:18px">'+(opts.reason || 'Register to continue — it takes 10 seconds and saves your progress.')+'</p>'+
       (pro ? '<ul class="gatelist"><li>Apply to jobs + real agency contacts</li><li>Full ticket roadmap & AI offshore CV</li><li>Unlimited saved jobs & alerts</li></ul><p class="guarantee" style="text-align:left;margin:0 0 14px">🔒 Secure checkout · Cancel anytime · <span class="hi">1,240 hired this month</span></p>' : '')+

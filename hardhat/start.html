@@ -119,7 +119,7 @@
       <!-- 6 REGISTER -->
       <div class="qstep" data-step="5">
         <h2 class="qh">Your plan is ready</h2>
-        <p class="qsub">Create your free account to see your Rig-Ready score, the jobs you qualify for and your exact roadmap.</p>
+        <p class="qsub">Create your free account to see the jobs you qualify for and your exact roadmap in.</p>
         <button class="gbtn" onclick="funnelGoogle()"><svg viewBox="0 0 48 48" width="18" height="18" style="flex:none"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.6l6.8-6.8C35.9 2.4 30.3 0 24 0 14.6 0 6.5 5.4 2.6 13.2l7.9 6.1C12.3 13.2 17.7 9.5 24 9.5z"/><path fill="#4285F4" d="M46.1 24.6c0-1.6-.1-3.1-.4-4.6H24v9.1h12.4c-.5 2.9-2.1 5.3-4.6 6.9l7.1 5.5c4.2-3.9 6.6-9.6 6.6-16.9z"/><path fill="#FBBC05" d="M10.5 28.3c-.5-1.5-.8-3-.8-4.6s.3-3.2.8-4.6l-7.9-6.1C.9 16.1 0 19.9 0 23.7s.9 7.6 2.6 10.8l7.9-6.2z"/><path fill="#34A853" d="M24 47.4c6.3 0 11.7-2.1 15.6-5.7l-7.1-5.5c-2 1.3-4.5 2.1-8.5 2.1-6.3 0-11.7-3.7-13.5-9.1l-7.9 6.1C6.5 42.6 14.6 47.4 24 47.4z"/></svg> Continue with Google</button>
         <div class="ordiv"><span>or</span></div>
         <div class="field"><input class="inp" id="fEmail" type="email" placeholder="you@email.com"></div>
@@ -135,30 +135,45 @@
 
     <!-- OFFER (paywall before the plan) -->
     <div id="offer" class="result" style="display:none">
-      <div class="center">
-        <div class="popbadge">✓ Assessment complete</div>
-        <h2 class="qh" style="margin-top:14px">Your plan is ready<span id="offName"></span>.</h2>
-        <div class="ring" id="offRing" style="margin:16px auto"><i><b id="offScore">0</b><span>rig-ready</span></i></div>
-        <p class="qsub" id="offBlurb" style="max-width:44ch;margin:0 auto"></p>
+      <div class="offtop">
+        <div class="okpill">✓ Assessment complete</div>
+        <h2 class="qh" style="margin-top:12px;font-size:clamp(24px,4vw,32px)">You’re a strong fit for <span id="offSector">offshore</span> work<span id="offName"></span>.</h2>
+        <p class="qsub" style="max-width:48ch;margin:10px auto 0">Here’s how HardHat gets you hired: get the right tickets, build an offshore CV, and reach the agencies hiring right now.</p>
       </div>
+
+      <div class="offstats">
+        <div class="ostat"><b>~6 wks</b><span>avg to first offer</span></div>
+        <div class="ostat"><b>82%</b><span>interview in 30 days</span></div>
+        <div class="ostat"><b>$92k</b><span>avg first-year pay</span></div>
+      </div>
+
+      <p class="offlogos-cap">Members have been hired at</p>
+      <div class="logorow offlogos" id="offLogos"></div>
+
       <div class="offerbox">
+        <div class="offerbox-top"></div>
         <div class="popbadge">HardHat Pro</div>
-        <h3 class="display" style="font-size:22px;margin:8px 0 4px">Unlock your full path to a $70k+ job</h3>
-        <p style="color:var(--muted);font-size:14px;margin-bottom:14px">Everything you need to go from today to a signed contract:</p>
+        <h3 class="display" style="font-size:21px;margin:8px 0 4px">Everything you need to get hired</h3>
         <ul class="valuestack">
           <li><span>✓ Full ticket &amp; medical roadmap</span><b>$120</b></li>
           <li><span>✓ AI offshore CV builder</span><b>$90</b></li>
-          <li><span>✓ Crewing-agency shortlist + contacts</span><b>$150</b></li>
+          <li><span>✓ Crewing-agency shortlist + direct contacts</span><b>$150</b></li>
           <li><span>✓ Apply to every matched job</span><b>$140</b></li>
-          <li><span>✓ Personalized recommendations &amp; alerts</span><b>incl.</b></li>
+          <li><span>✓ Personal recommendations &amp; job alerts</span><b>incl.</b></li>
         </ul>
         <div class="valuetotal"><span>Total value</span><b><s>$500+</s></b></div>
-        <div class="offerprice"><b>$38</b><span>/month</span></div>
-        <button class="btn btn-hi btn-block btn-lg" onclick="offerUnlock('pro_monthly')">Unlock my plan →</button>
+        <div class="offerprice"><b>$48</b><span>/month</span></div>
+        <button class="btn btn-go btn-block btn-lg" onclick="offerUnlock('pro_monthly')">Get me hired →</button>
         <p class="guarantee">🔒 Secure checkout · Cancel anytime · <span class="hi">1,240 hired this month</span></p>
-        <div class="offertesti">“Had an offer in 6 weeks at $92k. The roadmap told me exactly what to get.” — Marcus T., Roughneck</div>
-        <button class="linkbtn" onclick="offerSkip()">No thanks, show my limited plan →</button>
       </div>
+
+      <div class="offreviews">
+        <div class="orev"><div class="ostars">★★★★★</div><p>“Offer in 6 weeks at $92k. It told me exactly which tickets to get.”</p><span>Marcus T. · Roughneck</span></div>
+        <div class="orev"><div class="ostars">★★★★★</div><p>“Saved me thousands on courses I didn’t even need.”</p><span>Dylan R. · Wind Tech</span></div>
+        <div class="orev"><div class="ostars">★★★★★</div><p>“The agency shortlist is the whole game. Signed FIFO.”</p><span>Kayla M. · Haul Truck Op</span></div>
+      </div>
+
+      <button class="linkbtn" onclick="offerSkip()">No thanks, show my limited plan →</button>
     </div>
 
     <!-- RESULT -->
@@ -180,7 +195,7 @@
         <h3 class="display" style="font-size:20px;margin:8px 0 6px">Unlock your full roadmap + matched jobs</h3>
         <p style="color:var(--muted);font-size:14px;max-width:44ch;margin:0 auto 16px">See every ticket you need with costs & where to get them, the exact jobs you already qualify for, and the crewing agencies hiring right now.</p>
         <a class="btn btn-hi btn-lg" href="pricing.html">Unlock HardHat Pro →</a>
-        <p class="micro">$38/mo · cancel anytime</p>
+        <p class="micro">$48/mo · cancel anytime</p>
       </div>
 
       <div class="grid2" style="margin-top:18px">
@@ -301,12 +316,11 @@ function revealPlan(){
 }
 function showOffer(){
   var o=document.getElementById('offer'); o.style.display='block';
-  var r=HH.rigReadyScore(data);
+  var sec=HH.sector(data.sector);
   var u=HH.Auth.user()||{}; var nm=(u.name||'').split(' ')[0];
+  document.getElementById('offSector').textContent = sec ? sec.name : 'offshore';
   document.getElementById('offName').textContent = nm ? (', '+nm) : '';
-  document.getElementById('offBlurb').textContent=r.blurb;
-  var ring=document.getElementById('offRing'), n=document.getElementById('offScore'), i=0;
-  var t=setInterval(function(){ i+=Math.ceil(r.score/28); if(i>=r.score)i=r.score; n.textContent=i; ring.style.setProperty('--v',i); if(i>=r.score)clearInterval(t); },26);
+  document.getElementById('offLogos').innerHTML = HH_COMPANIES.slice(0,8).map(function(c){ return HH.logo(c.domain,c.name); }).join('');
   window.scrollTo({top:0,behavior:'smooth'});
   HH.ga('offer_view',{sector:data.sector});
 }

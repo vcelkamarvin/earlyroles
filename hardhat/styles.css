@@ -310,6 +310,26 @@ h1.hero-h1 em{font-style:normal;color:var(--hi)}
 .offertesti{margin-top:16px;padding:14px 16px;background:var(--bg2);border-radius:12px;border:1px solid var(--line);font-size:13.5px;color:var(--ink2);font-style:italic}
 .linkbtn{display:block;width:100%;margin-top:14px;background:none;border:none;color:var(--muted);font-size:13.5px;cursor:pointer;text-decoration:underline;font-family:inherit}
 .linkbtn:hover{color:var(--ink)}
+/* reworked offer: fit message, stats, logos, reviews, green CTA */
+.offtop{text-align:center;margin-bottom:4px}
+.okpill{display:inline-block;font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--good);background:var(--good-soft);border:1px solid #bfe6cf;padding:5px 12px;border-radius:999px;font-weight:600}
+#offSector{color:var(--hi)}
+.offstats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:540px;margin:22px auto 0}
+.ostat{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 8px;text-align:center}
+.ostat b{display:block;font-family:"Space Grotesk",sans-serif;font-weight:800;font-size:clamp(20px,4vw,26px);color:var(--hi);line-height:1}
+.ostat span{font-size:11.5px;color:var(--muted)}
+.offlogos-cap{text-align:center;font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin:26px 0 0}
+.offlogos{margin-top:14px;gap:16px 28px}
+.offlogos img{height:24px;filter:grayscale(1);opacity:.55}
+.offlogos img:hover{filter:grayscale(0);opacity:1}
+.offerbox-top{height:4px;background:linear-gradient(90deg,var(--slate),var(--good));margin:-26px -26px 18px;border-radius:18px 18px 0 0}
+.btn-go{background:linear-gradient(135deg,#22a866,#15864f);color:#fff;border-color:transparent;box-shadow:0 14px 30px -12px rgba(31,157,97,.55);font-size:16px}
+.btn-go:hover{filter:brightness(1.07);transform:translateY(-1px)}
+.offreviews{display:flex;flex-wrap:wrap;gap:10px;max-width:640px;margin:22px auto 0}
+.orev{flex:1 1 150px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px}
+.ostars{color:var(--warn);letter-spacing:1px;font-size:13px}
+.orev p{font-size:12.5px;color:var(--ink2);margin:6px 0 8px;font-style:italic;line-height:1.5}
+.orev span{font-size:11.5px;color:var(--muted);font-weight:600}
 
 /* conversion popup */
 .modal.popup{opacity:0;transition:opacity .2s}
