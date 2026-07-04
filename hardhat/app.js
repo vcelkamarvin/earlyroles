@@ -540,7 +540,7 @@ function navHTML(active){
     : '<a class="btn btn-out btn-sm" href="login.html">Log in</a><a class="btn btn-hi btn-sm" href="start.html">Start free</a>';
   return '<nav><div class="wrap nav">'+
     '<a class="brand" href="index.html"><span class="mk">⛏</span>HardHat</a>'+
-    '<div class="navlinks">'+a('jobs.html','Jobs')+a('locations.html','Locations')+a('roadmap.html','Roadmap')+a('pay.html','Pay')+a('directory.html','Agencies')+a('blog.html','Blog')+a('pricing.html','Pricing')+'</div>'+
+    '<div class="navlinks">'+a('jobs.html','Jobs')+a('directory.html','Agencies')+a('blog.html','Blog')+a('pricing.html','Pricing')+'</div>'+
     '<div class="navr">'+right+'</div>'+
     '</div></nav>';
 }
