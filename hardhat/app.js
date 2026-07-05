@@ -12,7 +12,7 @@ var CONFIG = {
   SUPABASE_URL: 'https://ossyctgqycfkcdcncpgg.supabase.co',   // durable lead capture (Supabase REST)
   SUPABASE_KEY: 'sb_publishable_GQGwqejtKqPBwUXOQe0E0w_d4iHupij', // publishable key (safe in client)
   // Stripe Payment Links (fastest path). Leave '' to use /api/checkout.
-  PAY: { pro_monthly:'', pro_annual:'', fasttrack:'' }
+  PAY: { pro_monthly:'https://buy.stripe.com/00wbITeEv0vv5WZbeu63K0c', pro_annual:'', fasttrack:'https://buy.stripe.com/fZu14faof7XXfxz1DU63K0e' }
 };
 window.HH_CONFIG = CONFIG;
 
@@ -35,7 +35,7 @@ function saveLead(){
       body: JSON.stringify({
         email: u.email, name: u.name || '',
         sector: ik.sector || null, experience: ik.experience || null,
-        plan: get('plan','free'), source: (typeof location!=='undefined' ? location.pathname : ''),
+        plan: get('plan','free'), source: (typeof window!=='undefined' && window.location ? window.location.pathname : ''),
         payload: ik
       })
     }).catch(function(){});
@@ -522,11 +522,11 @@ window.HH.showPaywall = showPaywall;
 window.HH.checkout = function(plan){
   ga('begin_checkout',{plan:plan});
   var link = CONFIG.PAY[plan];
-  if(link){ location.href=link; return; }
-  function fallback(){ location.href = Auth.signedIn() ? 'dashboard.html' : ('signup.html?plan='+encodeURIComponent(plan)); }
+  if(link){ window.location.href=link; return; }
+  function fallback(){ window.location.href = Auth.signedIn() ? 'dashboard.html' : ('signup.html?plan='+encodeURIComponent(plan)); }
   fetch('/api/checkout',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({plan:plan})})
     .then(function(r){return r.json();})
-    .then(function(j){ if(j&&j.url){ location.href=j.url; } else { fallback(); } })
+    .then(function(j){ if(j&&j.url){ window.location.href=j.url; } else { fallback(); } })
     .catch(fallback);
 };
 
