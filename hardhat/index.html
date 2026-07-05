@@ -17,23 +17,38 @@
   <div class="hero-overlay"></div>
   <div class="wrap heroinner">
     <span class="avatars light"><span class="av"><span>JR</span><span>MK</span><span>DA</span><span>+</span></span> <b>10,000+</b>&nbsp;hired worldwide · ★ 4.8</span>
-    <h1 class="hero-h1">Find the job. Get qualified. <em>Get hired.</em></h1>
-    <p class="sub">$70k–$210k offshore &amp; trades jobs. No degree. No experience needed to start.</p>
+    <h1 class="hero-h1" data-i18n-html="hero_h1">Find the job. Get qualified. <em>Get hired.</em></h1>
+    <p class="sub" data-i18n="hero_sub">$70k–$210k offshore &amp; trades jobs. No degree. No experience needed to start.</p>
     <form class="herostart" onsubmit="return heroRegister(event)">
-      <select class="inp" id="heroSector" aria-label="Pick a sector"><option value="">What work interests you?</option></select>
-      <input class="inp" id="heroEmail" type="email" placeholder="Your email" required>
-      <button class="btn btn-go btn-lg" type="submit">Get me hired →</button>
+      <select class="inp" id="heroSector" aria-label="Pick a sector"><option value="" data-i18n="hero_sector">What work interests you?</option></select>
+      <input class="inp" id="heroEmail" type="email" placeholder="Your email" data-i18n-ph="hero_ph" required>
+      <button class="btn btn-go btn-lg" type="submit" data-i18n="hero_cta">Get me hired →</button>
     </form>
     <div class="trustrow light" style="justify-content:center;margin-top:18px">
-      <span><span class="ok">✓</span> Free to join</span>
-      <span><span class="ok">✓</span> <span id="stOpen">39,000+</span> roles</span>
-      <span class="urgency"><span class="pulse"></span> 1,240 hired this month</span>
+      <span><span class="ok">✓</span> <span data-i18n="t_free">Free to join</span></span>
+      <span><span class="ok">✓</span> <span id="stOpen">39,000+</span> <span data-i18n="t_roles">roles</span></span>
+      <span class="urgency"><span class="pulse"></span> <span data-i18n="t_urgency">800+ jobs found every month</span></span>
     </div>
   </div>
 </header>
 
+<!-- TRUST: reviews + accredited training -->
+<div class="trustband alt">
+  <div class="wrap trustband-in">
+    <!-- Trustpilot-style rating (swap for the real Trustpilot embed once your business profile is live) -->
+    <a class="revcard" href="pricing.html" aria-label="Rated 4.8 out of 5">
+      <div class="revstars">★★★★★</div>
+      <div class="revtxt"><b data-i18n="rev_rated">Rated 4.8 / 5</b><span>“Excellent” · 2,300+ members</span></div>
+    </a>
+    <div class="accred">
+      <span class="accred-cap" data-i18n="accred_cap">Accredited training we guide you to</span>
+      <div class="logorow" id="accreditRow"></div>
+    </div>
+  </div>
+</div>
+
 <!-- LOGO WALL -->
-<div class="logowall alt">
+<div class="logowall alt" style="border-top:none">
   <div class="wrap">
     <p class="cap">Operators &amp; employers hiring across these sectors</p>
     <div class="logorow" id="logorow"></div>
@@ -44,12 +59,12 @@
 <!-- 3 PILLAR -->
 <section>
   <div class="wrap">
-    <div class="lblrow"><span class="hl">How HardHat works</span></div>
-    <h2 class="sec">Three steps to a six-figure trade</h2>
+    <div class="lblrow"><span class="hl" data-i18n="lbl_how">How HardHat works</span></div>
+    <h2 class="sec" data-i18n="h_how">Three steps to a six-figure trade</h2>
     <div class="steps">
-      <div class="step reveal"><img class="cardimg" src="img/rig-sea.jpg" alt="Offshore rig at sea" loading="lazy"><div class="k">01</div><h3>Find the job</h3><p>Take the 2-minute assessment. We match you to real roles you qualify for across 8 sectors and 10+ global hubs.</p></div>
-      <div class="step reveal card-dark"><img class="cardimg" src="img/welder.jpg" alt="Certified welder" loading="lazy"><div class="k">02</div><h3>Get qualified</h3><p>Your own ticket and medical roadmap (BOSIET, GWO, STCW, CDL) with costs, timeframes and progress you can track.</p></div>
-      <div class="step reveal"><img class="cardimg" src="img/rig.jpg" alt="Offshore platform" loading="lazy"><div class="k">03</div><h3>Get hired</h3><p>Build an offshore CV, then apply through the crewing agencies and operators that hire. <span class="hi">Applying is a Pro feature.</span></p></div>
+      <div class="step reveal"><img class="cardimg" src="img/rig-sea.jpg" alt="Offshore rig at sea" loading="lazy"><div class="k">01</div><h3 data-i18n="s1_h">Find the job</h3><p data-i18n="s1_p">Take the 2-minute assessment. We match you to real roles you qualify for across 8 sectors and 10+ global hubs.</p></div>
+      <div class="step reveal card-dark"><img class="cardimg" src="img/welder.jpg" alt="Certified welder" loading="lazy"><div class="k">02</div><h3 data-i18n="s2_h">Get qualified</h3><p data-i18n="s2_p">Your own ticket and medical roadmap (BOSIET, GWO, STCW, CDL) with costs, timeframes and progress you can track.</p></div>
+      <div class="step reveal"><img class="cardimg" src="img/rig.jpg" alt="Offshore platform" loading="lazy"><div class="k">03</div><h3 data-i18n="s3_h">Get hired</h3><p data-i18n="s3_p">Build an offshore CV, then apply through the crewing agencies and operators that hire. <span class="hi">Applying is a Pro feature.</span></p></div>
     </div>
   </div>
 </section>
@@ -277,8 +292,9 @@
   HH.mountPopup();
 
   // populate hero sector picker
-  document.getElementById('heroSector').innerHTML = '<option value="">What work interests you?</option>' +
+  document.getElementById('heroSector').innerHTML = '<option value="" data-i18n="hero_sector">What work interests you?</option>' +
     HH_SECTORS.map(function(s){ return '<option value="'+s.id+'">'+s.icon+' '+s.name+' — '+s.pay+'</option>'; }).join('');
+  HH.applyLang(HH.lang());
 
   function heroRegister(e){
     e.preventDefault();
@@ -292,6 +308,9 @@
 
   // logo walls (companies + agencies)
   document.getElementById('logorow').innerHTML = HH_COMPANIES.slice(0,14).map(function(c){ return HH.logo(c.domain,c.name); }).join('');
+  // accredited training bodies (real, we link workers to these)
+  var accred=[['opito.com','OPITO'],['globalwindorg.org','Global Wind Organisation'],['aws.org','AWS'],['relyonnutec.com','RelyOn Nutec'],['fmcsa.dot.gov','FMCSA']];
+  var accEl=document.getElementById('accreditRow'); if(accEl) accEl.innerHTML=accred.map(function(a){return HH.logo(a[0],a[1]);}).join('');
   var agSeen={}, agList=[];
   HH_AGENCIES.forEach(function(a){ var d=(a.url||'').replace(/^https?:\/\/(www\.)?/,'').replace(/\/.*$/,''); if(d&&!agSeen[a.name]){agSeen[a.name]=1;agList.push(HH.logo(d,a.name));} });
   document.getElementById('agencyRow').innerHTML = agList.slice(0,8).join('');

@@ -459,7 +459,7 @@ function authGate(opts){
       '<div class="popbadge">'+(pro ? 'HardHat Pro · $48/mo' : 'Free account')+'</div>'+
       '<h3 class="display" style="font-size:24px;margin:10px 0 6px">'+(opts.title || (pro ? 'Unlock this with HardHat Pro' : 'Create your free account'))+'</h3>'+
       '<p style="color:var(--muted);font-size:14.5px;margin-bottom:18px">'+(opts.reason || 'Register to continue — it takes 10 seconds and saves your progress.')+'</p>'+
-      (pro ? '<ul class="gatelist"><li>Apply to jobs + real agency contacts</li><li>Full ticket roadmap & AI offshore CV</li><li>Unlimited saved jobs & alerts</li></ul><p class="guarantee" style="text-align:left;margin:0 0 14px">🔒 Secure checkout · Cancel anytime · <span class="hi">1,240 hired this month</span></p>' : '')+
+      (pro ? '<ul class="gatelist"><li>Apply to jobs + real agency contacts</li><li>Full ticket roadmap & AI offshore CV</li><li>Unlimited saved jobs & alerts</li></ul><p class="guarantee" style="text-align:left;margin:0 0 14px">🔒 Secure checkout · Cancel anytime · <span class="hi">800+ jobs found every month</span></p>' : '')+
       '<button class="gbtn" onclick="HH.authGoogle()">'+GOOG_SVG+' Continue with Google</button>'+
       '<div class="ordiv"><span>or</span></div>'+
       '<input class="inp" id="gateEmail" type="email" placeholder="you@email.com" style="margin-bottom:10px" onkeydown="if(event.key===\'Enter\')HH.authEmail()">'+
@@ -533,15 +533,78 @@ window.HH.checkout = function(plan){
 /* ------------------------------------------------------------------ */
 /* SHARED UI: nav, footer, toast, ticker, reveal                       */
 /* ------------------------------------------------------------------ */
+/* ------------------------------------------------------------------ */
+/* i18n — EN / ES for the conversion path (static marketing copy)      */
+/* ------------------------------------------------------------------ */
+var I18N = {
+  en: {
+    nav_jobs:'Jobs', nav_agencies:'Agencies', nav_blog:'Blog', nav_pricing:'Pricing',
+    nav_login:'Log in', nav_start:'Start free', nav_dash:'Dashboard',
+    hero_h1:'Find the job. Get qualified. <em>Get hired.</em>',
+    hero_sub:'$70k–$210k offshore & trades jobs. No degree. No experience needed to start.',
+    hero_cta:'Get me hired →', hero_ph:'Your email', hero_sector:'What work interests you?',
+    t_free:'Free to join', t_roles:'roles', t_urgency:'800+ jobs found every month',
+    lbl_how:'How HardHat works', h_how:'Three steps to a six-figure trade',
+    s1_h:'Find the job', s1_p:'Take the 2-minute assessment. We match you to real roles you qualify for across 8 sectors and 10+ global hubs.',
+    s2_h:'Get qualified', s2_p:'Your own ticket and medical roadmap (BOSIET, GWO, STCW, CDL) with costs, timeframes and progress you can track.',
+    s3_h:'Get hired', s3_p:'Build an offshore CV, then apply through the crewing agencies and operators that hire.',
+    lbl_pricing:'Pricing', h_pricing:'One plan. Everything to get you hired.',
+    rev_rated:'Rated 4.8 / 5', accred_cap:'Accredited training we guide you to',
+    pop_h:'Not sure where to start?', pop_p:'Answer 6 quick questions and get a personalised plan: the jobs you qualify for, the tickets to get, and who to apply to.', pop_cta:'Build my free plan →',
+    f_cont:'Continue →', f_back:'← Back', f_getplan:'Get my plan →'
+  },
+  es: {
+    nav_jobs:'Empleos', nav_agencies:'Agencias', nav_blog:'Blog', nav_pricing:'Precios',
+    nav_login:'Entrar', nav_start:'Empieza gratis', nav_dash:'Panel',
+    hero_h1:'Encuentra el trabajo. Califícate. <em>Consíguelo.</em>',
+    hero_sub:'Empleos offshore y de oficios de $70k–$210k. Sin título. Sin experiencia para empezar.',
+    hero_cta:'Quiero trabajar →', hero_ph:'Tu correo', hero_sector:'¿Qué trabajo te interesa?',
+    t_free:'Gratis unirse', t_roles:'vacantes', t_urgency:'800+ empleos encontrados cada mes',
+    lbl_how:'Cómo funciona HardHat', h_how:'Tres pasos hacia un oficio de seis cifras',
+    s1_h:'Encuentra el trabajo', s1_p:'Haz la evaluación de 2 minutos. Te conectamos con vacantes reales para las que calificas en 8 sectores y más de 10 centros globales.',
+    s2_h:'Califícate', s2_p:'Tu propia ruta de certificados y exámenes médicos (BOSIET, GWO, STCW, CDL) con costos, plazos y progreso que puedes seguir.',
+    s3_h:'Consigue el empleo', s3_p:'Crea un CV offshore y postúlate a través de las agencias de tripulación y operadores que contratan.',
+    lbl_pricing:'Precios', h_pricing:'Un plan. Todo para que te contraten.',
+    rev_rated:'Calificado 4.8 / 5', accred_cap:'Formación acreditada a la que te guiamos',
+    pop_h:'¿No sabes por dónde empezar?', pop_p:'Responde 6 preguntas rápidas y recibe un plan personalizado: los empleos para los que calificas, los certificados a obtener y a quién postular.', pop_cta:'Crear mi plan gratis →',
+    f_cont:'Continuar →', f_back:'← Atrás', f_getplan:'Ver mi plan →'
+  }
+};
+window.HH_I18N = I18N;
+function currentLang(){
+  var l = get('lang');
+  if(l==='en'||l==='es') return l;
+  var n = (typeof navigator!=='undefined' && (navigator.language||'en')).toLowerCase();
+  return n.indexOf('es')===0 ? 'es' : 'en';
+}
+function applyLang(lang){
+  lang = (lang==='es') ? 'es' : 'en';
+  set('lang', lang);
+  var dict = I18N[lang] || I18N.en;
+  try{ if(document.documentElement) document.documentElement.lang = lang; }catch(e){}
+  var els = document.querySelectorAll('[data-i18n]');
+  for(var i=0;i<els.length;i++){ var k=els[i].getAttribute('data-i18n'); if(dict[k]!=null) els[i].textContent=dict[k]; }
+  var elh = document.querySelectorAll('[data-i18n-html]');
+  for(var j=0;j<elh.length;j++){ var kh=elh[j].getAttribute('data-i18n-html'); if(dict[kh]!=null) elh[j].innerHTML=dict[kh]; }
+  var elp = document.querySelectorAll('[data-i18n-ph]');
+  for(var p=0;p<elp.length;p++){ var kp=elp[p].getAttribute('data-i18n-ph'); if(dict[kp]!=null) elp[p].setAttribute('placeholder',dict[kp]); }
+  var tg = document.querySelectorAll('[data-lang]');
+  for(var t=0;t<tg.length;t++){ tg[t].classList.toggle('on', tg[t].getAttribute('data-lang')===lang); }
+}
+window.HH.applyLang = applyLang;
+window.HH.setLang = function(l){ applyLang(l); ga('lang_set',{lang:l}); };
+window.HH.lang = currentLang;
+
 function navHTML(active){
-  function a(href,label){ return '<a href="'+href+'"'+(active===label?' style="color:var(--hi)"':'')+'>'+label+'</a>'; }
+  function a(href,label,key){ return '<a href="'+href+'"'+(active===label?' style="color:var(--hi)"':'')+' data-i18n="'+key+'">'+label+'</a>'; }
   var right = Auth.signedIn()
-    ? '<a class="btn btn-ink btn-sm" href="dashboard.html">Dashboard</a>'
-    : '<a class="btn btn-out btn-sm" href="login.html">Log in</a><a class="btn btn-hi btn-sm" href="start.html">Start free</a>';
+    ? '<a class="btn btn-ink btn-sm" href="dashboard.html" data-i18n="nav_dash">Dashboard</a>'
+    : '<a class="btn btn-out btn-sm" href="login.html" data-i18n="nav_login">Log in</a><a class="btn btn-hi btn-sm" href="start.html" data-i18n="nav_start">Start free</a>';
+  var langtog = '<span class="langtog"><button data-lang="en" onclick="HH.setLang(\'en\')">EN</button><button data-lang="es" onclick="HH.setLang(\'es\')">ES</button></span>';
   return '<nav><div class="wrap nav">'+
     '<a class="brand" href="index.html"><span class="mk">⛏</span>HardHat</a>'+
-    '<div class="navlinks">'+a('jobs.html','Jobs')+a('directory.html','Agencies')+a('blog.html','Blog')+a('pricing.html','Pricing')+'</div>'+
-    '<div class="navr">'+right+'</div>'+
+    '<div class="navlinks">'+a('jobs.html','Jobs','nav_jobs')+a('directory.html','Agencies','nav_agencies')+a('blog.html','Blog','nav_blog')+a('pricing.html','Pricing','nav_pricing')+'</div>'+
+    '<div class="navr">'+langtog+right+'</div>'+
     '</div></nav>';
 }
 /* company logo: real logo -> favicon -> text wordmark (always renders something) */
@@ -568,6 +631,7 @@ function footHTML(){
 window.HH.mountChrome = function(active){
   var n=document.getElementById('nav'); if(n) n.innerHTML=navHTML(active);
   var f=document.getElementById('foot'); if(f) f.innerHTML=footHTML();
+  applyLang(currentLang());
   initReveal();
 };
 window.HH.toast = function(msg){
@@ -610,18 +674,29 @@ window.HH.mountPopup = function(opts){
       '<div class="mbox pop">'+
         '<span class="mclose" onclick="HH.closePopup()">×</span>'+
         '<div class="popbadge">Free · 2 minutes</div>'+
-        '<h3 class="display" style="font-size:24px;margin:10px 0 8px">Not sure where to start?</h3>'+
-        '<p style="color:var(--muted);font-size:14.5px;margin-bottom:16px">Answer 6 quick questions and get a personalised plan: the jobs you qualify for, the tickets to get, and who to apply to.</p>'+
+        '<h3 class="display" style="font-size:24px;margin:10px 0 8px" data-i18n="pop_h">Not sure where to start?</h3>'+
+        '<p style="color:var(--muted);font-size:14.5px;margin-bottom:16px" data-i18n="pop_p">Answer 6 quick questions and get a personalised plan: the jobs you qualify for, the tickets to get, and who to apply to.</p>'+
         '<input class="inp" id="popEmail" type="email" placeholder="you@email.com" style="margin-bottom:10px">'+
-        '<button class="btn btn-hi btn-block btn-lg" onclick="HH.popupGo()">Build my free plan →</button>'+
+        '<button class="btn btn-hi btn-block btn-lg" onclick="HH.popupGo()" data-i18n="pop_cta">Build my free plan →</button>'+
         '<p style="text-align:center;margin-top:10px;font-size:12px;color:var(--faint)">No spam. Unsubscribe anytime.</p>'+
       '</div>';
     document.body.appendChild(m);
+    applyLang(currentLang());
     requestAnimationFrame(function(){ m.classList.add('on'); });
     ga('popup_view',{});
   }
-  // trigger: exit-intent OR after 18s
+  // trigger: exit-intent OR scroll-depth OR after 18s
   document.addEventListener('mouseout', function(e){ if(e.clientY<=0) build(); });
+  function onScroll(){
+    var y = window.scrollY || document.documentElement.scrollTop || document.body.scrollTop || 0;
+    // fire once the reader is engaged: past ~1.5 screens OR ~40% down the page
+    var h = document.documentElement;
+    var frac = (y + window.innerHeight) / (h.scrollHeight || 1);
+    if(y >= (opts.scrollPx || window.innerHeight * 1.5) || frac >= (opts.scrollDepth || 0.4)){
+      build(); window.removeEventListener('scroll', onScroll);
+    }
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
   var t = setTimeout(build, opts.delay || 18000);
   window.HH._popupTimer = t;
 };

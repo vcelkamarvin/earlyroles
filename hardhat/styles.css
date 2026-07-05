@@ -119,6 +119,35 @@ h1.hero-h1 em{font-style:normal;color:var(--hi)}
 .hl{display:inline-block;background:#c9f24d;color:#0e1116;font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:15px;letter-spacing:0;text-transform:none;padding:3px 12px;border-radius:7px;transform:rotate(-1deg)}
 .lblrow{text-align:center;margin-bottom:4px}
 
+/* v10 — trust band: reviews + accredited */
+.trustband{padding:22px 0}
+.trustband-in{display:flex;align-items:center;justify-content:center;gap:28px 40px;flex-wrap:wrap}
+.revcard{display:inline-flex;align-items:center;gap:12px;background:var(--panel);border:1px solid var(--line2);border-radius:14px;padding:12px 18px;text-decoration:none}
+.revcard:hover{border-color:var(--hi)}
+.revstars{color:#00b67a;font-size:20px;letter-spacing:2px}
+.revtxt b{display:block;font-family:"Space Grotesk",sans-serif;font-weight:800;font-size:15px;color:var(--ink)}
+.revtxt span{font-size:12.5px;color:var(--muted)}
+.accred{display:flex;flex-direction:column;align-items:center;gap:8px}
+.accred-cap{font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+.accred .logorow{margin:0;gap:22px}
+.accred .logorow img,.accred .logorow .wm{max-height:26px}
+@media(max-width:560px){.trustband-in{gap:18px}.accred .logorow{gap:16px}}
+
+/* v10 — money-term variant landing hero */
+.vhero{position:relative;border-radius:22px;overflow:hidden;margin:8px 0 26px;min-height:420px;display:flex;align-items:center;justify-content:center}
+.vhero-ov{position:absolute;inset:0;background:linear-gradient(180deg,rgba(8,14,22,.6),rgba(8,14,22,.82)),url("img/rig.jpg") center/cover no-repeat;z-index:0}
+.vhero-in{position:relative;z-index:2;text-align:center;padding:56px 20px}
+.vtri{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.vtri-c{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px;display:flex;gap:12px;align-items:center;font-size:14px;color:var(--ink2)}
+.vtri-c b{width:30px;height:30px;flex:none;border-radius:50%;background:var(--good-soft);color:var(--good);display:grid;place-items:center;font-family:"Space Grotesk",sans-serif}
+@media(max-width:640px){.vtri{grid-template-columns:1fr}}
+
+/* v10 — language toggle */
+.langtog{display:inline-flex;border:1px solid var(--line2);border-radius:8px;overflow:hidden;margin-right:4px}
+.langtog button{background:transparent;border:none;padding:6px 9px;font-family:"JetBrains Mono",monospace;font-size:11px;font-weight:600;color:var(--muted);cursor:pointer}
+.langtog button.on{background:var(--hi);color:#fff}
+@media(max-width:560px){.langtog button{padding:5px 7px;font-size:10px}}
+
 /* v8 — funnel income motivator */
 .incbar{display:flex;align-items:center;gap:12px;background:linear-gradient(135deg,var(--good-soft),var(--panel));border:1px solid var(--good-soft);border-radius:14px;padding:12px 16px;margin-bottom:18px}
 .incbar .incm{font-size:22px;flex:none}

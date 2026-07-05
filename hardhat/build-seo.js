@@ -315,6 +315,58 @@ function buildBrowse(jobPages, locPages, guidePages) {
   return { file: 'browse.html', title: 'Browse Offshore & Trades Jobs, Locations & Guides | HardHat', desc: 'Browse every no-degree offshore and trades job, location hub and how-to-get-hired guide on HardHat.', body, jsonld: [crumb([{ name: 'Home', file: '' }, { name: 'Browse', file: 'browse.html' }])], active: 'jobs.html' };
 }
 
+/* ---- MONEY-TERM A/B LANDING VARIANTS ----
+ * Distinct URLs targeting high-intent search/ad terms. Point a different ad
+ * campaign at each and compare conversion in GA4 (each fires a `variant` event).
+ */
+const LANDING_VARIANTS = [
+  { file: 'no-degree-jobs.html', term: 'no-degree-jobs', hl: 'No degree needed',
+    h1: 'High-Paying Jobs With No Degree', sub: 'Offshore, wind, diving, mining & welding roles paying $70k–$210k/yr. No degree. No experience needed to start.',
+    title: 'High-Paying Jobs With No Degree ($70k–$210k) | HardHat',
+    desc: 'Land a $70k–$210k job with no degree — offshore oil & gas, wind, diving, FIFO mining and welding. See what you qualify for in 2 minutes.' },
+  { file: 'no-experience-offshore-jobs.html', term: 'no-experience-offshore', hl: 'No experience? Start here', sector: 'oil',
+    h1: 'Offshore Jobs With No Experience', sub: 'Roustabout, deckhand and trainee roles that hire on tickets and attitude — not a CV. Find your route in 2 minutes.',
+    title: 'Offshore Jobs With No Experience (No Degree) | HardHat',
+    desc: 'Get an offshore job with no experience. The exact tickets, medicals and crewing agencies that hire entry-level — mapped to you in 2 minutes.' },
+  { file: '150k-jobs-no-degree.html', term: '150k-no-degree',
+    h1: '$150k+ Jobs, No Degree Required', sub: 'Saturation diving, pipeline welding and FIFO mining reach $120k–$210k. Here’s the real route in.',
+    title: '$150k+ Jobs With No Degree | HardHat',
+    desc: 'Six-figure trades: saturation diving, 6G pipe welding and FIFO mining pay $120k–$210k with no degree. See your fastest route in 2 minutes.' },
+  { file: 'offshore-jobs-uk.html', term: 'uk', sector: 'oil',
+    h1: 'Offshore Jobs in the UK & North Sea', sub: 'Aberdeen, the North Sea and beyond — BOSIET + medical and you’re in. $70k–$210k, no degree.',
+    title: 'Offshore Jobs UK & North Sea (No Degree) | HardHat',
+    desc: 'Offshore oil, gas & wind jobs across the UK and North Sea. The tickets you need (BOSIET, OGUK) and who hires — mapped to you in 2 minutes.' },
+  { file: 'offshore-jobs-australia.html', term: 'australia', sector: 'mining',
+    h1: 'FIFO & Offshore Jobs in Australia', sub: 'Pilbara mining and offshore roles paying AU$90k–$180k. Camp, flights and meals often covered.',
+    title: 'FIFO & Offshore Jobs Australia (No Degree) | HardHat',
+    desc: 'FIFO mining and offshore jobs across Australia — Pilbara, QLD and beyond. Inductions, medicals and labour-hire agencies, mapped to you in 2 minutes.' },
+  { file: 'offshore-jobs-usa.html', term: 'usa', sector: 'oil',
+    h1: 'Offshore & Trades Jobs in the USA', sub: 'Gulf of Mexico rigs, US wind and CDL/hazmat haul — $70k–$210k, no degree needed.',
+    title: 'Offshore & High-Pay Trades Jobs USA (No Degree) | HardHat',
+    desc: 'High-paying US jobs with no degree — Gulf of Mexico offshore, East Coast wind and oilfield CDL. See what you qualify for in 2 minutes.' },
+];
+
+function buildVariant(v) {
+  const go = 'start.html' + (v.sector ? ('?sector=' + v.sector) : '');
+  const body = `<div class="vhero">
+    <div class="vhero-ov"></div>
+    <div class="vhero-in">
+      <div class="lblrow"><span class="hl">${esc(v.hl || 'No degree · No experience')}</span></div>
+      <h1 style="color:#fff;font-family:'Space Grotesk',sans-serif;font-weight:900;font-size:clamp(30px,6vw,54px);line-height:1;letter-spacing:-.02em;max-width:16ch;margin:10px auto 0">${esc(v.h1)}</h1>
+      <p style="color:rgba(255,255,255,.88);font-size:clamp(15px,2vw,18px);max-width:52ch;margin:16px auto 0">${esc(v.sub)}</p>
+      <div class="cta-row"><a class="btn btn-go btn-lg" href="${go}" onclick="HH.ga&&HH.ga('variant',{v:'${v.term}'})">Get me hired →</a></div>
+      <p style="color:rgba(255,255,255,.75);font-size:12.5px;margin-top:12px">Free · 2 minutes · no card · 800+ jobs found every month</p>
+    </div>
+  </div>
+  <div class="vtri">
+    <div class="vtri-c"><b>1</b><span>Take the free 2-minute assessment</span></div>
+    <div class="vtri-c"><b>2</b><span>Get your exact tickets &amp; matched jobs</span></div>
+    <div class="vtri-c"><b>3</b><span>Apply through the agencies that hire</span></div>
+  </div>`;
+  return { file: v.file, title: v.title, desc: v.desc, body, active: 'jobs.html', ctaH: 'Ready to earn $70k–$210k with no degree?',
+    jsonld: [crumb([{ name: 'Home', file: '' }, { name: v.h1, file: v.file }])] };
+}
+
 /* ---- sitemap ---- */
 function sitemap(files) {
   const urls = files.map((f) => `  <url><loc>${SITE}/${f}</loc></url>`).join('\n');
@@ -340,12 +392,15 @@ function main() {
   const browse = buildBrowse(jobPages, locPages, guidePages);
   write(browse);
 
+  const variantPages = LANDING_VARIANTS.map(buildVariant);
+  variantPages.forEach((p) => write(p));
+
   // sitemap: core static pages + blog posts + all generated
   const core = ['', 'index.html', 'jobs.html', 'start.html', 'roadmap.html', 'pay.html', 'directory.html', 'cv.html', 'pricing.html', 'locations.html', 'blog.html', 'browse.html', 'signup.html', 'login.html', 'privacy.html', 'terms.html'];
   const blogPosts = ['highest-paying-no-degree-jobs-2026', 'offshore-oil-rig-job-no-experience', 'bosiet-huet-oguk-explained', 'offshore-wind-gwo-break-in', 'fifo-mining-pay-how-to-get-hired', 'become-commercial-diver'].map((s) => 'post.html?slug=' + s);
-  const allFiles = core.concat(blogPosts, jobPages.map((p) => p.file), locPages.map((p) => p.file), guidePages.map((p) => p.file));
+  const allFiles = core.concat(blogPosts, jobPages.map((p) => p.file), locPages.map((p) => p.file), guidePages.map((p) => p.file), variantPages.map((p) => p.file));
   fs.writeFileSync(path.join(DIR, 'sitemap.xml'), sitemap(allFiles));
 
-  console.log(`Generated ${written} pages (${jobPages.length} jobs, ${locPages.length} locations, ${guidePages.length} guides, browse) + sitemap.xml (${allFiles.length} urls)`);
+  console.log(`Generated ${written} pages (${jobPages.length} jobs, ${locPages.length} locations, ${guidePages.length} guides, ${variantPages.length} variants, browse) + sitemap.xml (${allFiles.length} urls)`);
 }
 main();
