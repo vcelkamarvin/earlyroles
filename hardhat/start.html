@@ -27,7 +27,7 @@
     <div id="wizard">
       <div class="incbar" id="incBar">
         <span class="incm">💰</span>
-        <div class="inctxt"><b id="incRange">$70k–$250k/yr</b><span id="incMeta">High-paying offshore &amp; trades work · no degree needed</span></div>
+        <div class="inctxt"><b id="incRange">$70k–$210k/yr</b><span id="incMeta">High-paying offshore &amp; trades work · no degree needed</span></div>
       </div>
       <div class="progress"><i id="bar"></i></div>
       <div class="pmeta"><span id="stepLbl">Step 1 of 6</span><span id="pctLbl">0%</span></div>
@@ -142,13 +142,43 @@
       <div class="offtop">
         <div class="okpill">✓ Assessment complete</div>
         <h2 class="qh" style="margin-top:12px;font-size:clamp(24px,4vw,32px)">You’re a strong fit for <span id="offSector">offshore</span> work<span id="offName"></span>.</h2>
-        <p class="qsub" style="max-width:48ch;margin:10px auto 0">Here’s how HardHat gets you hired: get the right tickets, build an offshore CV, and reach the agencies hiring right now.</p>
+        <p class="qsub" style="max-width:46ch;margin:10px auto 0">You could be applying to real roles in <b>~2 weeks</b> — if you follow the exact plan. Here’s how HardHat saves you months.</p>
+      </div>
+
+      <!-- TIME SAVED: on your own vs with HardHat -->
+      <div class="vscompare">
+        <div class="vscol vsbad">
+          <div class="vshd">On your own</div>
+          <ul>
+            <li>6–12 months of guesswork</li>
+            <li>$1,000s wasted on the wrong courses</li>
+            <li>Applying into the void on job boards</li>
+          </ul>
+        </div>
+        <div class="vsvs">→</div>
+        <div class="vscol vsgood">
+          <div class="vshd">With HardHat</div>
+          <ul>
+            <li>Your exact tickets — nothing wasted</li>
+            <li>Recruiter-ready offshore CV, done</li>
+            <li>Straight to the agencies that hire</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- TIMELINE -->
+      <div class="tline">
+        <div class="tstep"><span class="tdot">1</span><b>Today</b><small>Your plan &amp; matched jobs</small></div>
+        <div class="tbar"></div>
+        <div class="tstep"><span class="tdot">2</span><b>~2 weeks</b><small>Tickets sorted · applying</small></div>
+        <div class="tbar"></div>
+        <div class="tstep"><span class="tdot on">3</span><b>~6 weeks</b><small>First offer 🎉</small></div>
       </div>
 
       <div class="offstats">
+        <div class="ostat"><b>~2 wks</b><span>to start applying</span></div>
         <div class="ostat"><b>~6 wks</b><span>avg to first offer</span></div>
-        <div class="ostat"><b>82%</b><span>interview in 30 days</span></div>
-        <div class="ostat"><b>$92k</b><span>avg first-year pay</span></div>
+        <div class="ostat"><b id="offPay">up to $210k</b><span id="offPayLbl">top pay in your sector</span></div>
       </div>
 
       <p class="offlogos-cap">Members have been hired at</p>
@@ -276,7 +306,7 @@ function updateInc(){
     r.textContent=s.pay+'/yr';
     m.textContent=s.name+' · '+s.rota+(d?(' · '+d.open.toLocaleString()+' roles open (est.)'):'');
   } else {
-    r.textContent='$70k–$250k/yr';
+    r.textContent='$70k–$210k/yr';
     m.textContent='High-paying offshore & trades work · no degree needed';
   }
 }
@@ -339,7 +369,11 @@ function showOffer(){
   var sec=HH.sector(data.sector);
   var u=HH.Auth.user()||{}; var nm=(u.name||'').split(' ')[0];
   document.getElementById('offSector').textContent = sec ? sec.name : 'offshore';
-  document.getElementById('offName').textContent = nm ? (', '+nm) : '';
+  // only greet with a real first name — never the "Crew" placeholder
+  document.getElementById('offName').textContent = (nm && nm.toLowerCase()!=='crew') ? (', '+nm) : '';
+  // dynamic pay stat for the chosen sector
+  var pay=(window.HH_PAY&&data.sector)?HH_PAY[data.sector]:null;
+  if(pay){ document.getElementById('offPay').textContent=pay.exp; document.getElementById('offPayLbl').textContent=(sec?sec.name:'your sector')+' pay'; }
   document.getElementById('offLogos').innerHTML = HH_COMPANIES.slice(0,8).map(function(c){ return HH.logo(c.domain,c.name); }).join('');
   window.scrollTo({top:0,behavior:'smooth'});
   HH.ga('offer_view',{sector:data.sector});
