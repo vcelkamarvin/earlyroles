@@ -16,9 +16,10 @@
     <h2 class="display" style="font-size:32px;margin-top:10px" id="h">Unlocking your account…</h2>
     <p style="color:var(--muted);margin-top:10px" id="p">Confirming your payment.</p>
     <div class="cta-row" id="cta" style="display:none">
-      <a class="btn btn-hi btn-lg" href="roadmap.html">Open my roadmap →</a>
+      <a class="btn btn-go btn-lg" href="setup.html">Build my exact plan →</a>
       <a class="btn btn-out btn-lg" href="dashboard.html">Go to dashboard</a>
     </div>
+    <p class="micro" id="setupNote" style="display:none">2 minutes: where you are + where you want to work → your region-exact tickets, medical and agencies.</p>
   </div>
 </section>
 <div id="foot"></div>
@@ -35,7 +36,7 @@ fetch('/api/verify-checkout?plan='+encodeURIComponent(plan)+'&session_id='+encod
       HH.Auth.setPlan(p);
       document.getElementById('h').textContent='You’re in. Welcome to HardHat Pro.';
       document.getElementById('p').textContent='Your full roadmap, agency directory and CV builder are unlocked.';
-      document.getElementById('cta').style.display='flex';
+      document.getElementById('cta').style.display='flex'; var sn=document.getElementById('setupNote'); if(sn) sn.style.display='block';
     } else {
       document.getElementById('h').textContent='Payment not confirmed';
       document.getElementById('p').innerHTML='We couldn’t confirm your payment. <a href="pricing.html" style="color:var(--hi)">Try again</a>.';
@@ -44,7 +45,7 @@ fetch('/api/verify-checkout?plan='+encodeURIComponent(plan)+'&session_id='+encod
   .catch(function(){
     HH.Auth.setPlan('pro');
     document.getElementById('h').textContent='You’re in.';
-    document.getElementById('cta').style.display='flex';
+    document.getElementById('cta').style.display='flex'; var sn=document.getElementById('setupNote'); if(sn) sn.style.display='block';
   });
 </script>
 </body>

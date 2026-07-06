@@ -439,6 +439,124 @@ window.HH.recommendations = recommendations;
 window.HH.providers = function(id){ return PROVIDERS[id] || []; };
 
 /* ------------------------------------------------------------------ */
+/* PRO PLAN — region-exact recommendation engine                       */
+/* Joins intake + pro profile + Certificate Truth Engine (cert-data.js)*/
+/* + job data into: exact ticket/medical gaps for the TARGET region,   */
+/* an honest right-to-work check, matched jobs, and a hiring plan.     */
+/* ------------------------------------------------------------------ */
+var EU_CCS=['AT','BE','BG','HR','CY','CZ','DK','EE','FI','FR','DE','GR','HU','IE','IT','LV','LT','LU','MT','NL','PL','PT','RO','SK','SI','ES','SE','NO','IS','CH'];
+var REGIONS = [
+  { id:'uk',     name:'North Sea (UK & Norway)',   flag:'🇬🇧', cert:'uk',     locIds:['northsea'], cty:'UK',        pass:['GB','NO'] },
+  { id:'eu',     name:'Europe (offshore wind)',    flag:'🇪🇺', cert:'eu',     locIds:['northsea'], cty:'Denmark',   pass:EU_CCS },
+  { id:'us',     name:'US Gulf of Mexico',         flag:'🇺🇸', cert:'us',     locIds:['gom'],      cty:'US',        pass:['US'] },
+  { id:'useast', name:'US East Coast (wind)',      flag:'🇺🇸', cert:'us',     locIds:['useast'],   cty:'US',        pass:['US'] },
+  { id:'au',     name:'Australia (FIFO & offshore)',flag:'🇦🇺', cert:'au',    locIds:['ausfifo'],  cty:'Australia', pass:['AU','NZ'] },
+  { id:'me',     name:'Middle East',               flag:'🇦🇪', cert:'global', locIds:['me'],       cty:'UAE',       pass:'sponsor' },
+  { id:'wafrica',name:'West Africa',               flag:'🌍', cert:'global', locIds:['wafrica'],  cty:'Nigeria',   pass:'sponsor' },
+  { id:'brazil', name:'Brazil (Santos Basin)',     flag:'🇧🇷', cert:'global', locIds:['brazil'],   cty:'Brazil',    pass:['BR'] },
+  { id:'seasia', name:'Southeast Asia',            flag:'🇸🇬', cert:'global', locIds:['seasia'],   cty:'Singapore', pass:'sponsor' },
+  { id:'home',   name:'My own country / nearest hub',flag:'📍', cert:'global', locIds:[],          cty:'',          pass:'home' }
+];
+window.HH_REGIONS = REGIONS;
+function regionById(id){ for(var i=0;i<REGIONS.length;i++) if(REGIONS[i].id===id) return REGIONS[i]; return null; }
+window.HH.region = regionById;
+
+/* sector -> Certificate Truth Engine role id */
+var CERT_ROLE = { oil:'roustabout', wind:'windtech', wtt:'windtech', mining:'haultruck', marine:'deckhand', weld:'welder6g', diving:'diver', cdl:'driver' };
+/* held ticket id -> keyword in matrix requirement strings */
+var TK_KEYWORDS = { bosiet:/bosiet/i, ogukmed:/oeuk|oguk/i, mist:/mist/i, gwobst:/gwo basic safety|bst/i, gwobtt:/basic technical|btt/i,
+  huet:/huet|water survival/i, offmed:/eng1|offshore.*medical|wind medical/i, stcw:/stcw/i, mmc:/mariner credential|seaman/i,
+  twic:/twic/i, twicm:/twic/i, twicd:/twic/i, twicw:/twic/i, twicc:/twic/i, marmed:/seafarer medical/i,
+  induction:/standard 11|induction|white card/i, medm:/coal board|pre-employment medical/i, hr:/heavy vehicle|hr \/ hc/i,
+  weldcert:/coding test|6g|asme|aws d1/i, osha:/osha/i, rigging:/rigg/i, dmt:/diver qualification|dive school|imca|adci/i,
+  divemed:/diving medical/i, gwoheights:/heights|gwo/i, wttmed:/climb medical/i, elec:/high.?voltage|electrical/i,
+  cdla:/cdl class a|cdl/i, hazmat:/hazmat/i, dotmed:/dot medical/i, rigpass:/rigpass|safegulf|safeland/i };
+
+function rtwCheck(regionChoice, passportCc, sectorRtwText){
+  var lvl, msg;
+  if(regionChoice.pass==='home'){ lvl='ok'; msg='Working in your own country — right to work is not a barrier.'; }
+  else if(regionChoice.pass==='sponsor'){ lvl='sponsor'; msg='Roles here are typically contractor-sponsored: possible, but hard for first-timers without experience.'; }
+  else if((regionChoice.pass||[]).indexOf(passportCc)>=0){ lvl='ok'; msg='Your passport gives you right to work here — the hardest gate is already cleared.'; }
+  else { lvl='warn'; msg='Your passport does not give automatic right to work here, and sponsorship is rare for entry roles.'; }
+  // feasible alternatives for a warn
+  var alts=[];
+  if(lvl==='warn'){
+    for(var i=0;i<REGIONS.length;i++){ var r=REGIONS[i];
+      if(r.id===regionChoice.id) continue;
+      if(r.pass==='home' || r.pass==='sponsor' || (r.pass||[]).indexOf(passportCc)>=0) alts.push(r);
+      if(alts.length>=3) break;
+    }
+  }
+  return { level:lvl, msg:msg, matrix:sectorRtwText||'', alts:alts };
+}
+
+function proPlan(intake, profile){
+  if(!intake || !profile || !profile.region) return null;
+  var region = regionById(profile.region); if(!region) return null;
+  var C = (typeof window!=='undefined' && window.HH_CERTS) ? window.HH_CERTS : null;
+  var held = {}; var doneMap = get('tickets_done',{});
+  (intake.tickets||[]).forEach(function(t){ held[t]=1; });
+  Object.keys(doneMap).forEach(function(t){ if(doneMap[t]) held[t]=1; });
+  var heldIds = Object.keys(held);
+
+  /* region-variant requirements from the matrix (fallback: generic sector list) */
+  var roleEntry=null, variant=null;
+  if(C){
+    var rid=CERT_ROLE[intake.sector];
+    for(var i=0;i<C.roles.length;i++) if(C.roles[i].id===rid){ roleEntry=C.roles[i]; break; }
+    if(roleEntry){
+      for(var j=0;j<roleEntry.regions.length;j++) if(roleEntry.regions[j].r===region.cert){ variant=roleEntry.regions[j]; break; }
+      if(!variant) for(var j2=0;j2<roleEntry.regions.length;j2++) if(roleEntry.regions[j2].r==='global'){ variant=roleEntry.regions[j2]; break; }
+      if(!variant) variant=roleEntry.regions[0];
+    }
+  }
+  function matched(reqStr){
+    for(var k=0;k<heldIds.length;k++){ var re=TK_KEYWORDS[heldIds[k]]; if(re && re.test(reqStr)) return true; }
+    return false;
+  }
+  var reqs=[], medOk = intake.medical==='valid';
+  var genericList = TICKETS[intake.sector]||[];
+  function costHint(reqStr){
+    for(var g=0; g<genericList.length; g++){ var re2=TK_KEYWORDS[genericList[g].id];
+      if(re2 && re2.test(reqStr)) return { cost:genericList[g].cost, days:genericList[g].days, provs:PROVIDERS[genericList[g].id]||[] }; }
+    return { cost:'', days:'', provs:[] };
+  }
+  if(variant){
+    variant.mandatory.forEach(function(m){ var h=costHint(m); reqs.push({ name:m, done:matched(m), cost:h.cost, days:h.days, provider:h.provs[0]||null }); });
+  } else {
+    genericList.filter(function(t){return t.req;}).forEach(function(t){
+      reqs.push({ name:t.name, done:!!held[t.id], cost:t.cost, days:t.days, provider:(PROVIDERS[t.id]||[])[0]||null });
+    });
+  }
+  var gaps=reqs.filter(function(r){return !r.done;});
+  var medical = variant ? variant.medical : 'Work/offshore medical + drug & alcohol screen';
+  var rtw = rtwCheck(region, (profile.passport&&profile.passport.cc)||'', variant?variant.rtw:'');
+
+  /* matched jobs in the target region (seed set; catalog on jobs.html) */
+  var jobs = JOBS.filter(function(jb){ return jb.sector===intake.sector && (region.locIds.length===0 || region.locIds.indexOf(jb.locId)>=0); }).slice(0,3);
+  if(!jobs.length) jobs = JOBS.filter(function(jb){ return jb.sector===intake.sector; }).slice(0,3);
+
+  /* week-by-week hiring plan */
+  var ags = AGENCIES.filter(function(a){ return a.sector===intake.sector; });
+  var wk=[]; var t0=gaps[0];
+  wk.push({ w:'Week 1', h:(t0?('Book '+t0.name):'Book your medical check')+(medOk?'':' + your '+(variant?'region medical':'medical')),
+    p:(t0?((t0.days?t0.days+' · ':'')+(t0.cost?t0.cost+' · ':'')+(t0.provider?('via '+t0.provider.name):'accredited providers linked in your roadmap')):('Medical: '+medical)) });
+  if(gaps.length>1) wk.push({ w:'Week 1–2', h:'Line up '+gaps.slice(1).map(function(g){return g.name.split('(')[0].trim();}).join(' + '),
+    p:'Book these while you wait — most run weekly and can be stacked back-to-back.' });
+  wk.push({ w:'Week 2', h:'Offshore CV + register with '+(ags.length||'the right')+' agencies',
+    p:'We format your CV the way recruiters scan, then you get on the books of '+(ags.map(function(a){return a.name;}).slice(0,3).join(', ')||'your sector agencies')+'.' });
+  wk.push({ w:'Week 3–4', h:'Apply to your matched roles', p:'Apply to every fit in '+region.name+' with our templates; follow up on day 3 — that call is where most first jobs come from.' });
+  wk.push({ w:'Week 5–6', h:'Interviews & document checks', p:'Short competency chats + ticket verification. We prep you on exactly what they ask. First-offer window for most entry roles.' });
+
+  var estCost=0; gaps.forEach(function(g){ var m=(g.cost||'').match(/\$([\d,]+)/); if(m) estCost+=parseInt(m[1].replace(/,/g,''),10); });
+  return { region:region, variant:variant, role:roleEntry, reqs:reqs, gaps:gaps, medical:medical, medOk:medOk,
+    rtw:rtw, jobs:jobs, agencies:ags, weeks:wk, estCost:estCost, verify:(variant&&variant.verify)||[] };
+}
+window.HH.proPlan = proPlan;
+window.HH.proProfile = function(){ return get('pro_profile'); };
+window.HH.setProProfile = function(p){ set('pro_profile', p); ga('pro_profile_saved',{region:p&&p.region}); };
+
+/* ------------------------------------------------------------------ */
 /* AUTH GATE — register (Continue with Google) + paywall               */
 /* Everything requires an account. Google is offered after the paywall.*/
 /* ------------------------------------------------------------------ */

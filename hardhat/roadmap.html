@@ -22,6 +22,9 @@
       <select id="secSel"></select>
     </div>
 
+    <!-- Region-exact requirements (Pro, from the Certificate Truth Engine) -->
+    <div class="certcard" id="regionPanel" style="display:none;margin:8px 0 18px"></div>
+
     <div class="grid2" style="margin-top:8px;align-items:start">
       <div>
         <div id="ticketList"></div>
@@ -41,11 +44,28 @@
 
 <div id="foot"></div>
 <script src="app.js"></script>
+<script src="cert-data.js"></script>
 <script>
 HH.mountChrome('roadmap.html');
 var sel=document.getElementById('secSel');
 sel.innerHTML=HH_SECTORS.map(function(s){return '<option value="'+s.id+'">'+s.icon+' '+s.name+'</option>';}).join('');
 var intake=HH.Auth.intake();
+
+/* Region-exact requirements panel (Pro profile + Certificate Truth Engine) */
+(function(){
+  var profile=HH.proProfile();
+  if(!(HH.Auth.isPaid() && profile && intake)) return;
+  var pp=HH.proPlan(intake, profile); if(!pp||!pp.variant) return;
+  var links=(pp.verify||[]).map(function(k){ var l=HH_CERTS.links[k]; return l?('<a class="cverify" href="'+l.url+'" target="_blank" rel="noopener">Verify: '+l.name+' ↗</a>'):''; }).join('');
+  document.getElementById('regionPanel').style.display='block';
+  document.getElementById('regionPanel').innerHTML=
+    '<div class="cc-head"><div><h3>'+pp.region.flag+' Requirements for '+pp.region.name+'</h3>'+
+    '<div class="cc-meta"><span class="jchip hi">Your exact route</span><span class="jchip">'+(pp.gaps.length?pp.gaps.length+' ticket'+(pp.gaps.length>1?'s':'')+' to go':'All mandatory tickets held')+'</span></div></div></div>'+
+    '<div class="creq"><h5>Mandatory for this region</h5><ul>'+pp.reqs.map(function(q){return '<li>'+(q.done?'✓ ':'')+q.name+(q.done?' <span style="color:var(--good);font-size:12px">held</span>':(q.cost?' · '+q.cost:''))+'</li>';}).join('')+'</ul></div>'+
+    '<div class="creq"><h5>Medical</h5><p>'+pp.medical+(pp.medOk?' <span style="color:var(--good)">— valid ✓</span>':'')+'</p></div>'+
+    '<div class="creq"><h5>Right to work</h5><p>'+pp.rtw.msg+(pp.rtw.matrix?' ('+pp.rtw.matrix+')':'')+'</p></div>'+
+    '<div class="cverifyrow">'+links+'</div>';
+})();
 var cur=(intake&&intake.sector)||'oil';
 sel.value=cur;
 sel.onchange=function(){ cur=sel.value; render(); };
