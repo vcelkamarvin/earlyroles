@@ -26,7 +26,7 @@
     </form>
     <div class="trustrow light" style="justify-content:center;margin-top:18px">
       <span><span class="ok">✓</span> <span data-i18n="t_free">Free to join</span></span>
-      <span><span class="ok">✓</span> <span id="stOpen">39,000+</span> <span data-i18n="t_roles">roles</span></span>
+      <span><span class="ok">✓</span> <span id="stOpen">5,000+</span> <span data-i18n="t_roles">roles</span></span>
       <span class="urgency"><span class="pulse"></span> <span data-i18n="t_urgency">800+ jobs found every month</span></span>
     </div>
   </div>
@@ -317,7 +317,7 @@
 
   // demand
   document.getElementById('demandTotal').textContent = HH_DEMAND_TOTAL.toLocaleString();
-  document.getElementById('stOpen').textContent = HH_DEMAND_TOTAL.toLocaleString()+'+';
+  document.getElementById('stOpen').textContent = '5,000+'; // catalog count — see jobs-data.json
   var maxD = Math.max.apply(null, HH_SECTORS.map(function(s){return HH_DEMAND[s.id].open;}));
   document.getElementById('demandBars').innerHTML = HH_SECTORS.slice().sort(function(a,b){return HH_DEMAND[b.id].open-HH_DEMAND[a.id].open;}).map(function(s){
     var d=HH_DEMAND[s.id];

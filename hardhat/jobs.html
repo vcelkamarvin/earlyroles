@@ -14,18 +14,19 @@
 
 <section>
   <div class="wrap">
-    <div class="eyebrow">Job board</div>
-    <h2 class="sec" style="max-width:22ch">High-pay roles, worldwide, no degree required</h2>
-    <p class="lead">Filter by sector, location and pay. Roles matched to your Rig-Ready profile are flagged. <span class="hi">Applying is a Pro feature.</span></p>
+    <div class="lblrow"><span class="hl">Job board</span></div>
+    <h2 class="sec" style="max-width:22ch"><span id="jobTotal">5,000+</span> roles worldwide, no degree required</h2>
+    <p class="lead">Filter by sector, country and pay. Create a free account to see each role's pay cycle, rotation and exact requirements. <span class="hi">Applying is a Pro feature.</span></p>
 
     <div class="filters" style="margin-top:24px">
-      <input id="q" placeholder="Search role or company…">
+      <input id="q" placeholder="Search role, company or city…">
       <select id="secF"><option value="all">All sectors</option></select>
-      <select id="locF"><option value="all">All locations</option></select>
+      <select id="ctyF"><option value="all">All countries</option></select>
       <select id="expF"><option value="all">Any experience</option><option value="noexp">No experience OK</option></select>
-      <select id="payF"><option value="0">Any pay</option><option value="70000">$70k+</option><option value="90000">$90k+</option><option value="110000">$110k+</option></select>
-      <select id="sortF"><option value="match">Best match</option><option value="pay">Highest pay</option></select>
+      <select id="payF"><option value="0">Any pay</option><option value="70000">$70k+</option><option value="90000">$90k+</option><option value="110000">$110k+</option><option value="150000">$150k+</option></select>
+      <select id="sortF"><option value="match">Best match</option><option value="pay">Highest pay</option><option value="new">Newest</option></select>
     </div>
+    <p class="micro" id="resCount" style="margin:6px 0 0"></p>
 
     <div id="recRow"></div>
     <div id="matchNote" class="notice" style="margin-bottom:16px;display:none"></div>
@@ -38,16 +39,52 @@
 
 <div id="foot"></div>
 <script src="app.js"></script>
+<script src="cert-data.js"></script>
 <script>
-HH.mountChrome('jobs.html');
+HH.mountChrome('Jobs');
 var intake=HH.Auth.intake();
 var qs=new URLSearchParams(location.search);
-var secF=document.getElementById('secF'), locF=document.getElementById('locF');
+var secF=document.getElementById('secF'), ctyF=document.getElementById('ctyF');
 HH_SECTORS.forEach(function(s){ var o=document.createElement('option'); o.value=s.id; o.textContent=s.icon+' '+s.name; secF.appendChild(o); });
-HH_LOCATIONS.forEach(function(l){ var o=document.createElement('option'); o.value=l.id; o.textContent=l.flag+' '+l.name; locF.appendChild(o); });
-if(qs.get('loc')) locF.value=qs.get('loc');
-else if(intake&&intake.sector) secF.value=intake.sector;
-var shown=8;
+if(intake&&intake.sector) secF.value=intake.sector;
+var shown=12;
+
+/* ---- catalog: expand compact jobs-data.json into job objects ---- */
+var JOBS_ALL = HH_JOBS.slice(); // fallback until catalog loads
+function countryOf(cityName){ var p=cityName.split(','); return p[p.length-1].trim(); }
+function expandCatalog(d){
+  var icons={}; HH_SECTORS.forEach(function(s){icons[s.id]=s.icon;});
+  var out=[];
+  for(var i=0;i<d.rows.length;i++){
+    var r=d.rows[i], role=d.roles[r[0]], city=d.cities[r[1]], src=d.cos[r[2]];
+    var lvl=r[3], typ=r[4], rota=(d.rotas[role.sec]||['rotation'])[r[5]], payn=r[6], pst=r[7];
+    out.push({
+      id:'c'+i, title:role.t, co:src.n, logo:src.d, viaAgency:!!src.ag,
+      sector:role.sec, icon:icons[role.sec]||'🛠', loc:city.n, locId:city.locId,
+      cty:countryOf(city.n), fl:city.fl,
+      rota:rota, payn:payn, pay:'$'+payn.toLocaleString(),
+      noexp:!!(role.ne&&lvl===0), level:lvl?'Experienced':'Entry',
+      type:['Rotational','Contract','Full-time'][typ]||'Full-time',
+      posted:pst+'d', tickets:role.tks
+    });
+  }
+  return out;
+}
+fetch('jobs-data.json').then(function(r){return r.json();}).then(function(d){
+  if(d&&d.rows&&d.rows.length){
+    JOBS_ALL=expandCatalog(d);
+    document.getElementById('jobTotal').textContent=d.count.toLocaleString();
+    buildCountryFilter();
+    render();
+  }
+}).catch(function(){ buildCountryFilter(); });
+function buildCountryFilter(){
+  var seen={}, opts=[];
+  JOBS_ALL.forEach(function(j){ var c=j.cty||countryOf(j.loc||''); if(c&&!seen[c]){seen[c]=1;opts.push(c);} });
+  opts.sort();
+  ctyF.innerHTML='<option value="all">All countries</option>'+opts.map(function(c){return '<option value="'+c+'">'+c+'</option>';}).join('');
+  if(qs.get('cty')) ctyF.value=qs.get('cty');
+}
 
 function matchScore(j){
   if(!intake) return 0;
@@ -65,34 +102,36 @@ function rowHTML(j){
     (intake&&j._m>=60?'<span class="jchip good">'+j._m+'% match</span>':'');
   return '<div class="jrow" onclick="openJob(\''+j.id+'\')">'+
     '<div class="jlogo">'+HH.logo(j.logo,j.co)+'</div>'+
-    '<div class="jmain"><h3>'+j.title+'</h3><div class="jco">'+j.co+'</div>'+(j.desc?'<div class="jdesc">'+j.desc+'</div>':'')+'<div class="jchips">'+chips+'</div></div>'+
-    '<div class="jloc">'+j.loc+'<span class="jtime">'+j.posted+' ago</span></div>'+
+    '<div class="jmain"><h3>'+j.title+'</h3><div class="jco">'+j.co+(j.viaAgency?' · via agency':'')+'</div><div class="jchips">'+chips+'</div></div>'+
+    '<div class="jloc">'+(j.fl?j.fl+' ':'')+j.loc+'<span class="jtime">'+j.posted+' ago</span></div>'+
     '<div class="jpay"><b>'+j.pay+'</b><span>per year</span></div>'+
     '<button class="jbookmark'+(sv?' on':'')+'" title="Save" onclick="event.stopPropagation();saveJob(\''+j.id+'\')">'+(sv?'★':'☆')+'</button>'+
     '</div>';
 }
 function filtered(){
   var q=document.getElementById('q').value.toLowerCase();
-  var sf=secF.value, lf=locF.value, ef=document.getElementById('expF').value, pf=+document.getElementById('payF').value, sort=document.getElementById('sortF').value;
-  var arr=HH_JOBS.filter(function(j){
-    if(q && (j.title+' '+j.co).toLowerCase().indexOf(q)<0) return false;
+  var sf=secF.value, cf=ctyF.value, ef=document.getElementById('expF').value, pf=+document.getElementById('payF').value, sort=document.getElementById('sortF').value;
+  var arr=JOBS_ALL.filter(function(j){
+    if(q && (j.title+' '+j.co+' '+j.loc).toLowerCase().indexOf(q)<0) return false;
     if(sf!=='all' && j.sector!==sf) return false;
-    if(lf!=='all' && j.locId!==lf) return false;
+    if(cf!=='all' && (j.cty||countryOf(j.loc||''))!==cf) return false;
     if(ef==='noexp' && !j.noexp) return false;
     if(j.payn<pf) return false;
     return true;
   });
   arr.forEach(function(j){ j._m=matchScore(j); });
-  arr.sort(function(a,b){ return sort==='pay'?b.payn-a.payn:(b._m-a._m)||(b.payn-a.payn); });
+  if(sort==='new') arr.sort(function(a,b){ return parseInt(a.posted)-parseInt(b.posted); });
+  else if(sort==='pay') arr.sort(function(a,b){ return b.payn-a.payn; });
+  else arr.sort(function(a,b){ return (b._m-a._m)||(b.payn-a.payn); });
   return arr;
 }
 function render(){
   var arr=filtered();
   var mn=document.getElementById('matchNote');
   if(intake){ mn.style.display='block'; mn.innerHTML='🎯 Showing matches for your <b>'+(HH.sector(intake.sector)||{}).name+'</b> profile. <a href="start.html" style="color:var(--hi)">Update</a>'; }
+  document.getElementById('resCount').textContent=arr.length.toLocaleString()+' roles match your filters';
   document.getElementById('jobList').innerHTML=arr.slice(0,shown).map(rowHTML).join('') || '<p style="color:var(--muted);text-align:center;padding:30px">No roles match — widen your filters.</p>';
   document.getElementById('moreBtn').style.display=arr.length>shown?'inline-flex':'none';
-  // recommended row
   var rr=document.getElementById('recRow');
   if(intake){
     var rec=HH.recommendations(intake);
@@ -102,22 +141,68 @@ function render(){
     } else rr.innerHTML='';
   }
 }
+
+/* ---- structured job detail (the value) — gated behind free registration ---- */
+function rotaDesc(rota){
+  var r=(rota||'').toLowerCase();
+  if(r.indexOf('fifo')>=0) return 'Fly-in fly-out: you fly to site for the on-swing, work long shifts, then fly home. Camp, meals and flights are usually covered on top of pay.';
+  if(r.indexOf('sat')>=0) return 'Saturation diving stints: you live in a pressurised system for the campaign, then decompress. The most demanding — and highest paid — cycle in the industry.';
+  if(r.indexOf('shutdown')>=0) return 'Shutdown/turnaround work: intense project bursts (often 2–6 weeks) with heavy overtime, then time off between projects.';
+  if(r.indexOf('project')>=0) return 'Project-based: you work the length of the campaign, then move to the next one. Day rates are typically higher to balance gaps.';
+  if(r.indexOf('home weekly')>=0) return 'Out during the week, home on weekends — the most family-friendly cycle in this line of work.';
+  if(r.indexOf('weeks out')>=0) return 'Multi-week stretches away, then blocks of home time. Common in oilfield driving and remote work.';
+  if(r.indexOf('local')>=0) return 'Local shift work — home every night.';
+  if(r.indexOf('mon–fri')>=0||r.indexOf('mon-fri')>=0) return 'Weekday work with travel to sites, home most weekends.';
+  var m=rota.match(/(\d+)\s*(?:on|\/)\s*\/?\s*(\d+)/);
+  if(m) return 'You work '+m[1]+' '+(parseInt(m[1],10)>6?'days':'weeks')+' on site, then get '+m[2]+' off — fully off, no calls. Travel to the site is typically covered, and many crews earn a full year’s pay working half the year’s days.';
+  return 'Rotational cycle: blocks of time on site followed by blocks fully off. Travel and accommodation on rotation are typically covered.';
+}
+function certLinkFor(j){
+  var map={oil:'roustabout',wind:'windtech',wtt:'windtech',mining:'haultruck',marine:'deckhand',weld:'welder6g',diving:'diver',cdl:'driver'};
+  var rid=map[j.sector]; if(!rid||!window.HH_CERTS) return '';
+  return '<a href="certs.html#'+rid+'" style="color:var(--hi);font-size:13px;font-weight:600">See the full requirements for your region →</a>';
+}
 function openJob(id){
-  var j=HH_JOBS.filter(function(x){return x.id===id;})[0]; if(!j) return;
+  var j=JOBS_ALL.filter(function(x){return x.id===id;})[0]; if(!j) return;
+  // THE GATE: full description requires a free account
+  if(!HH.Auth.signedIn()){
+    document.getElementById('jobBox').innerHTML=
+      '<span class="mclose" onclick="closeJob()">×</span>'+
+      '<div style="display:flex;gap:14px;align-items:center"><div class="jlogo" style="width:54px;height:54px">'+HH.logo(j.logo,j.co)+'</div><div><h3 class="display" style="font-size:22px;margin-bottom:2px">'+j.title+'</h3><p style="color:var(--muted)">'+j.co+' · '+(j.fl?j.fl+' ':'')+j.loc+'</p></div></div>'+
+      '<div class="gateblur"><div class="grid3" style="margin:16px 0"><div class="dstat"><b style="font-size:22px">$••k</b><span>per year</span></div><div class="dstat"><b style="font-size:16px">••/••</b><span>rotation</span></div><div class="dstat"><b style="font-size:16px">•••</b><span>experience</span></div></div>'+
+      '<p style="color:var(--ink2);font-size:14px">The pay, rotation cycle, required tickets and how to get hired for this role…</p></div>'+
+      '<div class="notice" style="margin:14px 0;text-align:center"><b>Create a free account</b> to see the pay, cycle and exact requirements for this role.</div>'+
+      '<button class="btn btn-go btn-block btn-lg" onclick="gateJob(\''+j.id+'\')">Show me this job — free →</button>'+
+      '<p class="micro" style="text-align:center">Free forever · no card · 2 clicks</p>';
+    document.getElementById('jobModal').classList.add('on');
+    HH.ga('job_gate_view',{sector:j.sector});
+    return;
+  }
   var saved=HH.Auth.saved(); var sv=saved.indexOf(id)>=0;
+  var sec=HH.sector(j.sector)||{}; var pay=HH_PAY[j.sector]||{};
   var allT=[]; Object.keys(HH_TICKETS).forEach(function(k){allT=allT.concat(HH_TICKETS[k]);});
   var tickets=(j.tickets||[]).map(function(tid){ var t=allT.filter(function(x){return x.id===tid;})[0]; return t?('<div class="ticket" style="margin-bottom:8px"><div class="tinfo"><b>'+t.name+'</b><small>'+t.cost+' · '+t.days+'</small></div></div>'):''; }).join('');
   var paid=HH.Auth.isPaid();
   document.getElementById('jobBox').innerHTML=
     '<span class="mclose" onclick="closeJob()">×</span>'+
-    '<div style="display:flex;gap:14px;align-items:center"><div class="jlogo" style="width:54px;height:54px">'+HH.logo(j.logo,j.co)+'</div><div><h3 class="display" style="font-size:22px;margin-bottom:2px">'+j.title+'</h3><p style="color:var(--muted)">'+j.co+' · '+j.loc+'</p></div></div>'+
-    (j.desc?'<p style="color:var(--ink2);font-size:14.5px;margin:14px 0 4px">'+j.desc+'</p>':'')+
-    '<div class="grid3" style="margin:16px 0"><div class="dstat"><b style="font-size:22px">'+j.pay+'</b><span>per year</span></div><div class="dstat"><b style="font-size:16px">'+j.rota+'</b><span>rotation</span></div><div class="dstat"><b style="font-size:16px">'+(j.noexp?'None':'Some')+'</b><span>experience</span></div></div>'+
-    '<div class="eyebrow" style="text-align:left">Tickets you’ll need</div><div style="margin:10px 0">'+(tickets||'<p style="color:var(--muted);font-size:14px">Check your roadmap.</p>')+'</div>'+
+    '<div style="display:flex;gap:14px;align-items:center"><div class="jlogo" style="width:54px;height:54px">'+HH.logo(j.logo,j.co)+'</div><div><h3 class="display" style="font-size:22px;margin-bottom:2px">'+j.title+'</h3><p style="color:var(--muted)">'+j.co+(j.viaAgency?' (crewing agency)':'')+' · '+(j.fl?j.fl+' ':'')+j.loc+'</p></div></div>'+
+    '<div class="grid3" style="margin:16px 0"><div class="dstat"><b style="font-size:22px">'+j.pay+'</b><span>per year</span></div><div class="dstat"><b style="font-size:16px">'+j.rota+'</b><span>rotation</span></div><div class="dstat"><b style="font-size:16px">'+(j.noexp?'None needed':'Required')+'</b><span>experience</span></div></div>'+
+    '<div class="jdet"><h5>About the role</h5><p>'+(sec.blurb||'')+' This is '+(j.level==='Entry'?'an entry-level opening — employers here hire on safety tickets, medical fitness and reliability, not a degree.':'an experienced role — you\'ll need proven time in the field plus current tickets.')+'</p></div>'+
+    '<div class="jdet"><h5>Rotation &amp; lifestyle</h5><p><b>'+j.rota+'</b> — '+rotaDesc(j.rota)+'</p></div>'+
+    '<div class="jdet"><h5>The money</h5><p>Around <b>'+j.pay+'/yr</b> for this role and level. Sector day rates run <b>'+(pay.day||'—')+'</b>, and experienced '+ (sec.name||'') +' workers reach <b>'+(pay.exp||'—')+'</b>. '+(pay.note||'')+'</p></div>'+
+    '<div class="jdet"><h5>What you need</h5><div style="margin:8px 0">'+(tickets||'<p style="color:var(--muted);font-size:14px">See the requirements matrix for this sector.</p>')+'</div>'+certLinkFor(j)+'</div>'+
+    '<div class="jdet"><h5>How hiring works here</h5><p>Roles like this are filled '+(j.viaAgency?('through <b>'+j.co+'</b> and similar crewing agencies'):'through crewing agencies and the operator\'s own talent pool')+' — not by applying on general job boards. Get the tickets above, build an offshore-format CV, then get on the agencies\' books.</p></div>'+
+    '<p class="micro" style="margin:12px 0">Representative role — the kind of opening filled continuously in this sector and region. Confirm specifics on the posting when you apply.</p>'+
     '<button class="btn btn-hi btn-block btn-lg" onclick="applyJob(\''+j.id+'\')">'+(paid?'Apply through agency →':'🔒 Apply — unlock with Pro')+'</button>'+
     '<button class="btn btn-out btn-block" style="margin-top:10px" onclick="saveJob(\''+j.id+'\')">'+(sv?'★ Saved':'☆ Save job')+'</button>';
   document.getElementById('jobModal').classList.add('on');
+  HH.ga('job_view',{sector:j.sector});
 }
+function gateJob(id){
+  closeJob();
+  HH.requireAuth(function(){ openJob(id); }, 'Create your free account to see the pay, rotation cycle and exact requirements for every role.', 'See this job');
+}
+window.gateJob=gateJob;
 function closeJob(){ document.getElementById('jobModal').classList.remove('on'); }
 function saveJob(id){
   if(!HH.Auth.signedIn()){ HH.requireAuth(function(){ saveJob(id); }, 'Create a free account to save jobs and track your applications.', 'Save this job'); return; }
@@ -133,8 +218,8 @@ function applyJob(id){
   location.href='directory.html';
 }
 window.openJob=openJob; window.closeJob=closeJob; window.saveJob=saveJob; window.applyJob=applyJob;
-['q','secF','locF','expF','payF','sortF'].forEach(function(id){ document.getElementById(id).addEventListener('input',function(){shown=8;render();}); });
-document.getElementById('moreBtn').onclick=function(){ shown+=8; render(); };
+['q','secF','ctyF','expF','payF','sortF'].forEach(function(id){ document.getElementById(id).addEventListener('input',function(){shown=12;render();}); });
+document.getElementById('moreBtn').onclick=function(){ shown+=20; render(); };
 render();
 </script>
 </body>

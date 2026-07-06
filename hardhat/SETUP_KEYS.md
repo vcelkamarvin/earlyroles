@@ -36,3 +36,9 @@ Set `CONFIG.GA_MEASUREMENT_ID` in `app.js` and add the GA4 gtag snippet to enabl
 
 ---
 **Note:** Plan entitlement is currently stored client-side (`localStorage`), which is demo-grade. For production, verify subscriptions with a Stripe webhook and gate premium features server-side.
+
+## Live job feed (optional — activates /api/jobs)
+- `ADZUNA_APP_ID` + `ADZUNA_APP_KEY` — free at developer.adzuna.com
+- `CAREERJET_KEY` — free affiliate key at careerjet.com/partners
+Until set, the jobs page uses the built-in 5,000+ role catalog (jobs-data.json,
+regenerate with `node build-jobs.js`).

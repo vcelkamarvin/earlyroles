@@ -12,14 +12,7 @@
 <div id="nav"></div>
 
 <section>
-  <div class="wrap">
-    <div class="dtophead">
-      <div>
-        <div class="eyebrow" style="text-align:left">Your dashboard</div>
-        <h2 class="sec" id="hi" style="text-align:left;margin:6px 0 0;max-width:none">Welcome back</h2>
-      </div>
-      <span class="planpill" id="planPill">Free plan</span>
-    </div>
+  <div class="wrap" style="max-width:860px">
 
     <div id="noIntake" class="notice" style="max-width:640px;margin:22px auto;display:none;text-align:center">
       You haven’t taken the Rig-Ready assessment yet. <a href="start.html" style="color:var(--hi)">Take it now →</a>
@@ -27,61 +20,55 @@
 
     <div id="board" style="display:none">
 
-      <!-- NEXT STEP -->
-      <div id="nextStep"></div>
-
-      <!-- COMPLETE YOUR PROFILE CHECKLIST -->
-      <div class="panel checkcard" id="checkCard" style="margin-top:18px">
-        <div class="checkhead">
-          <div>
-            <div class="eyebrow" style="text-align:left">Complete your profile</div>
-            <p id="checkSub" style="color:var(--muted);font-size:13.5px;margin:4px 0 0">Workers who finish every step are 3× more likely to get hired.</p>
-          </div>
-          <div class="checkring" id="checkRing"><i><b id="checkN">0/6</b></i></div>
-        </div>
-        <div class="progbar" style="margin:14px 0 4px"><i id="checkBar" style="width:0%"></i></div>
-        <div id="checkRows" style="margin-top:12px"></div>
+      <!-- GREETING — one idea, big type -->
+      <div class="dgreet">
+        <h1 id="greetH">You are 2 tickets from applying.</h1>
+        <p id="greetSub">Best fit right now: offshore work. Here is the one thing to do next.</p>
       </div>
 
-      <!-- STATS -->
-      <div class="dstats" style="margin-top:18px">
-        <div class="dstat"><b id="stTickets">0</b><span>tickets done</span></div>
-        <div class="dstat"><b id="stSaved">0</b><span>saved jobs</span></div>
-        <div class="dstat"><b id="stApplied">0</b><span>applied</span></div>
-        <div class="dstat"><b id="stInterview">0</b><span>interviews</span></div>
-      </div>
+      <!-- ONE PRIMARY ACTION -->
+      <div class="dnext reveal" id="dNext"></div>
 
-      <!-- SCORE + WHAT YOU'RE MISSING -->
-      <div class="grid2" style="margin-top:16px;align-items:start">
-        <div class="panel center">
+      <!-- SCORE + BLOCKERS -->
+      <div class="grid2" style="margin-top:22px;align-items:stretch;gap:18px">
+        <div class="panel center" style="display:flex;flex-direction:column;justify-content:center">
           <div class="eyebrow">Rig-Ready Score</div>
-          <div class="ring" id="ring" style="margin:16px auto"><i><b id="scoreN">0</b><span>rig-ready</span></i></div>
-          <p id="scoreBlurb" style="color:var(--muted);font-size:14px"></p>
-          <a class="btn btn-hi btn-block" style="margin-top:14px" href="roadmap.html">Work my roadmap →</a>
+          <div class="ring" id="ring" style="margin:16px auto"><i><b id="scoreN">0</b><span>of 100</span></i></div>
+          <p id="scoreBlurb" style="color:var(--muted);font-size:14px;max-width:30ch;margin:0 auto"></p>
         </div>
         <div class="panel">
-          <div class="eyebrow" style="text-align:left">What you’re missing</div>
-          <div id="missBox" style="margin-top:12px"></div>
+          <div class="eyebrow" style="text-align:left">What stands between you and applying</div>
+          <div id="blockers" style="margin-top:14px"></div>
+          <p class="micro" id="phoneRow" style="margin-top:14px"></p>
         </div>
       </div>
 
-      <!-- WHERE YOU'VE APPLIED -->
-      <div style="display:flex;justify-content:space-between;align-items:baseline;margin:32px 0 10px">
-        <h3 class="display" style="font-size:20px">Where you’ve applied</h3>
-        <a href="jobs.html" style="color:var(--hi);font-size:13.5px;font-weight:600">Find more jobs →</a>
-      </div>
-      <div class="panel" style="padding:8px 18px" id="appsBox"></div>
+      <!-- PATH TO HIRED -->
+      <h3 class="display" style="font-size:20px;margin:36px 0 14px">Your path to hired</h3>
+      <div class="pathwrap" id="pathWrap"></div>
 
-      <!-- RECOMMENDED -->
-      <div id="recBox" style="margin-top:26px"></div>
-
-      <!-- UPSELL -->
-      <div class="panel" id="upsell" style="margin-top:24px;display:none;background:linear-gradient(135deg,var(--hi-soft),var(--panel))">
-        <div class="grid2" style="align-items:center">
-          <div><h3 class="display" style="font-size:20px">Ready to actually get hired?</h3><p style="color:var(--muted);font-size:14px;margin-top:6px">Unlock the full roadmap, agency contacts, AI CV builder and the ability to apply.</p></div>
-          <div><a class="btn btn-go btn-block btn-lg" href="pricing.html">Get me hired →</a></div>
-        </div>
+      <!-- SAMPLE MATCHED ROLES -->
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin:36px 0 12px">
+        <h3 class="display" style="font-size:20px">Roles you already qualify for <span style="color:var(--faint);font-weight:400;font-size:14px">· sample</span></h3>
+        <a href="jobs.html" style="color:var(--hi);font-size:13.5px;font-weight:600">All 5,000+ roles →</a>
       </div>
+      <div id="fitList"></div>
+
+      <!-- PRO UNLOCK -->
+      <div class="prounlock reveal" id="proCard" style="display:none">
+        <div class="pu-lock">🔒</div>
+        <h3 class="display" style="font-size:20px;margin:6px 0 6px">Unlock every matched role and the agencies that hire</h3>
+        <p style="color:var(--muted);font-size:14px;max-width:52ch;margin:0 auto 18px">See every matched job, the crewing-agency shortlist for your sector and region, and application templates that get replies.</p>
+        <button class="btn btn-go btn-lg" onclick="HH.checkout('pro_monthly')">Unlock HardHat Pro · $48/mo</button>
+        <p class="micro" style="margin-top:12px">Cancel anytime. No job or salary is guaranteed.</p>
+      </div>
+
+      <!-- APPLICATIONS (only when they exist) -->
+      <div id="appsWrap" style="display:none">
+        <h3 class="display" style="font-size:20px;margin:36px 0 12px">Where you’ve applied</h3>
+        <div class="panel" style="padding:8px 18px" id="appsBox"></div>
+      </div>
+
     </div>
   </div>
 </section>
@@ -90,97 +77,132 @@
 <script src="app.js"></script>
 <script>
 HH.mountChrome('dashboard.html');
-var u=HH.Auth.user(); var intake=HH.Auth.intake();
-document.getElementById('hi').textContent='Welcome back'+(u&&u.name&&u.name!=='Crew'?', '+u.name.split(' ')[0]:'');
+var u=HH.Auth.user()||{}; var intake=HH.Auth.intake();
 var paid=HH.Auth.isPaid();
-document.getElementById('planPill').textContent=paid?(HH.Auth.plan()==='fasttrack'?'Fast-Track':'HardHat Pro'):'Free plan';
-if(paid) document.getElementById('planPill').className='planpill pro';
+var nm=(u.name||'').split(' ')[0]; if(nm&&nm.toLowerCase()==='crew') nm='';
 
 if(!intake){ document.getElementById('noIntake').style.display='block'; }
 else {
   document.getElementById('board').style.display='block';
-  var sec=HH.sector(intake.sector);
+  var sec=HH.sector(intake.sector)||{};
   var list=HH_TICKETS[intake.sector]||[]; var done=HH.Auth.tickets();
-  var apps=HH.Auth.apps(); var saved=HH.Auth.saved();
+  var missing=list.filter(function(t){return t.req && !done[t.id];});
+  var medOk = intake.medical==='valid' || list.some(function(t){return t.type==='medical'&&done[t.id];});
+  var rtwOk = intake.rightwork==='yes';
+  var cvOk = !!HH.get('cv_built');
+  var apps=HH.Auth.apps();
+  var appliedN=Object.keys(apps).filter(function(k){return ['applied','responded','interview','offer'].indexOf(apps[k])>=0;}).length;
   var r=HH.rigReadyScore(intake);
 
-  // score ring
+  /* ---- greeting: one idea ---- */
+  var greetH;
+  if(missing.length) greetH='You are '+missing.length+' ticket'+(missing.length>1?'s':'')+' from applying'+(nm?', '+nm:'')+'.';
+  else if(!cvOk) greetH='One CV from applying'+(nm?', '+nm:'')+'.';
+  else if(appliedN===0) greetH='You are ready to apply'+(nm?', '+nm:'')+'.';
+  else greetH='You are on track'+(nm?', '+nm:'')+'.';
+  document.getElementById('greetH').textContent=greetH;
+  document.getElementById('greetSub').textContent='Best fit right now: '+(sec.name||'offshore work')+'. Here is the one thing to do next.';
+
+  /* ---- one primary action ---- */
+  var nx;
+  if(missing.length){
+    var t0=missing[0]; var provs=HH.providers(t0.id)||[];
+    nx={k:'◆ Your next step', h:'Book your '+t0.name,
+      p:'This is the single ticket blocking the roles you already qualify for. '+(t0.days||'A few days')+', '+(t0.cost||'')+' — then you can start applying. We link you straight to accredited providers.',
+      cta:(provs.length?'Find a course →':'Open my roadmap →'), href:(provs.length?provs[0].url:'roadmap.html'), ext:!!provs.length};
+  } else if(!cvOk){
+    nx={k:'◆ Your next step', h:'Finish your offshore CV',
+      p:'You hold the required tickets — big head start. Twenty minutes with the builder formats it the way rig and vessel recruiters scan.',
+      cta:'Build my CV →', href:'cv.html'};
+  } else if(!paid){
+    nx={k:'◆ Your next step', h:'Reach the agencies that hire',
+      p:'Tickets done, CV done. The last step is applying through the crewing agencies for '+(sec.name||'your sector')+' — your shortlist unlocks with Pro.',
+      cta:'Unlock and apply →', href:'pricing.html'};
+  } else if(appliedN===0){
+    nx={k:'◆ Your next step', h:'Apply to your matched roles',
+      p:'Everything is in place. Apply to the roles you qualify for and register with your agency shortlist today.',
+      cta:'See matched jobs →', href:'jobs.html'};
+  } else {
+    nx={k:'◆ You are on track', h:'Keep the momentum',
+      p:'You have '+appliedN+' application'+(appliedN>1?'s':'')+' in motion. Follow up with agencies and keep your tickets current.',
+      cta:'Find more roles →', href:'jobs.html'};
+  }
+  document.getElementById('dNext').innerHTML=
+    '<span class="dnext-k">'+nx.k+'</span><h2>'+nx.h+'</h2><p>'+nx.p+'</p>'+
+    '<a class="btn btn-go btn-lg" href="'+nx.href+'"'+(nx.ext?' target="_blank" rel="noopener"':'')+'>'+nx.cta+'</a>';
+
+  /* ---- score + projected ---- */
   var n=document.getElementById('scoreN'), ring=document.getElementById('ring'), i=0;
   var t=setInterval(function(){ i+=Math.ceil(r.score/26); if(i>=r.score)i=r.score; n.textContent=i; ring.style.setProperty('--v',i); if(i>=r.score)clearInterval(t); },26);
-  document.getElementById('scoreBlurb').textContent=r.blurb;
+  var proj=Math.min(97, r.score + (missing.length?18:0));
+  document.getElementById('scoreBlurb').textContent = missing.length
+    ? 'Get '+missing[0].name.split('(')[0].trim()+' to reach ~'+proj+' and unlock applying.'
+    : r.blurb;
 
-  // stats
-  var ticketsDone=list.filter(function(tk){return done[tk.id];}).length;
-  var appliedN=Object.keys(apps).filter(function(k){return ['applied','responded','interview','offer'].indexOf(apps[k])>=0;}).length;
-  var interviewN=Object.keys(apps).filter(function(k){return ['interview','offer'].indexOf(apps[k])>=0;}).length;
-  document.getElementById('stTickets').textContent=ticketsDone+'/'+list.length;
-  document.getElementById('stSaved').textContent=saved.length;
-  document.getElementById('stApplied').textContent=appliedN;
-  document.getElementById('stInterview').textContent=interviewN;
-
-  // WHAT YOU'RE MISSING — required tickets not done + medical
-  var missing=list.filter(function(tk){return tk.req && !done[tk.id];});
-  var medMissing = intake.medical!=='valid' && !list.some(function(tk){return tk.type==='medical'&&done[tk.id];});
-  var missHtml='';
-  if(missing.length){
-    missHtml=missing.map(function(tk){
-      var provs=HH.providers(tk.id);
-      var link=provs.length?provs[0].url:'roadmap.html';
-      return '<div class="missrow"><span class="ml"><span class="mdot"></span>'+tk.name+' <span class="badge req" style="margin-left:4px">required</span></span>'+
-        '<a href="'+(provs.length?link:'roadmap.html')+'"'+(provs.length?' target="_blank" rel="noopener"':'')+'>Get it →</a></div>';
-    }).join('');
-  } else {
-    missHtml='<div class="missdone">✓ You hold every required ticket for '+(sec?sec.name:'your sector')+'.</div>';
+  /* ---- named blockers ---- */
+  function brow(ok, label, state){
+    return '<div class="blockrow'+(ok?' ok':'')+'"><span class="bmark">'+(ok?'✓':'!')+'</span><span class="blabel">'+label+'</span><span class="bstate">'+state+'</span></div>';
   }
-  // progress bar
-  var pct=list.length?Math.round(ticketsDone/list.length*100):0;
-  missHtml+='<div style="margin-top:14px"><div style="display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted)"><span>Roadmap progress</span><span>'+pct+'%</span></div>'+
-    '<div class="progbar"><i style="width:'+pct+'%"></i></div></div>'+
-    '<a class="btn btn-ink btn-block btn-sm" style="margin-top:12px" href="roadmap.html">Open my roadmap →</a>';
-  document.getElementById('missBox').innerHTML=missHtml;
+  var bl='';
+  bl+=brow(rtwOk,'Right to work', rtwOk?'Confirmed':'Needs visa / sponsorship');
+  bl+=brow(medOk,'Work / offshore medical', medOk?'Valid':'Needed');
+  if(missing.length) missing.slice(0,2).forEach(function(tk){ bl+=brow(false, tk.name.split('(')[0].trim(), 'Needed'); });
+  else bl+=brow(true,'Required tickets','All held');
+  bl+=brow(cvOk,'Offshore CV', cvOk?'Done':'Draft');
+  document.getElementById('blockers').innerHTML=bl;
+  document.getElementById('phoneRow').innerHTML = (u.phone&&(''+u.phone).length>=6)
+    ? '📱 Job alerts on · '+u.phone
+    : '📱 <a href="javascript:void(0)" onclick="addPhone()" style="color:var(--hi)">Add your phone</a> for job alerts';
 
-  // COMPLETE YOUR PROFILE checklist
-  var u2=HH.Auth.user()||{};
-  var items=[
-    {k:'assess', label:'Take the Rig-Ready assessment', done:true, href:'start.html', cta:'Redo'},
-    {k:'tickets', label:'Complete your required tickets', done:missing.length===0, href:'roadmap.html', cta:'Do it'},
-    {k:'cv', label:'Build your offshore CV', done:!!HH.get('cv_built'), href:'cv.html', cta:'Do it'},
-    {k:'phone', label:'Add your phone for job alerts', done:!!(u2.phone&&(''+u2.phone).length>=6), href:'#', cta:'Add', act:'phone'},
-    {k:'save', label:'Save your first job', done:saved.length>0, href:'jobs.html', cta:'Do it'},
-    {k:'apply', label:'Apply to your first job', done:appliedN>0, href:'jobs.html', cta:'Do it'}
+  /* ---- path to hired: done collapsed, active loud, future dimmed ---- */
+  var steps=[
+    { h:'Confirm right to work and medical', done:(rtwOk&&medOk),
+      pDone:'Both done. You cleared the two hardest gates.',
+      pTodo:'Sort your right-to-work status and book the medical — the two hardest gates.' , meta:'' },
+    { h:'Get your required tickets', done:!missing.length,
+      pDone:'All required tickets held.',
+      pTodo:missing.length?('The only thing standing between you and live roles: '+missing.map(function(t){return t.name.split('(')[0].trim();}).join(' + ')+'.'):'',
+      meta:missing.length?((missing[0].days||'')+' · '+(missing[0].cost||'')):'' },
+    { h:'Finish your offshore CV', done:cvOk,
+      pDone:'CV done and recruiter-ready.',
+      pTodo:'Tickets and availability first, formatted the way recruiters scan.', meta:'20 minutes with the builder' },
+    { h:'Apply through the right agencies', done:false, pro:!paid,
+      pDone:'', pTodo:'Your shortlist of crewing agencies for '+(sec.name||'your sector')+'.', meta:paid?'':'Unlocks with Pro' }
   ];
-  var doneCount=items.filter(function(x){return x.done;}).length;
-  var cpct=Math.round(doneCount/items.length*100);
-  document.getElementById('checkN').textContent=doneCount+'/'+items.length;
-  document.getElementById('checkBar').style.width=cpct+'%';
-  document.getElementById('checkRing').style.setProperty('--v',cpct);
-  if(doneCount===items.length){ document.getElementById('checkSub').textContent='All set — your profile is complete. Keep applying and stay ticket-current.'; document.getElementById('checkCard').classList.add('checkdone'); }
-  document.getElementById('checkRows').innerHTML=items.map(function(x){
-    if(x.done) return '<div class="checkrow done"><span class="cl"><span class="cbox">✓</span>'+x.label+'</span></div>';
-    var link=x.act==='phone'?'<a href="javascript:void(0)" onclick="addPhone()">'+x.cta+' →</a>':'<a href="'+x.href+'">'+x.cta+' →</a>';
-    return '<div class="checkrow"><span class="cl"><span class="cbox"></span>'+x.label+'</span>'+link+'</div>';
+  var activeIdx=steps.findIndex(function(s){return !s.done;}); if(activeIdx<0) activeIdx=steps.length-1;
+  document.getElementById('pathWrap').innerHTML=steps.map(function(s,ix){
+    var cls=s.done?'done':(ix===activeIdx?'active':'future');
+    var body=s.done?s.pDone:s.pTodo;
+    return '<div class="pathstep '+cls+'">'+
+      '<span class="ps-n">'+(s.done?'✓':(ix+1))+'</span>'+
+      '<div class="ps-b"><h4>'+s.h+'</h4>'+(body?'<p>'+body+'</p>':'')+
+      (!s.done&&s.meta?'<small>'+(ix===activeIdx?'In progress · ':'Next up · ')+s.meta+'</small>':'')+
+      '</div></div>';
   }).join('');
 
-  // NEXT STEP banner — single most important action
-  var ns;
-  if(missing.length){
-    ns={ic:'🎓', h:'Get your next ticket: '+missing[0].name, p:'This is the #1 thing between you and applying. It takes '+(missing[0].days||'a few days')+' and costs '+(missing[0].cost||'—')+'.', cta:'Get certified →', href:'roadmap.html', cls:''};
-  } else if(!paid){
-    ns={ic:'🔓', h:'You’re ready to apply', p:'Unlock the agency contacts and apply to the jobs you already qualify for.', cta:'Get me hired →', href:'pricing.html', cls:'ready'};
-  } else if(appliedN===0){
-    ns={ic:'🎯', h:'Start applying', p:'You’re qualified. Apply to your matched jobs and reach the crewing agencies hiring now.', cta:'See matched jobs →', href:'jobs.html', cls:'ready'};
-  } else {
-    ns={ic:'✅', h:'You’re on track', p:'You’ve applied to '+appliedN+' role'+(appliedN>1?'s':'')+'. Keep your tickets current and follow up with agencies.', cta:'Find more jobs →', href:'jobs.html', cls:'ready'};
+  /* ---- sample matched roles with fit % ---- */
+  function fit(j){
+    var s=0; if(j.sector===intake.sector) s+=55;
+    var held=Object.keys(done).filter(function(k){return done[k];});
+    var need=j.tickets||[]; var have=need.filter(function(t){return held.indexOf(t)>=0;}).length;
+    s+=need.length?Math.round(have/need.length*30):18;
+    if(j.noexp && intake.experience==='none') s+=14;
+    return Math.min(98,s);
   }
-  document.getElementById('nextStep').outerHTML='<div class="nextstep '+ns.cls+'" id="nextStep"><div class="ns-l"><div class="ns-ic">'+ns.ic+'</div><div><h4>'+ns.h+'</h4><p>'+ns.p+'</p></div></div><a class="btn '+(ns.cls?'btn-go':'btn-hi')+'" href="'+ns.href+'">'+ns.cta+'</a></div>';
+  var pool=HH_JOBS.map(function(j){ j._f=fit(j); return j; }).sort(function(a,b){return b._f-a._f;}).slice(0,3);
+  document.getElementById('fitList').innerHTML=pool.map(function(j){
+    return '<a class="fitrow" href="jobs.html">'+
+      '<div class="fr-main"><b>'+j.title+'</b><span>'+j.loc+' · '+j.co+' · '+j.pay+'</span></div>'+
+      '<span class="fr-fit">'+j._f+'% fit</span></a>';
+  }).join('');
 
-  // WHERE YOU'VE APPLIED — table of saved/applied jobs with status
+  /* ---- pro card + applications ---- */
+  document.getElementById('proCard').style.display=paid?'none':'block';
   var labels={saved:'Saved',applied:'Applied',responded:'Responded',interview:'Interviewing',offer:'Offer',rejected:'Closed'};
-  var appIds=Object.keys(apps);
-  // sort: active applications first
   var order={offer:0,interview:1,responded:2,applied:3,saved:4,rejected:5};
-  appIds.sort(function(a,b){return (order[apps[a]]||9)-(order[apps[b]]||9);});
+  var appIds=Object.keys(apps).sort(function(a,b){return (order[apps[a]]||9)-(order[apps[b]]||9);});
   if(appIds.length){
+    document.getElementById('appsWrap').style.display='block';
     var rows=appIds.map(function(id){
       var j=HH_JOBS.filter(function(x){return x.id===id;})[0]; if(!j) return '';
       var st=apps[id];
@@ -189,25 +211,7 @@ else {
         '<td style="text-align:right"><span class="stchip st-'+st+'">'+(labels[st]||st)+'</span></td></tr>';
     }).join('');
     document.getElementById('appsBox').innerHTML='<table class="apptable"><tbody>'+rows+'</tbody></table>';
-  } else {
-    document.getElementById('appsBox').innerHTML='<div class="emptyst">You haven’t applied to any jobs yet.<br><a class="btn btn-hi btn-sm" style="margin-top:12px" href="jobs.html">Browse matched jobs →</a></div>';
   }
-
-  // RECOMMENDATIONS
-  var rec=HH.recommendations(intake);
-  if(rec){
-    var recTickets=rec.nextTickets.length?rec.nextTickets.map(function(t){return t.name;}).join(' + '):'You hold the required tickets';
-    var recLocs=rec.locations.map(function(l){return l.flag+' '+l.name;}).join(' · ');
-    var recJobs=rec.jobs.map(function(j){return '<div class="jchip" style="display:block;margin-bottom:6px">'+j.icon+' '+j.title+' — '+j.pay+'</div>';}).join('');
-    document.getElementById('recBox').innerHTML='<div class="rec"><div class="rh"><span class="rk">◆ Recommended for you</span></div>'+
-      '<div class="recgrid"><div class="reccard"><h5>Best-fit sector</h5><b>'+rec.sector.name+'</b><p style="color:var(--muted);font-size:12.5px;margin-top:4px">'+rec.sector.pay+'</p></div>'+
-      '<div class="reccard"><h5>Get this ticket next</h5><b style="font-size:14px">'+recTickets+'</b></div>'+
-      '<div class="reccard"><h5>Best locations</h5><b style="font-size:13px">'+(recLocs||'Worldwide')+'</b></div></div>'+
-      '<div style="margin-top:14px"><div class="eyebrow" style="text-align:left;margin-bottom:8px">Jobs you qualify for</div>'+recJobs+
-      '<a class="btn btn-hi btn-sm" style="margin-top:8px" href="jobs.html">See all matched jobs →</a></div></div>';
-  }
-
-  document.getElementById('upsell').style.display=paid?'none':'block';
 }
 function addPhone(){
   var v=prompt('Enter your mobile number for job alerts (with country code):','');

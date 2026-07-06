@@ -538,7 +538,7 @@ window.HH.checkout = function(plan){
 /* ------------------------------------------------------------------ */
 var I18N = {
   en: {
-    nav_jobs:'Jobs', nav_agencies:'Agencies', nav_blog:'Blog', nav_pricing:'Pricing',
+    nav_jobs:'Jobs', nav_tickets:'Tickets', nav_agencies:'Agencies', nav_blog:'Blog', nav_pricing:'Pricing',
     nav_login:'Log in', nav_start:'Start free', nav_dash:'Dashboard',
     hero_h1:'Find the job. Get qualified. <em>Get hired.</em>',
     hero_sub:'$70k–$210k offshore & trades jobs. No degree. No experience needed to start.',
@@ -554,7 +554,7 @@ var I18N = {
     f_cont:'Continue →', f_back:'← Back', f_getplan:'Get my plan →'
   },
   es: {
-    nav_jobs:'Empleos', nav_agencies:'Agencias', nav_blog:'Blog', nav_pricing:'Precios',
+    nav_jobs:'Empleos', nav_tickets:'Certificados', nav_agencies:'Agencias', nav_blog:'Blog', nav_pricing:'Precios',
     nav_login:'Entrar', nav_start:'Empieza gratis', nav_dash:'Panel',
     hero_h1:'Encuentra el trabajo. Califícate. <em>Consíguelo.</em>',
     hero_sub:'Empleos offshore y de oficios de $70k–$210k. Sin título. Sin experiencia para empezar.',
@@ -603,7 +603,7 @@ function navHTML(active){
   var langtog = '<span class="langtog"><button data-lang="en" onclick="HH.setLang(\'en\')">EN</button><button data-lang="es" onclick="HH.setLang(\'es\')">ES</button></span>';
   return '<nav><div class="wrap nav">'+
     '<a class="brand" href="index.html"><span class="mk">⛏</span>HardHat</a>'+
-    '<div class="navlinks">'+a('jobs.html','Jobs','nav_jobs')+a('directory.html','Agencies','nav_agencies')+a('blog.html','Blog','nav_blog')+a('pricing.html','Pricing','nav_pricing')+'</div>'+
+    '<div class="navlinks">'+a('jobs.html','Jobs','nav_jobs')+a('certs.html','Tickets','nav_tickets')+a('directory.html','Agencies','nav_agencies')+a('blog.html','Blog','nav_blog')+a('pricing.html','Pricing','nav_pricing')+'</div>'+
     '<div class="navr">'+langtog+right+'</div>'+
     '</div></nav>';
 }
@@ -623,7 +623,7 @@ function footHTML(){
   return '<footer><div class="wrap foot">'+
     '<div style="max-width:280px"><div class="brand" style="margin-bottom:10px"><span class="mk">⛏</span>HardHat</div>'+
     '<p>Find the job, get qualified, and get hired. The no-degree route into high-paying offshore and trades work, worldwide.</p></div>'+
-    '<div class="fcol"><h5>Explore</h5><a href="jobs.html">Job board</a><a href="browse.html">Browse all</a><a href="locations.html">Locations</a><a href="roadmap.html">Ticket roadmap</a><a href="pay.html">Pay explorer</a><a href="directory.html">Agencies</a></div>'+
+    '<div class="fcol"><h5>Explore</h5><a href="jobs.html">Job board</a><a href="browse.html">Browse all</a><a href="locations.html">Locations</a><a href="certs.html">Ticket requirements</a><a href="roadmap.html">Ticket roadmap</a><a href="pay.html">Pay explorer</a><a href="directory.html">Agencies</a></div>'+
     '<div class="fcol"><h5>Product</h5><a href="start.html">Rig-Ready assessment</a><a href="cv.html">Offshore CV builder</a><a href="blog.html">Blog</a><a href="pricing.html">Pricing</a><a href="dashboard.html">Dashboard</a></div>'+
     '<div class="fcol"><h5>Company</h5><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="mailto:hello@hardhatjobs.co">Contact</a></div>'+
     '</div><div class="wrap" style="margin-top:28px;font-size:12px;color:var(--faint);line-height:1.7">© 2026 HardHat. <b style="color:var(--muted)">Independent platform — not affiliated with, endorsed by, or partnered with any company named on this site.</b> Company names and logos are the trademarks of their respective owners, shown only to indicate sectors and employers that hire for these roles. Job listings, pay ranges and demand figures are illustrative industry estimates, not live vacancies or guarantees. Work offshore and in the trades carries real physical risk; always complete accredited safety training. Photos: Wikimedia Commons &amp; Unsplash.</div></footer>';

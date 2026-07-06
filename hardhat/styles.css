@@ -142,6 +142,66 @@ h1.hero-h1 em{font-style:normal;color:var(--hi)}
 .vtri-c b{width:30px;height:30px;flex:none;border-radius:50%;background:var(--good-soft);color:var(--good);display:grid;place-items:center;font-family:"Space Grotesk",sans-serif}
 @media(max-width:640px){.vtri{grid-template-columns:1fr}}
 
+/* v11 — dashboard taste pass */
+.dgreet{margin:26px 0 22px}
+.dgreet h1{font-family:"Space Grotesk",sans-serif;font-weight:900;font-size:clamp(28px,4.6vw,44px);letter-spacing:-.02em;line-height:1.02}
+.dgreet p{color:var(--muted);font-size:15.5px;margin-top:10px}
+.dnext{background:linear-gradient(135deg,var(--hi-soft),var(--panel));border:1.5px solid var(--hi);border-radius:20px;padding:28px;box-shadow:var(--shadow)}
+.dnext .dnext-k{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--hi);font-weight:600}
+.dnext h2{font-family:"Space Grotesk",sans-serif;font-weight:800;font-size:clamp(20px,3vw,27px);letter-spacing:-.015em;margin:10px 0 8px}
+.dnext p{color:var(--ink2);font-size:14.5px;max-width:58ch;margin-bottom:18px;line-height:1.55}
+.blockrow{display:flex;align-items:center;gap:11px;padding:10px 0;border-bottom:1px solid var(--line);font-size:14px}
+.blockrow:last-child{border-bottom:none}
+.blockrow .bmark{width:22px;height:22px;flex:none;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:800;background:var(--warn-soft);color:var(--warn)}
+.blockrow.ok .bmark{background:var(--good-soft);color:var(--good)}
+.blockrow .blabel{flex:1;min-width:0}
+.blockrow .bstate{font-size:12.5px;color:var(--warn);font-weight:600;white-space:nowrap}
+.blockrow.ok .bstate{color:var(--good)}
+.pathwrap{display:flex;flex-direction:column;gap:10px}
+.pathstep{display:flex;gap:14px;align-items:flex-start;border:1px solid var(--line);border-radius:16px;padding:16px 18px;background:var(--panel)}
+.pathstep .ps-n{width:30px;height:30px;flex:none;border-radius:50%;display:grid;place-items:center;font-family:"Space Grotesk",sans-serif;font-weight:800;font-size:13px;background:var(--bg3);color:var(--muted);border:1.5px solid var(--line2)}
+.pathstep h4{font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:15.5px}
+.pathstep p{color:var(--muted);font-size:13.5px;margin-top:4px;line-height:1.5}
+.pathstep small{display:block;margin-top:7px;font-family:"JetBrains Mono",monospace;font-size:11px;color:var(--hi)}
+.pathstep.done{padding:12px 18px;opacity:.85}
+.pathstep.done .ps-n{background:var(--good);border-color:var(--good);color:#fff}
+.pathstep.done p{display:inline;font-size:13px}
+.pathstep.active{border:1.5px solid var(--hi);background:linear-gradient(135deg,var(--hi-soft),var(--panel));box-shadow:var(--shadow)}
+.pathstep.active .ps-n{background:var(--hi);border-color:var(--hi);color:#fff}
+.pathstep.future{opacity:.55}
+.fitrow{display:flex;align-items:center;justify-content:space-between;gap:14px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:15px 18px;margin-bottom:9px;transition:.14s}
+.fitrow:hover{border-color:var(--hi);transform:translateY(-1px)}
+.fitrow .fr-main{min-width:0}
+.fitrow .fr-main b{font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:15px;display:block}
+.fitrow .fr-main span{font-size:12.5px;color:var(--muted)}
+.fitrow .fr-fit{flex:none;font-family:"JetBrains Mono",monospace;font-size:12px;font-weight:700;color:var(--good);background:var(--good-soft);padding:5px 11px;border-radius:99px}
+.prounlock{text-align:center;border:1.5px dashed var(--line2);border-radius:20px;padding:32px 24px;margin-top:30px;background:var(--bg2)}
+.prounlock .pu-lock{font-size:26px}
+@media(max-width:640px){.dnext{padding:22px 18px}.dgreet{margin-top:14px}}
+
+/* v11 — job detail sections + register gate */
+.jdet{margin:14px 0;padding-top:12px;border-top:1px solid var(--line)}
+.jdet h5{font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin-bottom:6px}
+.jdet p{font-size:14px;color:var(--ink2);line-height:1.55}
+.gateblur{filter:blur(5px);user-select:none;pointer-events:none;opacity:.75}
+
+/* v11 — Certificate Truth Engine */
+.certcard{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:24px;margin-bottom:18px}
+.certcard h3{font-family:"Space Grotesk",sans-serif;font-weight:800;font-size:21px;letter-spacing:-.01em}
+.cc-meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.certreg{border-top:1px solid var(--line);margin-top:18px;padding-top:16px}
+.creg-h{display:flex;align-items:center;gap:9px;font-size:15px;margin-bottom:10px}
+.creg-fl{font-size:19px}
+.creq{margin:10px 0}
+.creq h5{font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin-bottom:5px}
+.creq ul{list-style:none;margin:0;display:flex;flex-direction:column;gap:4px}
+.creq li{font-size:14px;padding-left:18px;position:relative}
+.creq li::before{content:"▸";position:absolute;left:0;color:var(--hi)}
+.creq p{font-size:14px;color:var(--ink2)}
+.cverifyrow{display:flex;gap:14px;flex-wrap:wrap;margin-top:10px}
+.cverify{font-size:12.5px;font-weight:600;color:var(--hi)}
+.cverify:hover{text-decoration:underline}
+
 /* v10 — language toggle */
 .langtog{display:inline-flex;border:1px solid var(--line2);border-radius:8px;overflow:hidden;margin-right:4px}
 .langtog button{background:transparent;border:none;padding:6px 9px;font-family:"JetBrains Mono",monospace;font-size:11px;font-weight:600;color:var(--muted);cursor:pointer}

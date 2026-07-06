@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The Exact Tickets for the Job — Certificate Requirements by Role &amp; Region | HardHat</title>
+<meta name="description" content="Which safety tickets and medicals each offshore, mining, marine and trades role actually needs — BOSIET, GWO, STCW, Standard 11, CDL — by region, with official verify links.">
+<link rel="canonical" href="https://hardhatjobs.co/certs.html">
+<link rel="icon" href="favicon.svg">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="hazbar"></div>
+<div id="nav"></div>
+
+<section>
+  <div class="wrap" style="max-width:900px">
+    <div class="lblrow"><span class="hl">Certificate Truth Engine</span></div>
+    <h1 class="sec" style="max-width:24ch">The exact tickets for the job. Real requirements, not guesses.</h1>
+    <p class="lead">Which safety tickets and medicals a role actually needs, and how that changes by region. Buy the ticket the job needs, not the popular one.</p>
+
+    <div class="notice" style="margin:26px 0 6px;font-size:13.5px">
+      <b>Read this first.</b> Requirements vary by employer, country, installation and role, and they change over time. Treat this as a starting map, not gospel. Always confirm against the specific job posting and the accredited provider (OPITO, GWO, flag state, etc.) before you book or pay for any course. HardHat is independent and not affiliated with the bodies named here.
+    </div>
+
+    <div class="filters" style="margin-top:18px">
+      <select class="inp" id="fSec"><option value="">All sectors</option></select>
+      <select class="inp" id="fReg"><option value="">All regions</option></select>
+    </div>
+    <p class="micro" id="certCount" style="margin:4px 0 0"></p>
+
+    <div id="certList" style="margin-top:14px"></div>
+
+    <p class="micro" style="margin-top:34px;line-height:1.7">Sources to verify against: OPITO (opito.com), Global Wind Organisation (globalwindorganisation.org), IMO STCW (imo.org), Offshore Energies UK medical (oeuk.org.uk), Queensland Resources Safety &amp; Health / Standard 11, TSA TWIC (tsa.gov), IMCA (imca-int.com), FMCSA DOT medical. Pay ranges are illustrative. Last verified: <span id="certVer"></span>. Spot something wrong? <a href="mailto:hello@hardhatjobs.co" style="color:var(--hi)">Tell us</a> — accuracy is a living asset.</p>
+  </div>
+</section>
+
+<section class="alt">
+  <div class="wrap center">
+    <h2 class="sec" style="max-width:22ch">Not sure which role fits you?</h2>
+    <p class="lead">Take the free 2-minute assessment — we map the exact tickets for your sector and region.</p>
+    <div class="cta-row"><a class="btn btn-go btn-lg" href="start.html">Get my Rig-Ready plan →</a><a class="btn btn-out btn-lg" href="jobs.html">Browse jobs</a></div>
+  </div>
+</section>
+
+<div id="foot"></div>
+<script src="app.js"></script>
+<script src="cert-data.js"></script>
+<script>
+HH.mountChrome('Tickets');
+document.getElementById('certVer').textContent = HH_CERTS.lastVerified;
+
+// filters
+var secSel=document.getElementById('fSec'), regSel=document.getElementById('fReg');
+secSel.innerHTML='<option value="">All sectors</option>'+HH_SECTORS.map(function(s){return '<option value="'+s.id+'">'+s.icon+' '+s.name+'</option>';}).join('');
+regSel.innerHTML='<option value="">All regions</option>'+Object.keys(HH_CERTS.regions).map(function(k){var r=HH_CERTS.regions[k];return '<option value="'+k+'">'+r.flag+' '+r.name+'</option>';}).join('');
+
+function verifyLinks(keys){
+  return (keys||[]).map(function(k){ var l=HH_CERTS.links[k]; if(!l) return '';
+    return '<a class="cverify" href="'+l.url+'" target="_blank" rel="noopener">Verify: '+l.name+' ↗</a>'; }).join('');
+}
+function regionHTML(reg){
+  var meta=HH_CERTS.regions[reg.r]||{};
+  return '<div class="certreg">'+
+    '<div class="creg-h"><span class="creg-fl">'+(meta.flag||'🌍')+'</span><b>'+(meta.name||reg.r)+'</b></div>'+
+    '<div class="creq"><h5>Mandatory tickets</h5><ul>'+reg.mandatory.map(function(m){return '<li>'+m+'</li>';}).join('')+'</ul></div>'+
+    '<div class="creq"><h5>Medical</h5><p>'+reg.medical+'</p></div>'+
+    '<div class="creq"><h5>Right to work</h5><p>'+reg.rtw+'</p></div>'+
+    (reg.helps&&reg.helps.length?'<div class="creq"><h5>Helps / sometimes required</h5><ul>'+reg.helps.map(function(m){return '<li>'+m+'</li>';}).join('')+'</ul></div>':'')+
+    '<div class="cverifyrow">'+verifyLinks(reg.verify)+'</div>'+
+  '</div>';
+}
+function render(){
+  var fs=secSel.value, fr=regSel.value;
+  var roles=HH_CERTS.roles.filter(function(role){
+    if(fs && role.sec!==fs) return false;
+    if(fr && !role.regions.some(function(g){return g.r===fr;})) return false;
+    return true;
+  });
+  document.getElementById('certCount').textContent=roles.length+' role'+(roles.length===1?'':'s')+' shown. Filter by sector and region.';
+  document.getElementById('certList').innerHTML=roles.map(function(role){
+    var sec=HH.sector(role.sec);
+    var regs=role.regions.filter(function(g){return !fr||g.r===fr;});
+    return '<div class="certcard" id="'+role.id+'">'+
+      '<div class="cc-head"><div><h3>'+role.title+'</h3>'+
+      '<div class="cc-meta"><span class="jchip">'+role.lvl+' · '+role.pay+'</span><span class="jchip hi">'+(sec?sec.icon+' '+sec.name:role.sec)+'</span></div></div></div>'+
+      regs.map(regionHTML).join('')+
+    '</div>';
+  }).join('') || '<p style="color:var(--muted);text-align:center;padding:30px">No roles match those filters yet.</p>';
+}
+secSel.onchange=render; regSel.onchange=render;
+render();
+// deep-link: certs.html#roleId
+if(location.hash){ var el=document.getElementById(location.hash.slice(1)); if(el){ el.scrollIntoView(); el.style.outline='2px solid var(--hi)'; setTimeout(function(){el.style.outline='none';},1800); } }
+</script>
+</body>
+</html>
