@@ -49,30 +49,12 @@ HH_SECTORS.forEach(function(s){ var o=document.createElement('option'); o.value=
 if(intake&&intake.sector) secF.value=intake.sector;
 var shown=12;
 
-/* ---- catalog: expand compact jobs-data.json into job objects ---- */
+/* ---- catalog: expand compact jobs-data.json into job objects (shared helper) ---- */
 var JOBS_ALL = HH_JOBS.slice(); // fallback until catalog loads
-function countryOf(cityName){ var p=cityName.split(','); return p[p.length-1].trim(); }
-function expandCatalog(d){
-  var icons={}; HH_SECTORS.forEach(function(s){icons[s.id]=s.icon;});
-  var out=[];
-  for(var i=0;i<d.rows.length;i++){
-    var r=d.rows[i], role=d.roles[r[0]], city=d.cities[r[1]], src=d.cos[r[2]];
-    var lvl=r[3], typ=r[4], rota=(d.rotas[role.sec]||['rotation'])[r[5]], payn=r[6], pst=r[7];
-    out.push({
-      id:'c'+i, title:role.t, co:src.n, logo:src.d, viaAgency:!!src.ag,
-      sector:role.sec, icon:icons[role.sec]||'🛠', loc:city.n, locId:city.locId,
-      cty:countryOf(city.n), fl:city.fl,
-      rota:rota, payn:payn, pay:'$'+payn.toLocaleString(),
-      noexp:!!(role.ne&&lvl===0), level:lvl?'Experienced':'Entry',
-      type:['Rotational','Contract','Full-time'][typ]||'Full-time',
-      posted:pst+'d', tickets:role.tks
-    });
-  }
-  return out;
-}
+var countryOf = HH.countryOf;
 fetch('jobs-data.json').then(function(r){return r.json();}).then(function(d){
   if(d&&d.rows&&d.rows.length){
-    JOBS_ALL=expandCatalog(d);
+    JOBS_ALL=HH.expandCatalog(d);
     document.getElementById('jobTotal').textContent=d.count.toLocaleString();
     buildCountryFilter();
     render();

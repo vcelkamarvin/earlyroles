@@ -56,6 +56,34 @@
   </div>
 </div>
 
+<!-- HIRING RIGHT NOW — real inventory on the homepage -->
+<section>
+  <div class="wrap">
+    <div class="lblrow"><span class="hl">Hiring right now</span></div>
+    <h2 class="sec"><span id="homeJobsN">5,000+</span> roles worldwide</h2>
+    <p class="lead">A taste of what's on the board — pay, rotation and requirements included. No degree needed for most.</p>
+    <div class="joblist" id="homeJobs" style="margin-top:30px"></div>
+    <p class="center" style="margin-top:22px"><a class="btn btn-go btn-lg" href="jobs.html">Browse all roles →</a></p>
+  </div>
+</section>
+
+<!-- 3-WEEK TIMELINE -->
+<section class="alt">
+  <div class="wrap center">
+    <div class="lblrow"><span class="hl">How fast can you go?</span></div>
+    <h2 class="sec" style="max-width:24ch">From zero to applying in ~3 weeks</h2>
+    <div class="tline" style="margin-top:34px;max-width:640px">
+      <div class="tstep"><span class="tdot">1</span><b>Week 1</b><small>Tickets &amp; medical booked</small></div>
+      <div class="tbar"></div>
+      <div class="tstep"><span class="tdot">2</span><b>Week 2</b><small>CV done · on agency books</small></div>
+      <div class="tbar"></div>
+      <div class="tstep"><span class="tdot on">3</span><b>Week 3</b><small>Applying · first callbacks</small></div>
+    </div>
+    <p style="color:var(--muted);font-size:13.5px;margin-top:22px;max-width:52ch;margin-left:auto;margin-right:auto">Fastest members reach first offers in ~3–6 weeks — if you move on the plan. We map every step; you do the work.</p>
+    <div class="cta-row" style="margin-top:22px"><a class="btn btn-go btn-lg" href="start.html">Start my 3-week plan →</a></div>
+  </div>
+</section>
+
 <!-- 3 PILLAR -->
 <section>
   <div class="wrap">
@@ -85,18 +113,6 @@
     </div>
     <p class="cap" style="text-align:center;margin-top:34px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint)">Hiring happens through crewing agencies like</p>
     <div class="logorow" id="agencyRow" style="margin-top:18px"></div>
-  </div>
-</section>
-
-<!-- DEMAND -->
-<section>
-  <div class="wrap">
-    <div class="lblrow"><span class="hl">Real demand</span></div>
-    <h2 class="sec">Thousands of roles open right now</h2>
-    <p class="lead">Estimated open roles by sector. An ageing workforce and a fast-growing energy sector mean these jobs are hard to fill, which works in your favour if you’re getting in.</p>
-    <div class="bigstat" style="margin-top:30px"><b id="demandTotal">39,400</b><span>est. open no-degree roles worldwide</span></div>
-    <div class="panel" style="margin-top:20px" id="demandBars"></div>
-    <p class="micro" style="text-align:center">Figures are illustrative industry estimates, not live vacancy counts.</p>
   </div>
 </section>
 
@@ -202,24 +218,6 @@
   </div>
 </section>
 
-<!-- RECOMMENDATIONS teaser -->
-<section class="alt">
-  <div class="wrap">
-    <div class="lblrow"><span class="hl">Built around you</span></div>
-    <h2 class="sec">Recommendations built around you</h2>
-    <p class="lead">Once you take the assessment, HardHat suggests your best-fit sector, the next tickets to get, the jobs you already qualify for, and where in the world to look.</p>
-    <div class="rec" style="max-width:820px;margin:30px auto 0">
-      <div class="rh"><span class="rk">◆ Recommended for you</span></div>
-      <div class="recgrid">
-        <div class="reccard"><h5>Best-fit sector</h5><b>Offshore Wind</b><p style="color:var(--muted);font-size:13px;margin-top:4px">+31% demand · $65k–$140k</p></div>
-        <div class="reccard"><h5>Get this ticket next</h5><b>GWO Basic Safety</b><p style="color:var(--muted);font-size:13px;margin-top:4px">4–5 days · unlocks trainee roles</p></div>
-        <div class="reccard"><h5>You qualify for</h5><b>7 live roles</b><p style="color:var(--muted);font-size:13px;margin-top:4px">North Sea · US East Coast</p></div>
-      </div>
-      <div class="center" style="margin-top:18px"><a class="btn btn-hi" href="start.html">Get my recommendations →</a></div>
-    </div>
-  </div>
-</section>
-
 <!-- TESTIMONIALS -->
 <section>
   <div class="wrap">
@@ -241,6 +239,21 @@
     <p class="lead">Browse and plan for free. Upgrade to apply, unlock your full roadmap, and get hired.</p>
     <div id="pricingGrid"></div>
     <p class="center" style="margin-top:20px"><a href="pricing.html" style="color:var(--muted);font-size:14px">Compare plans in detail →</a></p>
+  </div>
+</section>
+
+<!-- INLINE EMAIL CAPTURE -->
+<section>
+  <div class="wrap center" style="max-width:620px">
+    <div class="emailband">
+      <h3 class="display" style="font-size:22px">Not ready yet? Take the plan with you.</h3>
+      <p style="color:var(--muted);font-size:14px;margin:8px 0 16px">Get the free 3-week plan to your first offshore job by email — the tickets, the agencies, the route.</p>
+      <form class="herostart" style="margin-top:0" onsubmit="return bandRegister(event)">
+        <input class="inp" id="bandEmail" type="email" placeholder="you@email.com" required style="background:var(--panel);border:1px solid var(--line2)">
+        <button class="btn btn-go" type="submit">Send me the plan →</button>
+      </form>
+      <p class="micro" style="margin-top:10px">No spam. Unsubscribe anytime.</p>
+    </div>
   </div>
 </section>
 
@@ -315,16 +328,41 @@
   HH_AGENCIES.forEach(function(a){ var d=(a.url||'').replace(/^https?:\/\/(www\.)?/,'').replace(/\/.*$/,''); if(d&&!agSeen[a.name]){agSeen[a.name]=1;agList.push(HH.logo(d,a.name));} });
   document.getElementById('agencyRow').innerHTML = agList.slice(0,8).join('');
 
-  // demand
-  document.getElementById('demandTotal').textContent = HH_DEMAND_TOTAL.toLocaleString();
+  // hero roles counter (real catalog count)
   document.getElementById('stOpen').textContent = '5,000+'; // catalog count — see jobs-data.json
-  var maxD = Math.max.apply(null, HH_SECTORS.map(function(s){return HH_DEMAND[s.id].open;}));
-  document.getElementById('demandBars').innerHTML = HH_SECTORS.slice().sort(function(a,b){return HH_DEMAND[b.id].open-HH_DEMAND[a.id].open;}).map(function(s){
-    var d=HH_DEMAND[s.id];
-    return '<div class="demandrow"><div class="dl">'+s.icon+' '+s.name+'</div>'+
-      '<div class="track"><i style="width:'+Math.round(d.open/maxD*100)+'%"></i></div>'+
-      '<div class="dn"><b>'+d.open.toLocaleString()+'</b> open · <span class="up">'+d.growth+'</span></div></div>';
-  }).join('');
+
+  // HIRING RIGHT NOW — 6 real rows from the catalog (one per sector, highest pay first)
+  fetch('jobs-data.json').then(function(r){return r.json();}).then(function(d){
+    if(!(d&&d.rows&&d.rows.length)) return;
+    document.getElementById('homeJobsN').textContent=d.count.toLocaleString();
+    var all=HH.expandCatalog(d);
+    all.sort(function(a,b){return b.payn-a.payn;});
+    var seen={}, picks=[];
+    for(var i=0;i<all.length && picks.length<6;i++){
+      var j=all[i]; if(seen[j.sector]) continue;
+      seen[j.sector]=1; picks.push(j);
+    }
+    document.getElementById('homeJobs').innerHTML=picks.map(function(j){
+      return '<a class="jrow" href="jobs.html" style="text-decoration:none;color:inherit">'+
+        '<div class="jlogo">'+HH.logo(j.logo,j.co)+'</div>'+
+        '<div class="jmain"><h3>'+j.title+'</h3><div class="jco">'+j.co+(j.viaAgency?' · via agency':'')+'</div>'+
+        '<div class="jchips"><span class="jchip">'+j.type+'</span><span class="jchip">'+j.level+'</span>'+(j.noexp?'<span class="jchip hi">No exp OK</span>':'')+'</div></div>'+
+        '<div class="jloc">'+(j.fl?j.fl+' ':'')+j.loc+'<span class="jtime">'+j.posted+' ago</span></div>'+
+        '<div class="jpay"><b>'+j.pay+'</b><span>per year</span></div></a>';
+    }).join('');
+  }).catch(function(){});
+
+  // inline email band
+  function bandRegister(e){
+    e.preventDefault();
+    var em=(document.getElementById('bandEmail').value||'').trim();
+    if(!/.+@.+\..+/.test(em)) return false;
+    HH.Auth.signup('', em); HH.set('nl', em); HH.ga('sign_up',{method:'email_band'});
+    HH.toast&&HH.toast('Plan on its way — or build it now');
+    setTimeout(function(){ window.location.href='start.html'; }, 900);
+    return false;
+  }
+  window.bandRegister=bandRegister;
 
   // locations
   document.getElementById('locGrid').innerHTML = HH_LOCATIONS.slice(0,6).map(function(l){

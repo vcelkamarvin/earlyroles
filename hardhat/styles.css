@@ -142,6 +142,16 @@ h1.hero-h1 em{font-style:normal;color:var(--hi)}
 .vtri-c b{width:30px;height:30px;flex:none;border-radius:50%;background:var(--good-soft);color:var(--good);display:grid;place-items:center;font-family:"Space Grotesk",sans-serif}
 @media(max-width:640px){.vtri{grid-template-columns:1fr}}
 
+/* v13 — inline email band + dashboard upsell */
+.emailband{background:linear-gradient(135deg,var(--good-soft),var(--panel));border:1.5px solid #bfe6cf;border-radius:20px;padding:30px 26px;text-align:center}
+.fitlock{position:relative;margin-top:9px}
+.fitlock .fitrow{filter:blur(4px);pointer-events:none;user-select:none}
+.fitlock .flover{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:2}
+.fitlock .flover a{background:var(--ink);color:#fff;font-weight:700;font-size:13.5px;padding:11px 20px;border-radius:99px;box-shadow:var(--shadow);text-decoration:none}
+.pu-stack{list-style:none;max-width:340px;margin:0 auto 14px;text-align:left}
+.pu-stack li{display:flex;justify-content:space-between;font-size:13.5px;color:var(--ink2);padding:7px 0;border-bottom:1px solid var(--line)}
+.pu-stack li b{font-family:"JetBrains Mono",monospace;color:var(--muted);font-weight:600}
+
 /* v11 — dashboard taste pass */
 .dgreet{margin:26px 0 22px}
 .dgreet h1{font-family:"Space Grotesk",sans-serif;font-weight:900;font-size:clamp(28px,4.6vw,44px);letter-spacing:-.02em;line-height:1.02}

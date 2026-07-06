@@ -557,6 +557,31 @@ window.HH.proProfile = function(){ return get('pro_profile'); };
 window.HH.setProProfile = function(p){ set('pro_profile', p); ga('pro_profile_saved',{region:p&&p.region}); };
 
 /* ------------------------------------------------------------------ */
+/* JOB CATALOG — expand compact jobs-data.json rows into job objects   */
+/* Shared by jobs.html (full board) and index.html (hiring-now strip). */
+/* ------------------------------------------------------------------ */
+function countryOf(cityName){ var p=String(cityName||'').split(','); return p[p.length-1].trim(); }
+window.HH.countryOf = countryOf;
+window.HH.expandCatalog = function(d){
+  var icons={}; SECTORS.forEach(function(s){icons[s.id]=s.icon;});
+  var out=[];
+  for(var i=0;i<d.rows.length;i++){
+    var r=d.rows[i], role=d.roles[r[0]], city=d.cities[r[1]], src=d.cos[r[2]];
+    var lvl=r[3], typ=r[4], rota=(d.rotas[role.sec]||['rotation'])[r[5]], payn=r[6], pst=r[7];
+    out.push({
+      id:'c'+i, title:role.t, co:src.n, logo:src.d, viaAgency:!!src.ag,
+      sector:role.sec, icon:icons[role.sec]||'🛠', loc:city.n, locId:city.locId,
+      cty:countryOf(city.n), fl:city.fl,
+      rota:rota, payn:payn, pay:'$'+payn.toLocaleString(),
+      noexp:!!(role.ne&&lvl===0), level:lvl?'Experienced':'Entry',
+      type:['Rotational','Contract','Full-time'][typ]||'Full-time',
+      posted:pst+'d', tickets:role.tks
+    });
+  }
+  return out;
+};
+
+/* ------------------------------------------------------------------ */
 /* AUTH GATE — register (Continue with Google) + paywall               */
 /* Everything requires an account. Google is offered after the paywall.*/
 /* ------------------------------------------------------------------ */
@@ -668,7 +693,7 @@ var I18N = {
     s3_h:'Get hired', s3_p:'Build an offshore CV, then apply through the crewing agencies and operators that hire.',
     lbl_pricing:'Pricing', h_pricing:'One plan. Everything to get you hired.',
     rev_rated:'Rated 4.8 / 5', accred_cap:'Accredited training we guide you to',
-    pop_h:'Not sure where to start?', pop_p:'Answer 6 quick questions and get a personalised plan: the jobs you qualify for, the tickets to get, and who to apply to.', pop_cta:'Build my free plan →',
+    pop_h:'Your first offshore job in ~3–6 weeks?', pop_p:'Get the free 3-week plan: the exact tickets, the agencies that hire, and the route for your region.', pop_cta:'Get my free 3-week plan →',
     f_cont:'Continue →', f_back:'← Back', f_getplan:'Get my plan →'
   },
   es: {
@@ -684,7 +709,7 @@ var I18N = {
     s3_h:'Consigue el empleo', s3_p:'Crea un CV offshore y postúlate a través de las agencias de tripulación y operadores que contratan.',
     lbl_pricing:'Precios', h_pricing:'Un plan. Todo para que te contraten.',
     rev_rated:'Calificado 4.8 / 5', accred_cap:'Formación acreditada a la que te guiamos',
-    pop_h:'¿No sabes por dónde empezar?', pop_p:'Responde 6 preguntas rápidas y recibe un plan personalizado: los empleos para los que calificas, los certificados a obtener y a quién postular.', pop_cta:'Crear mi plan gratis →',
+    pop_h:'¿Tu primer empleo offshore en ~3–6 semanas?', pop_p:'Recibe el plan gratuito de 3 semanas: los certificados exactos, las agencias que contratan y la ruta para tu región.', pop_cta:'Quiero mi plan de 3 semanas →',
     f_cont:'Continuar →', f_back:'← Atrás', f_getplan:'Ver mi plan →'
   }
 };
@@ -792,10 +817,10 @@ window.HH.mountPopup = function(opts){
       '<div class="mbox pop">'+
         '<span class="mclose" onclick="HH.closePopup()">×</span>'+
         '<div class="popbadge">Free · 2 minutes</div>'+
-        '<h3 class="display" style="font-size:24px;margin:10px 0 8px" data-i18n="pop_h">Not sure where to start?</h3>'+
-        '<p style="color:var(--muted);font-size:14.5px;margin-bottom:16px" data-i18n="pop_p">Answer 6 quick questions and get a personalised plan: the jobs you qualify for, the tickets to get, and who to apply to.</p>'+
+        '<h3 class="display" style="font-size:24px;margin:10px 0 8px" data-i18n="pop_h">Your first offshore job in ~3–6 weeks?</h3>'+
+        '<p style="color:var(--muted);font-size:14.5px;margin-bottom:16px" data-i18n="pop_p">Get the free 3-week plan: the exact tickets, the agencies that hire, and the route for your region.</p>'+
         '<input class="inp" id="popEmail" type="email" placeholder="you@email.com" style="margin-bottom:10px">'+
-        '<button class="btn btn-hi btn-block btn-lg" onclick="HH.popupGo()" data-i18n="pop_cta">Build my free plan →</button>'+
+        '<button class="btn btn-hi btn-block btn-lg" onclick="HH.popupGo()" data-i18n="pop_cta">Get my free 3-week plan →</button>'+
         '<p style="text-align:center;margin-top:10px;font-size:12px;color:var(--faint)">No spam. Unsubscribe anytime.</p>'+
       '</div>';
     document.body.appendChild(m);
@@ -810,7 +835,7 @@ window.HH.mountPopup = function(opts){
     // fire once the reader is engaged: past ~1.5 screens OR ~40% down the page
     var h = document.documentElement;
     var frac = (y + window.innerHeight) / (h.scrollHeight || 1);
-    if(y >= (opts.scrollPx || window.innerHeight * 1.5) || frac >= (opts.scrollDepth || 0.4)){
+    if(y >= (opts.scrollPx || window.innerHeight * 1.2) || frac >= (opts.scrollDepth || 0.4)){
       build(); window.removeEventListener('scroll', onScroll);
     }
   }

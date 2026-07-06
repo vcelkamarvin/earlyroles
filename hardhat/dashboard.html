@@ -65,14 +65,19 @@
         <a href="jobs.html" style="color:var(--hi);font-size:13.5px;font-weight:600">All 5,000+ roles →</a>
       </div>
       <div id="fitList"></div>
+      <div id="fitLock" class="fitlock" style="display:none"></div>
 
       <!-- PRO UNLOCK -->
       <div class="prounlock reveal" id="proCard" style="display:none">
         <div class="pu-lock">🔒</div>
-        <h3 class="display" style="font-size:20px;margin:6px 0 6px">Unlock every matched role and the agencies that hire</h3>
-        <p style="color:var(--muted);font-size:14px;max-width:52ch;margin:0 auto 18px">See every matched job, the crewing-agency shortlist for your sector and region, and application templates that get replies.</p>
+        <h3 class="display" style="font-size:20px;margin:6px 0 10px">Unlock every matched role and the agencies that hire</h3>
+        <ul class="pu-stack">
+          <li><span>✓ Every matched job + apply</span><b>$140</b></li>
+          <li><span>✓ Crewing-agency shortlist + contacts</span><b>$150</b></li>
+          <li><span>✓ Full region roadmap + AI CV</span><b>$210</b></li>
+        </ul>
         <button class="btn btn-go btn-lg" onclick="HH.checkout('pro_monthly')">Unlock HardHat Pro · $48/mo</button>
-        <p class="micro" style="margin-top:12px">Cancel anytime. No job or salary is guaranteed.</p>
+        <p class="micro" style="margin-top:12px">Cancel anytime · 800+ jobs found every month · No job or salary is guaranteed.</p>
       </div>
 
       <!-- APPLICATIONS (only when they exist) -->
@@ -226,6 +231,7 @@ else {
       '<span class="ps-n">'+(s.done?'✓':(ix+1))+'</span>'+
       '<div class="ps-b"><h4>'+s.h+'</h4>'+(body?'<p>'+body+'</p>':'')+
       (!s.done&&s.meta?'<small>'+(ix===activeIdx?'In progress · ':'Next up · ')+s.meta+'</small>':'')+
+      (s.pro&&!s.done?'<a class="btn btn-go btn-sm" href="pricing.html" style="margin-top:10px">Unlock →</a>':'')+
       '</div></div>';
   }).join('');
 
@@ -259,6 +265,21 @@ else {
       '<div class="fr-main"><b>'+j.title+'</b><span>'+j.loc+' · '+j.co+' · '+j.pay+'</span></div>'+
       '<span class="fr-fit">'+j._f+'% fit</span></a>';
   }).join('');
+
+  /* ---- locked teaser rows (free users): the roles they can't see yet ---- */
+  if(!paid){
+    var extra=basePool.filter(function(j){return pool.indexOf(j)<0;}).slice(0,2);
+    if(extra.length){
+      document.getElementById('fitLock').style.display='block';
+      document.getElementById('fitLock').innerHTML=extra.map(function(j){
+        return '<div class="fitrow"><div class="fr-main"><b>'+j.title+'</b><span>'+j.loc+' · '+j.co+' · '+j.pay+'</span></div><span class="fr-fit">'+(j._f||fit(j))+'% fit</span></div>';
+      }).join('')+'<div class="flover"><a href="pricing.html">🔒 See all matched roles + who hires — Pro</a></div>';
+    }
+    // sticky mobile CTA
+    var sc=document.createElement('div'); sc.className='stickycta';
+    sc.innerHTML='<b>Ready to apply? →</b><a class="btn btn-hi btn-sm" href="pricing.html">Unlock Pro</a>';
+    document.body.appendChild(sc);
+  }
 
   /* ---- pro card + applications ---- */
   document.getElementById('proCard').style.display=paid?'none':'block';
