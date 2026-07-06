@@ -42,3 +42,39 @@ Set `CONFIG.GA_MEASUREMENT_ID` in `app.js` and add the GA4 gtag snippet to enabl
 - `CAREERJET_KEY` — free affiliate key at careerjet.com/partners
 Until set, the jobs page uses the built-in 5,000+ role catalog (jobs-data.json,
 regenerate with `node build-jobs.js`).
+
+## Server-verified Pro entitlement (activates /api/stripe-webhook + /api/entitlement)
+Until these are set, entitlement stays demo-grade (localStorage). Once set, the
+server is the truth: paid users sync automatically, self-unlocked "Pro" gets
+downgraded on next page load.
+
+Env vars (Vercel → Settings → Environment Variables):
+- `STRIPE_SECRET_KEY` — Stripe dashboard → Developers → API keys (sk_live_…)
+- `STRIPE_WEBHOOK_SECRET` — created with the webhook endpoint below (whsec_…)
+- `SUPABASE_URL` — already used client-side; same value
+- `SUPABASE_SERVICE_KEY` — Supabase → Settings → API → service_role (SERVER ONLY — never in client code)
+
+Stripe webhook (dashboard → Developers → Webhooks → Add endpoint):
+- URL: `https://<your-domain>/api/stripe-webhook`
+- Events: `checkout.session.completed`, `customer.subscription.deleted`, `customer.subscription.updated`
+
+Supabase table (SQL editor — run once):
+```sql
+create table if not exists hardhat_subscriptions (
+  email text primary key,
+  plan text not null default 'free',
+  status text not null default 'active',
+  stripe_customer text,
+  amount int,
+  updated_at timestamptz default now()
+);
+alter table hardhat_subscriptions enable row level security;
+-- no anon policies on purpose: only the service key (serverless fns) reads/writes
+```
+
+Flow: Stripe payment → webhook verifies signature → upserts plan by email →
+client `HH.syncEntitlement()` (runs on every page load, 10-min throttle) asks
+`/api/entitlement?email=` and syncs `hh_plan` — server wins in both directions.
+Cancellations in Stripe downgrade automatically.
+Note: the entitlement endpoint answers plan status for any email (no auth) —
+acceptable at this stage; add a signed token if that ever matters.

@@ -771,10 +771,31 @@ function footHTML(){
     '<div class="fcol"><h5>Company</h5><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="mailto:hello@hardhatjobs.co">Contact</a></div>'+
     '</div><div class="wrap" style="margin-top:28px;font-size:12px;color:var(--faint);line-height:1.7">© 2026 HardHat. <b style="color:var(--muted)">Independent platform — not affiliated with, endorsed by, or partnered with any company named on this site.</b> Company names and logos are the trademarks of their respective owners, shown only to indicate sectors and employers that hire for these roles. Job listings, pay ranges and demand figures are illustrative industry estimates, not live vacancies or guarantees. Work offshore and in the trades carries real physical risk; always complete accredited safety training. Photos: Wikimedia Commons &amp; Unsplash.</div></footer>';
 }
+/* Server-verified entitlement sync (activates once /api/entitlement is
+ * configured with the Supabase service key — until then it's a silent
+ * no-op and the demo-grade localStorage plan stays authoritative). */
+function syncEntitlement(){
+  try{
+    var u = get('user'); if(!u || !u.email) return;
+    var last = get('ent_ts', 0); if(Date.now() - last < 10*60*1000) return;   // 10 min throttle
+    set('ent_ts', Date.now());
+    fetch('/api/entitlement?email='+encodeURIComponent(u.email))
+      .then(function(r){ return r.json(); })
+      .then(function(j){
+        if(!j || !j.configured) return;                    // not wired yet — keep local behavior
+        var local = get('plan','free');
+        if(j.plan && j.plan !== 'free' && j.plan !== local){ set('plan', j.plan); }
+        else if(j.plan === 'free' && local !== 'free'){ set('plan','free'); }   // server is the truth
+      }).catch(function(){});
+  }catch(e){}
+}
+window.HH.syncEntitlement = syncEntitlement;
+
 window.HH.mountChrome = function(active){
   var n=document.getElementById('nav'); if(n) n.innerHTML=navHTML(active);
   var f=document.getElementById('foot'); if(f) f.innerHTML=footHTML();
   applyLang(currentLang());
+  syncEntitlement();
   initReveal();
 };
 window.HH.toast = function(msg){
