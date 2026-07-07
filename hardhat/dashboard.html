@@ -20,46 +20,38 @@
 
     <div id="board" style="display:none">
 
-      <!-- 1 · STATUS HEADER: who you are, your target, your score -->
-      <div class="dhead">
-        <div class="dhead-l">
-          <h1 id="greetH">You are 2 tickets from applying.</h1>
-          <p id="greetSub"></p>
-        </div>
-        <div class="dhead-score">
-          <div class="ring" id="ring"><i><b id="scoreN">0</b><span>ready</span></i></div>
-          <p class="sblurb" id="scoreBlurb"></p>
-        </div>
+      <!-- STEP 1 · GREETING + GOAL + SIMPLE PROGRESS BAR -->
+      <div class="dtop">
+        <h1 id="greetH">Hi 👋</h1>
+        <p id="goalLine" class="goal"></p>
+        <div class="pbar"><i id="pbarFill"></i></div>
+        <p class="pbar-cap" id="pbarCap"></p>
       </div>
 
-      <!-- RTW honesty (only when it matters) -->
-      <div class="notice" id="rtwNote" style="display:none;margin-bottom:18px;font-size:13.5px"></div>
+      <!-- right-to-work honesty note (only when it matters) -->
+      <div class="notice" id="rtwNote" style="display:none;margin:18px 0 0;font-size:13.5px"></div>
 
-      <!-- 2 · THE ONE THING TO DO NEXT -->
-      <div class="dnext reveal" id="dNext"></div>
+      <!-- STEP 2 · THE PLAN — one connected list, only the current step is expanded -->
+      <h3 class="dh">Your plan to get hired</h3>
+      <p class="dh-sub">Do these in order. We only expand the step you’re on — finish it, and the next opens up.</p>
+      <div class="journey" id="journeyWrap"></div>
+      <p class="micro" id="pathNote" style="margin-top:14px;display:none"></p>
 
-      <!-- 3 · ONE UNIFIED PATH TO HIRED (right-to-work → medical → tickets → CV → apply) -->
+      <!-- STEP 3 · THE JOBS WAITING AT THE END -->
       <div class="dsec">
-        <div class="dsec-head"><h3>Your path to hired</h3><span class="dsec-meta" id="pathMeta"></span></div>
-        <div class="pathwrap" id="pathWrap"></div>
-        <p class="micro" id="pathNote" style="margin-top:12px;display:none"></p>
-      </div>
-
-      <!-- 4 · ROLES YOU QUALIFY FOR -->
-      <div class="dsec">
-        <div class="dsec-head"><h3>Roles you qualify for <span class="dim">· sample</span></h3><a href="jobs.html" class="dsec-link">All 5,000+ roles →</a></div>
+        <div class="dsec-head"><h3>🎯 Jobs you’ll qualify for <span class="dim">· sample</span></h3><a href="jobs.html" class="dsec-link">See all →</a></div>
         <div id="fitList"></div>
         <div id="fitLock" class="fitlock" style="display:none"></div>
         <p class="micro" id="phoneRow" style="margin-top:14px"></p>
       </div>
 
-      <!-- 5 · APPLICATIONS (only when they exist) -->
+      <!-- applications (only when they exist) -->
       <div class="dsec" id="appsWrap" style="display:none">
         <div class="dsec-head"><h3>Your applications</h3></div>
         <div class="panel" style="padding:8px 18px" id="appsBox"></div>
       </div>
 
-      <!-- 6 · UPGRADE (free users only) -->
+      <!-- upgrade (free users only) -->
       <div class="prounlock reveal" id="proCard" style="display:none">
         <div class="pu-lock">🔒</div>
         <h3 class="display" style="font-size:20px;margin:6px 0 10px">Unlock every matched role and the agencies that hire</h3>
@@ -105,109 +97,83 @@ else {
   var pp = (paid && profile) ? HH.proPlan(intake, profile) : null;
   var gapCount = pp ? pp.gaps.length : missing.length;
 
-  /* ---- 1 · greeting (status) + target line ---- */
-  var greetH;
-  if(paid && !profile) greetH='Two minutes from your exact plan'+(nm?', '+nm:'')+'.';
-  else if(gapCount) greetH='You’re '+gapCount+' ticket'+(gapCount>1?'s':'')+' from applying'+(nm?', '+nm:'')+'.';
-  else if(!cvOk) greetH='One CV from applying'+(nm?', '+nm:'')+'.';
-  else if(appliedN===0) greetH='You’re ready to apply'+(nm?', '+nm:'')+'.';
-  else greetH='You’re on track'+(nm?', '+nm:'')+'.';
-  document.getElementById('greetH').textContent=greetH;
-  document.getElementById('greetSub').innerHTML='Target: <b>'+(sec.name||'offshore work')+'</b>'+
-    (pp?(' · '+pp.region.flag+' '+pp.region.name):'')+
-    ' · <a href="'+(paid?'setup.html':'start.html')+'" style="color:var(--hi)">change</a>';
+  /* ---- greeting ---- */
+  document.getElementById('greetH').textContent = 'Hi'+(nm?' '+nm:'')+' 👋';
 
-  /* honest right-to-work note (only when it matters) */
-  if(pp && pp.rtw.level!=='ok'){
-    var rn=document.getElementById('rtwNote');
-    rn.style.display='block';
-    rn.innerHTML='<b>'+(pp.rtw.level==='warn'?'⚠️ Straight talk on right to work:':'🛂 Right to work:')+'</b> '+pp.rtw.msg+
-      (pp.rtw.matrix?(' <span style="color:var(--muted)">('+pp.rtw.matrix+')</span>'):'')+
-      (pp.rtw.alts&&pp.rtw.alts.length?('<br><b>Where your passport works today:</b> '+pp.rtw.alts.map(function(a){return a.flag+' '+a.name;}).join(' · ')+' — <a href="setup.html" style="color:var(--hi)">switch target</a>'):'');
-  }
-
-  /* ---- score ring + projection ---- */
-  var n=document.getElementById('scoreN'), ring=document.getElementById('ring'), i=0;
-  var t=setInterval(function(){ i+=Math.ceil(r.score/26); if(i>=r.score)i=r.score; n.textContent=i; ring.style.setProperty('--v',i); if(i>=r.score)clearInterval(t); },26);
-  var proj=Math.min(97, r.score + (gapCount?18:0));
-  var nextName = pp ? (pp.gaps[0]&&pp.gaps[0].name.split('(')[0].trim()) : (missing[0]&&missing[0].name.split('(')[0].trim());
-  document.getElementById('scoreBlurb').textContent = (gapCount&&nextName)
-    ? 'Get '+nextName+' to reach ~'+proj+'.'
-    : r.blurb;
-
-  document.getElementById('phoneRow').innerHTML = (u.phone&&(''+u.phone).length>=6)
-    ? '📱 Job alerts on · '+u.phone
-    : '📱 <a href="javascript:void(0)" onclick="addPhone()" style="color:var(--hi)">Add your phone</a> for job alerts';
-
-  /* ---- 3 · ONE unified path to hired (merges the old blockers + path + week plan) ---- */
+  /* ---- the plan: 5 plain-English steps; only the current one expands ---- */
   var gaps = pp ? pp.gaps : missing;
   var g0 = gaps[0];
   var rtwDone = pp ? (pp.rtw.level==='ok') : rtwOk;
   var medDone = pp ? pp.medOk : medOk;
   var ticketsDone = !gaps.length;
-  var pathSteps=[
-    { title: pp ? ('Right to work — '+pp.region.name) : 'Confirm your right to work',
-      done: rtwDone,
-      detail: rtwDone ? 'Cleared — you can legally work your target region.'
-            : (pp ? (pp.rtw.msg||'Not automatic for your passport — see the note above.') : 'Confirm your visa / work authorisation for your target region.') },
-    { title:'Pass your work / offshore medical',
-      done: medDone,
-      detail: medDone ? 'Valid medical on file.'
-            : 'Book an offshore/OGUK-type fitness medical plus a drug & alcohol screen — the gate most people forget.' },
-    { title:'Get your required tickets',
-      done: ticketsDone,
-      detail: ticketsDone ? 'All required tickets held — you’re ready to apply.'
-            : ('You still need: '+gaps.slice(0,3).map(function(g){return g.name.split('(')[0].trim();}).join(', ')+'.'+(nextName?(' Getting '+nextName+' lifts your score to ~'+proj+'.'):'')),
-      meta: ticketsDone?'':((g0&&g0.days?g0.days:'')+(g0&&g0.days&&g0.cost?' · ':'')+(g0&&g0.cost?g0.cost:'')),
-      cta: ticketsDone?null:{ label:(g0&&g0.provider?'Find a course →':'Open my roadmap →'), href:(g0&&g0.provider?g0.provider.url:'roadmap.html'), ext:!!(g0&&g0.provider) } },
-    { title:'Build your offshore CV',
-      done: cvOk,
-      detail: cvOk ? 'Recruiter-ready CV done.'
-            : 'Format your tickets, medicals and reliability the way rig & vessel recruiters scan — about 20 minutes.',
-      cta: cvOk?null:{ label:'Build my CV →', href:'cv.html' } },
-    { title:'Apply through the right agencies',
-      done:false, locked:!paid,
-      detail: paid ? ('Apply to your matched roles and get on the books of '+(pp&&pp.agencies.length?pp.agencies.slice(0,2).map(function(a){return a.name;}).join(' & '):'the crewing agencies for '+(sec.name||'your sector'))+'.')
-            : 'The crewing agencies that actually hire for '+(sec.name||'your sector')+' — your shortlist and applying unlock with Pro.',
-      cta: paid?{ label:'See matched roles →', href:'jobs.html' }:{ label:'Unlock & apply →', href:'pricing.html' } }
-  ];
-  var doneN = pathSteps.filter(function(s){return s.done;}).length;
-  var activeIdx = pathSteps.findIndex(function(s){return !s.done && !s.locked;}); if(activeIdx<0) activeIdx=pathSteps.length-1;
-  document.getElementById('pathMeta').textContent = doneN+' of '+pathSteps.length+' done';
+  var needList = gaps.slice(0,3).map(function(g){return g.name.split('(')[0].trim();}).join(', ');
+  var ticketMeta = (g0&&g0.days?g0.days:'')+(g0&&g0.days&&g0.cost?' · ':'')+(g0&&g0.cost?g0.cost:'');
+  var agencyNames = (pp&&pp.agencies.length)?pp.agencies.slice(0,2).map(function(a){return a.name;}).join(' & '):('the agencies that hire for '+(sec.name||'your sector'));
 
-  /* ---- 2 · THE one next action — always the path's active step, so hero and path agree ---- */
-  var nx, a=pathSteps[activeIdx];
-  if(paid && !profile){
-    nx={k:'◆ Your next step', h:'Build your exact plan',
-      p:'Two minutes on where you are and where you want to work turns your roadmap into the exact tickets, medical and agencies for your route.',
-      cta:{label:'Start Pro setup →', href:'setup.html'}};
-  } else if(appliedN>0 && ticketsDone && cvOk){
-    nx={k:'◆ You’re on track', h:'Keep the momentum',
-      p:'You have '+appliedN+' application'+(appliedN>1?'s':'')+' in motion. Follow up with your agencies and keep your tickets current.',
-      cta:{label:'Find more roles →', href:'jobs.html'}};
-  } else {
-    nx={k:'◆ Your next step · step '+(activeIdx+1)+' of '+pathSteps.length, h:a.title,
-      p:a.detail, cta:a.cta||{label:'Open my roadmap →', href:'roadmap.html'}};
+  var steps=[
+    { title:'Check you can work there', done:rtwDone,
+      doneText:'Sorted — you’re allowed to work in your target country.',
+      detail: pp ? (pp.rtw.msg||'Confirm your right to work in your target country.') : 'Make sure you’re allowed to work in the country you’re aiming for (your passport or a visa).' },
+    { title:'Pass your medical', done:medDone,
+      doneText:'Done — your medical is valid.',
+      detail:'Book a simple offshore health check plus a drug &amp; alcohol test. It’s the step most people forget — do it early.',
+      cta:{ label:'What’s involved →', href:'roadmap.html' } },
+    { title:'Get your safety tickets', done:ticketsDone,
+      doneText:'All your required tickets are done.',
+      detail:'You still need: <b>'+(needList||'a couple of short courses')+'</b>. These are short safety courses — book them from an accredited provider and you’re ready to apply.',
+      meta: ticketMeta,
+      cta:{ label:(g0&&g0.provider?'Find a course →':'See my tickets →'), href:(g0&&g0.provider?g0.provider.url:'roadmap.html'), ext:!!(g0&&g0.provider) } },
+    { title:'Make your offshore CV', done:cvOk,
+      doneText:'Your offshore CV is ready.',
+      detail:'We build it in the format rig and vessel recruiters actually read — about 20 minutes.',
+      cta:{ label:'Build my CV →', href:'cv.html' } },
+    { title:'Apply to jobs', done:false, locked:!paid,
+      detail: paid ? ('Apply to the jobs below and send your CV to '+agencyNames+' — that’s how these jobs are really filled.')
+             : 'These jobs are filled through crewing agencies, not job boards. Applying + your agency shortlist unlock with Pro.',
+      cta: paid?{ label:'See your jobs →', href:'jobs.html' }:{ label:'Unlock applying — $120 →', href:'pricing.html' } }
+  ];
+  var total=steps.length;
+  var doneN=steps.filter(function(s){return s.done;}).length;
+  var activeIdx=steps.findIndex(function(s){return !s.done && !s.locked;}); if(activeIdx<0) activeIdx=total-1;
+
+  /* ---- goal line + progress bar ---- */
+  var goalTxt='Your goal: a job in <b>'+(sec.name||'offshore work')+'</b>'+(pp?(' · '+pp.region.flag+' '+pp.region.name):'')+'. ';
+  goalTxt += (doneN>=total-1) ? 'You’ve done the hard part — now apply.' : 'Do these '+total+' steps in order and you could be applying in about 3 weeks.';
+  goalTxt += ' <a href="'+(paid?'setup.html':'start.html')+'" style="color:var(--hi)">change</a>';
+  document.getElementById('goalLine').innerHTML=goalTxt;
+  document.getElementById('pbarFill').style.width=Math.round(doneN/total*100)+'%';
+  document.getElementById('pbarCap').innerHTML='<b>Step '+(activeIdx+1)+' of '+total+'</b> · '+doneN+' of '+total+' done';
+
+  /* right-to-work honesty note (only when it matters) */
+  if(pp && pp.rtw.level!=='ok'){
+    var rn=document.getElementById('rtwNote'); rn.style.display='block';
+    rn.innerHTML='<b>'+(pp.rtw.level==='warn'?'⚠️ Straight talk:':'🛂 Right to work:')+'</b> '+pp.rtw.msg+
+      (pp.rtw.alts&&pp.rtw.alts.length?('<br><b>Countries your passport works in today:</b> '+pp.rtw.alts.map(function(a){return a.flag+' '+a.name;}).join(' · ')+' — <a href="setup.html" style="color:var(--hi)">switch</a>'):'');
   }
-  document.getElementById('dNext').innerHTML=
-    '<span class="dnext-k">'+nx.k+'</span><h2>'+nx.h+'</h2><p>'+nx.p+'</p>'+
-    '<a class="btn btn-go btn-lg" href="'+nx.cta.href+'"'+(nx.cta.ext?' target="_blank" rel="noopener"':'')+'>'+nx.cta.label+'</a>';
-  document.getElementById('pathWrap').innerHTML = pathSteps.map(function(s,ix){
-    var cls = s.done?'done':(s.locked?'locked':(ix===activeIdx?'active':'future'));
-    var num = s.done?'✓':(s.locked?'🔒':(ix+1));
-    var showCta = s.cta && (ix===activeIdx || s.locked);
-    var cta = showCta ? '<a class="btn btn-go btn-sm" href="'+s.cta.href+'"'+(s.cta.ext?' target="_blank" rel="noopener"':'')+' style="margin-top:12px">'+s.cta.label+'</a>' : '';
-    return '<div class="pathstep '+cls+'">'+
-      '<span class="ps-n">'+num+'</span>'+
-      '<div class="ps-b"><h4>'+s.title+'</h4><p>'+s.detail+'</p>'+
-      (!s.done&&s.meta?'<small>'+(ix===activeIdx?'You’re here · ':'Next up · ')+s.meta+'</small>':'')+
-      cta+
-      '</div></div>';
+
+  /* render the connected journey — only the current (and locked last) step is expanded */
+  document.getElementById('journeyWrap').innerHTML=steps.map(function(s,ix){
+    var isActive=ix===activeIdx, expand=isActive||s.locked;
+    var cls=s.done?'done':(s.locked?'locked':(isActive?'active':'future'));
+    var num=s.done?'✓':(s.locked?'🔒':(ix+1));
+    var body='';
+    if(s.done){ body='<p class="jdone">'+s.doneText+'</p>'; }
+    else if(expand){
+      body=(s.detail?'<p>'+s.detail+'</p>':'')+
+           (s.meta?'<div class="jmeta">⏱ '+s.meta+'</div>':'')+
+           (s.cta?'<a class="btn btn-go btn-sm" href="'+s.cta.href+'"'+(s.cta.ext?' target="_blank" rel="noopener"':'')+' style="margin-top:12px">'+s.cta.label+'</a>':'');
+    }
+    var tag=isActive?'<span class="jhere">Do this next</span>':(s.locked?'<span class="jhere lock">Final step</span>':'');
+    return '<div class="jstep '+cls+'"><span class="jnum">'+num+'</span>'+
+      '<div class="jbody"><div class="jhead"><h4>'+s.title+'</h4>'+tag+'</div>'+body+'</div></div>';
   }).join('');
+
   var pn=document.getElementById('pathNote'); pn.style.display='block';
-  pn.innerHTML = pp
-    ? '⏱ Realistic route into '+pp.region.name+': tickets + medical in ~2 weeks · CV + agency sign-ups · first applications week 3 · first offers ~week 3–6.'+(pp.estCost?(' Est. ticket outlay ~$'+pp.estCost.toLocaleString()+'.'):'')+' Move on each step — no job or salary is guaranteed.'
-    : '⏱ Move on each step and most members are applying within ~3 weeks, with first offers around week 3–6. No job or salary is guaranteed.';
+  pn.textContent='Most people finish steps 1–4 in about 3 weeks, then get their first offer around week 3–6. No job or salary is guaranteed.';
+
+  document.getElementById('phoneRow').innerHTML = (u.phone&&(''+u.phone).length>=6)
+    ? '📱 Job alerts on · '+u.phone
+    : '📱 <a href="javascript:void(0)" onclick="addPhone()" style="color:var(--hi)">Add your phone</a> for job alerts';
 
   /* ---- sample matched roles with fit % ---- */
   function fit(j){
