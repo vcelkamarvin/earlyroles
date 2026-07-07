@@ -20,6 +20,7 @@
 
     <div class="filters" style="justify-content:center;margin-top:24px">
       <select id="secSel"><option value="all">All sectors</option></select>
+      <select id="regSel"><option value="all">All regions</option></select>
     </div>
 
     <div id="dirList" class="joblist"></div>
@@ -38,12 +39,14 @@
 <script>
 HH.mountChrome('directory.html');
 var paid=HH.Auth.isPaid();
-var sel=document.getElementById('secSel');
+var sel=document.getElementById('secSel'), reg=document.getElementById('regSel');
 HH_SECTORS.forEach(function(s){ var o=document.createElement('option'); o.value=s.id; o.textContent=s.icon+' '+s.name; sel.appendChild(o); });
+var regions=[]; HH_AGENCIES.forEach(function(a){ if(a.region && regions.indexOf(a.region)<0) regions.push(a.region); });
+regions.sort().forEach(function(r){ var o=document.createElement('option'); o.value=r; o.textContent=r; reg.appendChild(o); });
 var intake=HH.Auth.intake(); if(intake&&intake.sector) sel.value=intake.sector;
 function render(){
-  var f=sel.value;
-  var rows=HH_AGENCIES.filter(function(a){ return f==='all'||a.sector===f; });
+  var f=sel.value, rf=reg.value;
+  var rows=HH_AGENCIES.filter(function(a){ return (f==='all'||a.sector===f) && (rf==='all'||a.region===rf); });
   var shown=paid?rows:rows.slice(0,3);
   document.getElementById('dirList').innerHTML=shown.map(function(a){
     var s=HH.sector(a.sector);
@@ -56,7 +59,7 @@ function render(){
   }).join('');
   document.getElementById('lockBox').style.display=paid?'none':(rows.length>3?'block':'none');
 }
-sel.onchange=render; render();
+sel.onchange=render; reg.onchange=render; render();
 </script>
 </body>
 </html>

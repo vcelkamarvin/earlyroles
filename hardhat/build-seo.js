@@ -397,7 +397,7 @@ function main() {
 
   // sitemap: core static pages + blog posts + all generated
   const core = ['', 'index.html', 'jobs.html', 'certs.html', 'start.html', 'roadmap.html', 'pay.html', 'directory.html', 'cv.html', 'pricing.html', 'locations.html', 'blog.html', 'browse.html', 'signup.html', 'login.html', 'privacy.html', 'terms.html', 'fifo-mining-jobs.html', 'fifo-mining-jobs-canada.html', 'oil-sands-jobs-fort-mcmurray.html', 'work-in-canada-fifo-foreigners.html'];
-  const blogPosts = ['highest-paying-no-degree-jobs-2026', 'offshore-oil-rig-job-no-experience', 'bosiet-huet-oguk-explained', 'offshore-wind-gwo-break-in', 'fifo-mining-pay-how-to-get-hired', 'become-commercial-diver'].map((s) => 'post.html?slug=' + s);
+  const blogPosts = ['highest-paying-no-degree-jobs-2026', 'offshore-oil-rig-job-no-experience', 'bosiet-huet-oguk-explained', 'offshore-wind-gwo-break-in', 'fifo-mining-pay-how-to-get-hired', 'become-commercial-diver', 'h2s-alive-explained', 'cso-vs-csts-oil-sands-site-access', 'oil-sands-rotations-explained', 'newfoundland-offshore-jobs'].map((s) => 'post.html?slug=' + s);
   const allFiles = core.concat(blogPosts, jobPages.map((p) => p.file), locPages.map((p) => p.file), guidePages.map((p) => p.file), variantPages.map((p) => p.file));
   fs.writeFileSync(path.join(DIR, 'sitemap.xml'), sitemap(allFiles));
 

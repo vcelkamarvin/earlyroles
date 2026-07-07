@@ -56,8 +56,8 @@ function topHubs(sid){
 }
 function render(){
   var p=HH_PAY[sec.value];
-  document.getElementById('payBig').textContent=exp.value==='entry'?p.entry:p.exp;
-  document.getElementById('payRate').textContent=p.day;
+  document.getElementById('payBig').textContent=HH.payLoc(exp.value==='entry'?p.entry:p.exp);
+  document.getElementById('payRate').textContent=HH.payLoc(p.day);
   document.getElementById('payRota').textContent=p.rota;
   document.getElementById('payDem').textContent=(HH_DEMAND[sec.value].open).toLocaleString();
   document.getElementById('payNote').textContent='💬 '+p.note+'  ·  Demand '+HH_DEMAND[sec.value].growth+' · top hubs: '+topHubs(sec.value);
@@ -66,7 +66,7 @@ function render(){
 sec.onchange=render; exp.onchange=render; render();
 document.querySelector('#allTbl tbody').innerHTML=HH_SECTORS.map(function(s){
   var p=HH_PAY[s.id];
-  return '<tr><td><b>'+s.icon+' '+s.name+'</b></td><td class="num">'+p.entry+'</td><td class="num">'+p.exp+'</td><td>'+p.day+'</td><td class="num">'+HH_DEMAND[s.id].open.toLocaleString()+'</td><td style="color:var(--muted);font-size:12.5px">'+topHubs(s.id)+'</td></tr>';
+  return '<tr><td><b>'+s.icon+' '+s.name+'</b></td><td class="num">'+HH.payLoc(p.entry)+'</td><td class="num">'+HH.payLoc(p.exp)+'</td><td>'+HH.payLoc(p.day)+'</td><td class="num">'+HH_DEMAND[s.id].open.toLocaleString()+'</td><td style="color:var(--muted);font-size:12.5px">'+topHubs(s.id)+'</td></tr>';
 }).join('');
 </script>
 </body>

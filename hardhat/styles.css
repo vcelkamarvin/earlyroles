@@ -217,6 +217,8 @@ h1.hero-h1 em{font-style:normal;color:var(--hi)}
 .langtog button{background:transparent;border:none;padding:6px 9px;font-family:"JetBrains Mono",monospace;font-size:11px;font-weight:600;color:var(--muted);cursor:pointer}
 .langtog button.on{background:var(--hi);color:#fff}
 @media(max-width:560px){.langtog button{padding:5px 7px;font-size:10px}}
+.curtog{border:1px solid var(--line2);border-radius:8px;background:transparent;color:var(--muted);font-family:"JetBrains Mono",monospace;font-size:11px;font-weight:600;padding:5px 6px;margin-right:6px;cursor:pointer}
+@media(max-width:560px){.curtog{padding:4px 4px;font-size:10px}}
 
 /* v8 — funnel income motivator */
 .incbar{display:flex;align-items:center;gap:12px;background:linear-gradient(135deg,var(--good-soft),var(--panel));border:1px solid var(--good-soft);border-radius:14px;padding:12px 16px;margin-bottom:18px}
@@ -696,3 +698,9 @@ footer{border-top:1px solid var(--line);padding:48px 0 40px;color:var(--muted);f
 
 /* apply=pro lock */
 .prolock{font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--hi);background:var(--hi-soft);border:1px solid #26333d;padding:3px 8px;border-radius:5px;white-space:nowrap}
+
+/* v15 — worldwide positioning + honesty wedge */
+.wedgeband{padding:56px 0;border-top:1px solid var(--line)}
+.worldline{font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:clamp(16px,2.4vw,21px);color:var(--muted);max-width:34ch;margin:0 auto 26px;line-height:1.4}
+.wedge{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:34px 28px;max-width:760px;margin:0 auto}
+@media(max-width:560px){.wedgeband{padding:40px 0}.wedge{padding:26px 18px}}

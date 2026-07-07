@@ -12,7 +12,7 @@ var CONFIG = {
   SUPABASE_URL: 'https://ossyctgqycfkcdcncpgg.supabase.co',   // durable lead capture (Supabase REST)
   SUPABASE_KEY: 'sb_publishable_GQGwqejtKqPBwUXOQe0E0w_d4iHupij', // publishable key (safe in client)
   // Stripe Payment Links (fastest path). Leave '' to use /api/checkout.
-  PAY: { pro_monthly:'https://buy.stripe.com/00wbITeEv0vv5WZbeu63K0c', pro_annual:'', fasttrack:'https://buy.stripe.com/fZu14faof7XXfxz1DU63K0e' }
+  PAY: { pro_monthly:'https://buy.stripe.com/00wbITeEv0vv5WZbeu63K0c', pro_annual:'', fasttrack:'https://buy.stripe.com/fZu14faof7XXfxz1DU63K0e', starter:'' }
 };
 window.HH_CONFIG = CONFIG;
 
@@ -51,7 +51,7 @@ var SECTORS = [
   { id:'wind',   icon:'🌬️', name:'Offshore Wind',       blurb:'GWO-certified turbine techs building & maintaining wind farms.',      pay:'$65k–$140k', rota:'2 on / 2 off', noexp:true },
   { id:'diving', icon:'🤿', name:'Commercial Diving',    blurb:'Air & saturation divers, tenders — underwater welding & inspection.', pay:'$65k–$250k', rota:'project',     noexp:false },
   { id:'marine', icon:'⚓', name:'Merchant Marine',      blurb:'Deckhand, OS/AB, wiper — cargo ships, tugs, supply vessels.',        pay:'$58k–$130k', rota:'28 on / 28 off', noexp:true },
-  { id:'mining', icon:'⛏️', name:'FIFO Mining',          blurb:'Fly-in fly-out to Canadian oil-sands camps, US mines or Australian sites — flights, meals and camp usually covered. Operators, labourers & haul-truck drivers.', pay:'$70k–$180k', rota:'14/7 · 6/6 · 2/1 (camp/FIFO)', noexp:true },
+  { id:'mining', icon:'⛏️', name:'FIFO Mining (Canada, US & AU)', blurb:'Fly-in fly-out to Canadian oil-sands camps, US mines or Australian sites — flights, meals and camp usually covered. Operators, labourers & haul-truck drivers.', pay:'$70k–$180k', rota:'14/7 · 6/6 · 2/1 (camp/FIFO)', noexp:true },
   { id:'weld',   icon:'🔥', name:'Pipeline / Welding',   blurb:'Structural & pipeline welders, riggers, fabricators.',               pay:'$68k–$160k', rota:'project',     noexp:false },
   { id:'wtt',    icon:'⚡', name:'Wind Turbine Tech',    blurb:'Onshore turbine service techs — climb, service, fault-find.',        pay:'$58k–$105k',  rota:'rota',       noexp:true },
   { id:'cdl',    icon:'🚛', name:'Hazmat / CDL Haul',    blurb:'Long-haul, tanker & hazmat drivers — oilfield & heavy freight.',     pay:'$72k–$135k', rota:'weeks out',  noexp:true }
@@ -198,6 +198,9 @@ var AGENCIES = [
   { sector:'marine', name:'Faststream Marine', type:'Merchant fleet crewing',   region:'Global',    url:'https://www.faststream.com' },
   { sector:'mining', name:'Hays Mining',       type:'Mining recruitment',       region:'AU/Global', url:'https://www.hays.com.au' },
   { sector:'mining', name:'WorkPac',           type:'FIFO labour hire',         region:'Australia', url:'https://www.workpac.com' },
+  { sector:'mining', name:'Airswift (Canada)', type:'No-experience FIFO stream', region:'Canada',   url:'https://www.airswift.com' },
+  { sector:'mining', name:'The Bouchier Group',type:'Oil-sands camp & labour',  region:'Canada',    url:'https://www.bouchier.ca' },
+  { sector:'mining', name:'PTW Energy Services',type:'Trades & apprentice crews',region:'Canada',   url:'https://www.ptwenergy.com' },
   { sector:'weld',   name:'Aerotek',           type:'Skilled trades staffing',  region:'US',        url:'https://www.aerotek.com' },
   { sector:'weld',   name:'Airswift',          type:'Fabrication & construction',region:'Global',   url:'https://www.airswift.com' },
   { sector:'wtt',    name:'Taylor Hopkinson',  type:'Wind tech staffing',       region:'Global',    url:'https://www.taylorhopkinson.com' },
@@ -353,6 +356,37 @@ var BLOG = [
     body:['Commercial diving — underwater welding, inspection and saturation work — can pay $180k–$250k+ at the top end. It’s also the most demanding entry on this list.',
       'LIST:Attend an accredited commercial dive school (ADCI/HSE/IMCA) — $12k–$30k, 3–7 months.|Pass a commercial diving medical (annual).|Start as a tender, progress to air diver, then saturation.',
       'It’s a real investment of time and money, but few no-degree careers pay like saturation diving. Track the exact path in your HardHat roadmap.',
+      'CTA'] },
+  { slug:'h2s-alive-explained', tag:'Tickets', date:'2026-07-02', read:'5 min',
+    title:'H2S Alive: The Ticket You Need Before Any Oil-Sands Job',
+    excerpt:'What H2S Alive is, why every Canadian oil-sands and gas site demands it, what it costs and how long it lasts. The first ticket to book.',
+    body:['If you want a camp job in the Alberta oil sands, this is the ticket recruiters filter on first. H2S Alive is a one-day course from <b>Energy Safety Canada</b> that teaches you to work safely around hydrogen sulphide — the invisible, deadly gas found on oil-and-gas sites.',
+      'Here’s what actually matters:',
+      'LIST:One day of training, valid for <b>3 years</b>.|Costs roughly <b>CAD 175–250</b> — you pay for it, not the employer.|Recognised across Alberta, BC, Saskatchewan and most Canadian energy sites.|You cannot set foot on most oil-sands sites without it.',
+      'It replaced nothing — it has always been the baseline. Pair it with a CSO (site access orientation) and Standard First Aid and you have the core stack for an entry oil-sands role. Book H2S Alive first: it’s the one that unlocks the rest.',
+      'CTA'] },
+  { slug:'cso-vs-csts-oil-sands-site-access', tag:'Tickets', date:'2026-06-30', read:'5 min',
+    title:'CSO vs CSTS: Which Oil-Sands Site-Access Ticket Do You Need?',
+    excerpt:'Common Safety Orientation or CSTS? The two site-access tickets for Canadian oil-sands work, what changed, and which one to book.',
+    body:['New to oil-sands work, you’ll hit two acronyms fast: <b>CSO</b> and <b>CSTS</b>. Both are online site-access safety orientations — get one wrong and you can waste money on a ticket a site won’t accept.',
+      'LIST:<b>CSO (Common Safety Orientation)</b> — the newer standard for oil-sands site access. Online, ~CAD 90, does not expire. It replaced the old <b>OSSA BSO</b>.|<b>CSTS (Construction Safety Training System)</b> — a broader construction orientation still used on many projects.|Some contractors ask for one, some the other — a few want both.',
+      'The safe move: book <b>CSO</b> first (it’s what most oil-sands producers now expect), then add CSTS if a specific contractor or agency asks for it. Always confirm with the crewing agency putting you forward before you pay — requirements shift by site.',
+      'CTA'] },
+  { slug:'oil-sands-rotations-explained', tag:'Guide', date:'2026-06-26', read:'6 min',
+    title:'14/7, 6/6 and Camp Life: Oil-Sands Rotations Explained',
+    excerpt:'What FIFO rotations actually mean day to day — 14/7 vs 6/6, camp accommodation, 12-hour shifts, and what your off-swing really looks like.',
+    body:['FIFO (fly-in fly-out) pay looks huge until you understand the trade: you’re away from home in a work camp for the on-swing. Knowing the rotation patterns before you apply saves a nasty surprise.',
+      'The common patterns:',
+      'LIST:<b>14/7</b> — 14 days on site, 7 days home. The classic oil-sands rotation.|<b>6/6</b> — six on, six off; you swap the moment your relief lands.|<b>2/1</b> — two weeks on, one off — more common on remote mining sites.',
+      'On the on-swing you live in camp: your own room, meals in the mess, gym and wifi usually included — flights to and from site typically covered on top of pay. Shifts are <b>12 hours</b>, day or night. The off-swing is fully yours: no email, no on-call. It’s real money for real time away, and it isn’t for everyone — but for the right person it beats a five-day commute.',
+      'CTA'] },
+  { slug:'newfoundland-offshore-jobs', tag:'How-to', date:'2026-06-22', read:'6 min',
+    title:'Newfoundland Offshore Oil Jobs: The East-Coast Route In',
+    excerpt:'Canada’s offshore isn’t just Alberta. Off Newfoundland, platforms like Hibernia and Hebron hire for offshore roles — here’s the ticket stack and how to get on.',
+    body:['When Canadians think oil, they think Alberta oil sands — but the country also runs <b>offshore platforms off Newfoundland</b>: Hibernia, Terra Nova, White Rose and Hebron in the Jeanne d’Arc Basin. It’s true offshore work, with true offshore tickets.',
+      'The stack looks more like the North Sea than the oil sands:',
+      'LIST:<b>BST / offshore survival</b> (including helicopter underwater escape) to fly to a platform.|An <b>offshore medical</b> — fitness to work at sea.|<b>H2S Alive</b> and site-specific orientations.|Right to work in Canada — these roles go to citizens and PRs in practice.',
+      'Hiring runs through the operators and their crewing contractors out of St. John’s, not general job boards. Get your survival ticket and medical sorted, build a Canadian-format offshore CV, and get on the contractors’ books. It’s a smaller market than Alberta — but the pay is strong and the competition thinner if you’re ready.',
       'CTA'] }
 ];
 window.HH_BLOG = BLOG;
@@ -385,6 +419,70 @@ var Auth = {
   setApp: function(id, stage){ var a=get('apps',{}); a[id]=stage; set('apps',a); }
 };
 window.HH = { Auth:Auth, sector:sector, get:get, set:set, ga:ga };
+
+/* ------------------------------------------------------------------ */
+/* MULTI-CURRENCY — localizes the number-driven pay surfaces           */
+/* Static FX vs USD (illustrative, like the pay figures themselves).   */
+/* ------------------------------------------------------------------ */
+var FX  = { USD:1, CAD:1.36, AUD:1.52, GBP:0.79, EUR:0.92 };
+var SYM = { USD:'$', CAD:'C$', AUD:'A$', GBP:'£', EUR:'€' };
+function currency(){
+  var c = get('cur');
+  if(c && FX[c]) return c;
+  try{
+    var tz = (Intl.DateTimeFormat().resolvedOptions().timeZone||'');
+    if(/Edmonton|Toronto|Winnipeg|Vancouver|Regina|Halifax|St_Johns|Moncton/.test(tz)) return 'CAD';
+    if(/^Australia\//.test(tz)) return 'AUD';
+    if(tz==='Europe/London') return 'GBP';
+    if(/^Europe\//.test(tz)) return 'EUR';
+  }catch(e){}
+  return 'USD';
+}
+function setCurrency(c){ if(!FX[c]) c='USD'; set('cur', c); ga('currency_set',{cur:c}); if(window.HH.onCurrency) try{window.HH.onCurrency(c);}catch(e){} }
+/* HH.money(70000,{k:true}) -> "C$95k" in the active currency */
+function money(usd, o){
+  o = o || {};
+  var c = o.cur || currency();
+  var v = Math.round((Number(usd)||0) * (FX[c]||1));
+  var sym = SYM[c]||'$';
+  if(o.k){
+    var k = v/1000;
+    var s = (k>=100 || k===Math.round(k)) ? String(Math.round(k)) : (Math.round(k*10)/10).toString();
+    return sym + s + 'k';
+  }
+  return sym + v.toLocaleString('en-US');
+}
+/* parse the string pay figures ('$70k','$28–$58/hr','$0.65/mi') -> first USD number */
+function usdNum(str){
+  if(str==null) return 0;
+  if(typeof str==='number') return str;
+  var m = String(str).replace(/,/g,'').match(/(\d+(?:\.\d+)?)\s*([kK])?/);
+  if(!m) return 0;
+  var n = parseFloat(m[1]); if(m[2]) n*=1000;
+  return n;
+}
+/* re-render a '$Nk' string pay figure into the active currency, preserving suffix like '/hr' or '/day' */
+function payLoc(str, o){
+  if(str==null) return '';
+  var s = String(str);
+  var c = (o&&o.cur) || currency();
+  if(c==='USD') return s;                    // leave native strings untouched for USD
+  // ranges like "$28–$58/hr" or "$250–$650/day" or "$70k"
+  var suffix = (s.match(/\/(hr|day|mi|wk|week)/i)||[''])[0];
+  var nums = s.match(/\$?\d[\d,\.]*\s*[kK]?/g);
+  if(!nums) return s;
+  var out = nums.map(function(p){
+    var hasK = /[kK]/.test(p);
+    return money(usdNum(p), {cur:c, k:hasK});
+  });
+  return out.join('–') + suffix;
+}
+window.HH.currency = currency;
+window.HH.setCurrency = setCurrency;
+window.HH.money = money;
+window.HH.usdNum = usdNum;
+window.HH.payLoc = payLoc;
+window.HH.FX = FX; window.HH.SYM = SYM;
 
 /* ------------------------------------------------------------------ */
 /* RIG-READY SCORE                                                     */
@@ -574,7 +672,7 @@ window.HH.expandCatalog = function(d){
       id:'c'+i, title:role.t, co:src.n, logo:src.d, viaAgency:!!src.ag,
       sector:role.sec, icon:icons[role.sec]||'🛠', loc:city.n, locId:city.locId,
       cty:countryOf(city.n), fl:city.fl,
-      rota:rota, payn:payn, pay:'$'+payn.toLocaleString(),
+      rota:rota, payn:payn, pay:money(payn),
       noexp:!!(role.ne&&lvl===0), level:lvl?'Experienced':'Entry',
       type:['Rotational','Contract','Full-time'][typ]||'Full-time',
       posted:pst+'d', tickets:role.tks
@@ -686,9 +784,12 @@ var I18N = {
     nav_jobs:'Jobs', nav_tickets:'Tickets', nav_agencies:'Agencies', nav_blog:'Blog', nav_pricing:'Pricing',
     nav_login:'Log in', nav_start:'Start free', nav_dash:'Dashboard',
     hero_h1:'Find the job. Get qualified. <em>Get hired.</em>',
-    hero_sub:'$70k–$210k offshore & trades jobs. No degree. No experience needed to start.',
+    hero_sub:'$60k–$210k offshore, mining & trades jobs across the US, Canada & Australia. No degree. No experience needed to start.',
     hero_cta:'Get me hired →', hero_ph:'Your email', hero_sector:'What work interests you?',
     t_free:'Free to join', t_roles:'roles', t_urgency:'800+ jobs found every month',
+    wedge_world:'One platform for the whole world — the US, Canada, Australia, the North Sea, the Gulf and beyond.',
+    wedge_h:'No one can sell you a job. We sell the exact route.',
+    wedge_p:'Real ticket costs. The pre-access drug test nobody mentions. The plain truth on right-to-work — in every country we cover. That’s the difference between a plan and a fantasy.',
     lbl_how:'How HardHat works', h_how:'Three steps to a six-figure trade',
     s1_h:'Find the job', s1_p:'Take the 2-minute assessment. We match you to real roles you qualify for across 8 sectors and 10+ global hubs.',
     s2_h:'Get qualified', s2_p:'Your own ticket and medical roadmap (BOSIET, GWO, STCW, CDL) with costs, timeframes and progress you can track.',
@@ -702,9 +803,12 @@ var I18N = {
     nav_jobs:'Empleos', nav_tickets:'Certificados', nav_agencies:'Agencias', nav_blog:'Blog', nav_pricing:'Precios',
     nav_login:'Entrar', nav_start:'Empieza gratis', nav_dash:'Panel',
     hero_h1:'Encuentra el trabajo. Califícate. <em>Consíguelo.</em>',
-    hero_sub:'Empleos offshore y de oficios de $70k–$210k. Sin título. Sin experiencia para empezar.',
+    hero_sub:'Empleos offshore, de minería y de oficios de $60k–$210k en EE. UU., Canadá y Australia. Sin título. Sin experiencia para empezar.',
     hero_cta:'Quiero trabajar →', hero_ph:'Tu correo', hero_sector:'¿Qué trabajo te interesa?',
     t_free:'Gratis unirse', t_roles:'vacantes', t_urgency:'800+ empleos encontrados cada mes',
+    wedge_world:'Una plataforma para todo el mundo — EE. UU., Canadá, Australia, el Mar del Norte, el Golfo y más.',
+    wedge_h:'Nadie puede venderte un empleo. Nosotros vendemos la ruta exacta.',
+    wedge_p:'Costos reales de certificados. La prueba antidrogas previa que nadie menciona. La verdad clara sobre el derecho a trabajar — en cada país que cubrimos. Esa es la diferencia entre un plan y una fantasía.',
     lbl_how:'Cómo funciona HardHat', h_how:'Tres pasos hacia un oficio de seis cifras',
     s1_h:'Encuentra el trabajo', s1_p:'Haz la evaluación de 2 minutos. Te conectamos con vacantes reales para las que calificas en 8 sectores y más de 10 centros globales.',
     s2_h:'Califícate', s2_p:'Tu propia ruta de certificados y exámenes médicos (BOSIET, GWO, STCW, CDL) con costos, plazos y progreso que puedes seguir.',
@@ -739,6 +843,12 @@ function applyLang(lang){
 window.HH.applyLang = applyLang;
 window.HH.setLang = function(l){ applyLang(l); ga('lang_set',{lang:l}); };
 window.HH.lang = currentLang;
+/* currency picker in the nav — sets, then reloads so every pay surface re-renders */
+window.HH.pickCurrency = function(sel){
+  var c = sel && sel.value ? sel.value : sel;
+  setCurrency(c);
+  try{ window.location.reload(); }catch(e){}
+};
 
 function navHTML(active){
   function a(href,label,key){ return '<a href="'+href+'"'+(active===label?' style="color:var(--hi)"':'')+' data-i18n="'+key+'">'+label+'</a>'; }
@@ -746,10 +856,14 @@ function navHTML(active){
     ? '<a class="btn btn-ink btn-sm" href="dashboard.html" data-i18n="nav_dash">Dashboard</a>'
     : '<a class="btn btn-out btn-sm" href="login.html" data-i18n="nav_login">Log in</a><a class="btn btn-hi btn-sm" href="start.html" data-i18n="nav_start">Start free</a>';
   var langtog = '<span class="langtog"><button data-lang="en" onclick="HH.setLang(\'en\')">EN</button><button data-lang="es" onclick="HH.setLang(\'es\')">ES</button></span>';
+  var cur = currency();
+  var curtog = '<select class="curtog" onchange="HH.pickCurrency(this)" aria-label="Currency">'+
+    ['USD','CAD','AUD','GBP','EUR'].map(function(k){ return '<option value="'+k+'"'+(k===cur?' selected':'')+'>'+SYM[k]+' '+k+'</option>'; }).join('')+
+    '</select>';
   return '<nav><div class="wrap nav">'+
     '<a class="brand" href="index.html"><span class="mk">⛏</span>HardHat</a>'+
     '<div class="navlinks">'+a('jobs.html','Jobs','nav_jobs')+a('certs.html','Tickets','nav_tickets')+a('directory.html','Agencies','nav_agencies')+a('blog.html','Blog','nav_blog')+a('pricing.html','Pricing','nav_pricing')+'</div>'+
-    '<div class="navr">'+langtog+right+'</div>'+
+    '<div class="navr">'+curtog+langtog+right+'</div>'+
     '</div></nav>';
 }
 /* company logo: real logo -> favicon -> text wordmark (always renders something) */

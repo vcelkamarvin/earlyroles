@@ -56,6 +56,18 @@
   </div>
 </div>
 
+<!-- WORLDWIDE POSITIONING + HONESTY WEDGE -->
+<section class="wedgeband">
+  <div class="wrap center">
+    <p class="worldline" data-i18n="wedge_world">One platform for the whole world — the US, Canada, Australia, the North Sea, the Gulf and beyond.</p>
+    <div class="wedge reveal">
+      <span class="hl">Straight talk</span>
+      <h2 class="sec" style="max-width:20ch;margin:12px auto 10px" data-i18n="wedge_h">No one can sell you a job. We sell the exact route.</h2>
+      <p class="lead" style="max-width:60ch;margin:0 auto" data-i18n="wedge_p">Real ticket costs. The pre-access drug test nobody mentions. The plain truth on right-to-work — in every country we cover. That’s the difference between a plan and a fantasy.</p>
+    </div>
+  </div>
+</section>
+
 <!-- HIRING RIGHT NOW — real inventory on the homepage -->
 <section>
   <div class="wrap">
@@ -306,7 +318,7 @@
 
   // populate hero sector picker
   document.getElementById('heroSector').innerHTML = '<option value="" data-i18n="hero_sector">What work interests you?</option>' +
-    HH_SECTORS.map(function(s){ return '<option value="'+s.id+'">'+s.icon+' '+s.name+' — '+s.pay+'</option>'; }).join('');
+    HH_SECTORS.map(function(s){ return '<option value="'+s.id+'">'+s.icon+' '+s.name+' — '+HH.payLoc(s.pay)+'</option>'; }).join('');
   HH.applyLang(HH.lang());
 
   function heroRegister(e){
