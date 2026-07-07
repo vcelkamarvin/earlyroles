@@ -20,54 +20,46 @@
 
     <div id="board" style="display:none">
 
-      <!-- GREETING — one idea, big type -->
-      <div class="dgreet">
-        <h1 id="greetH">You are 2 tickets from applying.</h1>
-        <p id="greetSub">Best fit right now: offshore work. Here is the one thing to do next.</p>
-        <p class="micro" id="profileRow" style="display:none;margin-top:8px"></p>
+      <!-- 1 · STATUS HEADER: who you are, your target, your score -->
+      <div class="dhead">
+        <div class="dhead-l">
+          <h1 id="greetH">You are 2 tickets from applying.</h1>
+          <p id="greetSub"></p>
+        </div>
+        <div class="dhead-score">
+          <div class="ring" id="ring"><i><b id="scoreN">0</b><span>ready</span></i></div>
+          <p class="sblurb" id="scoreBlurb"></p>
+        </div>
       </div>
 
       <!-- RTW honesty (only when it matters) -->
-      <div class="notice" id="rtwNote" style="display:none;margin-bottom:16px;font-size:13.5px"></div>
+      <div class="notice" id="rtwNote" style="display:none;margin-bottom:18px;font-size:13.5px"></div>
 
-      <!-- ONE PRIMARY ACTION -->
+      <!-- 2 · THE ONE THING TO DO NEXT -->
       <div class="dnext reveal" id="dNext"></div>
 
-      <!-- SCORE + BLOCKERS -->
-      <div class="grid2" style="margin-top:22px;align-items:stretch;gap:18px">
-        <div class="panel center" style="display:flex;flex-direction:column;justify-content:center">
-          <div class="eyebrow">Rig-Ready Score</div>
-          <div class="ring" id="ring" style="margin:16px auto"><i><b id="scoreN">0</b><span>of 100</span></i></div>
-          <p id="scoreBlurb" style="color:var(--muted);font-size:14px;max-width:30ch;margin:0 auto"></p>
-        </div>
-        <div class="panel">
-          <div class="eyebrow" style="text-align:left">What stands between you and applying</div>
-          <div id="blockers" style="margin-top:14px"></div>
-          <p class="micro" id="phoneRow" style="margin-top:14px"></p>
-        </div>
+      <!-- 3 · ONE UNIFIED PATH TO HIRED (right-to-work → medical → tickets → CV → apply) -->
+      <div class="dsec">
+        <div class="dsec-head"><h3>Your path to hired</h3><span class="dsec-meta" id="pathMeta"></span></div>
+        <div class="pathwrap" id="pathWrap"></div>
+        <p class="micro" id="pathNote" style="margin-top:12px;display:none"></p>
       </div>
 
-      <!-- PATH TO HIRED -->
-      <h3 class="display" style="font-size:20px;margin:36px 0 14px">Your path to hired</h3>
-      <div class="pathwrap" id="pathWrap"></div>
-
-      <!-- HIRING PLAN (Pro, region-exact) -->
-      <div id="hpWrap" style="display:none">
-        <h3 class="display" style="font-size:20px;margin:36px 0 4px">How we get you hired</h3>
-        <p style="color:var(--muted);font-size:13.5px;margin-bottom:14px" id="hpSub"></p>
-        <div class="pathwrap" id="hpList"></div>
-        <p class="micro" style="margin-top:10px">Timelines assume you move on each step. No job or salary is guaranteed — this is the honest, realistic route.</p>
+      <!-- 4 · ROLES YOU QUALIFY FOR -->
+      <div class="dsec">
+        <div class="dsec-head"><h3>Roles you qualify for <span class="dim">· sample</span></h3><a href="jobs.html" class="dsec-link">All 5,000+ roles →</a></div>
+        <div id="fitList"></div>
+        <div id="fitLock" class="fitlock" style="display:none"></div>
+        <p class="micro" id="phoneRow" style="margin-top:14px"></p>
       </div>
 
-      <!-- SAMPLE MATCHED ROLES -->
-      <div style="display:flex;justify-content:space-between;align-items:baseline;margin:36px 0 12px">
-        <h3 class="display" style="font-size:20px">Roles you already qualify for <span style="color:var(--faint);font-weight:400;font-size:14px">· sample</span></h3>
-        <a href="jobs.html" style="color:var(--hi);font-size:13.5px;font-weight:600">All 5,000+ roles →</a>
+      <!-- 5 · APPLICATIONS (only when they exist) -->
+      <div class="dsec" id="appsWrap" style="display:none">
+        <div class="dsec-head"><h3>Your applications</h3></div>
+        <div class="panel" style="padding:8px 18px" id="appsBox"></div>
       </div>
-      <div id="fitList"></div>
-      <div id="fitLock" class="fitlock" style="display:none"></div>
 
-      <!-- PRO UNLOCK -->
+      <!-- 6 · UPGRADE (free users only) -->
       <div class="prounlock reveal" id="proCard" style="display:none">
         <div class="pu-lock">🔒</div>
         <h3 class="display" style="font-size:20px;margin:6px 0 10px">Unlock every matched role and the agencies that hire</h3>
@@ -78,12 +70,6 @@
         </ul>
         <a class="btn btn-go btn-lg" href="pricing.html">Unlock &amp; get hired — $120 →</a>
         <p class="micro" style="margin-top:12px">One payment, keep it for good · 800+ jobs found every month · No job or salary is guaranteed.</p>
-      </div>
-
-      <!-- APPLICATIONS (only when they exist) -->
-      <div id="appsWrap" style="display:none">
-        <h3 class="display" style="font-size:20px;margin:36px 0 12px">Where you’ve applied</h3>
-        <div class="panel" style="padding:8px 18px" id="appsBox"></div>
       </div>
 
     </div>
@@ -119,136 +105,109 @@ else {
   var pp = (paid && profile) ? HH.proPlan(intake, profile) : null;
   var gapCount = pp ? pp.gaps.length : missing.length;
 
-  /* ---- greeting: one idea ---- */
+  /* ---- 1 · greeting (status) + target line ---- */
   var greetH;
   if(paid && !profile) greetH='Two minutes from your exact plan'+(nm?', '+nm:'')+'.';
-  else if(gapCount) greetH='You are '+gapCount+' ticket'+(gapCount>1?'s':'')+' from applying'+(nm?', '+nm:'')+'.';
+  else if(gapCount) greetH='You’re '+gapCount+' ticket'+(gapCount>1?'s':'')+' from applying'+(nm?', '+nm:'')+'.';
   else if(!cvOk) greetH='One CV from applying'+(nm?', '+nm:'')+'.';
-  else if(appliedN===0) greetH='You are ready to apply'+(nm?', '+nm:'')+'.';
-  else greetH='You are on track'+(nm?', '+nm:'')+'.';
+  else if(appliedN===0) greetH='You’re ready to apply'+(nm?', '+nm:'')+'.';
+  else greetH='You’re on track'+(nm?', '+nm:'')+'.';
   document.getElementById('greetH').textContent=greetH;
-  document.getElementById('greetSub').textContent='Best fit right now: '+(sec.name||'offshore work')+(pp?(', '+pp.region.name):'')+'. Here is the one thing to do next.';
+  document.getElementById('greetSub').innerHTML='Target: <b>'+(sec.name||'offshore work')+'</b>'+
+    (pp?(' · '+pp.region.flag+' '+pp.region.name):'')+
+    ' · <a href="'+(paid?'setup.html':'start.html')+'" style="color:var(--hi)">change</a>';
 
-  /* profile row + honest right-to-work note */
-  if(pp){
-    document.getElementById('profileRow').style.display='block';
-    document.getElementById('profileRow').innerHTML=(profile.passport?profile.passport.n:'')+' passport → '+pp.region.flag+' '+pp.region.name+' · <a href="setup.html" style="color:var(--hi)">Change</a>';
-    if(pp.rtw.level!=='ok'){
-      var rn=document.getElementById('rtwNote');
-      rn.style.display='block';
-      rn.innerHTML='<b>'+(pp.rtw.level==='warn'?'⚠️ Straight talk on right to work:':'🛂 Right to work:')+'</b> '+pp.rtw.msg+
-        (pp.rtw.matrix?(' <span style="color:var(--muted)">('+pp.rtw.matrix+')</span>'):'')+
-        (pp.rtw.alts&&pp.rtw.alts.length?('<br><b>Where your passport works today:</b> '+pp.rtw.alts.map(function(a){return a.flag+' '+a.name;}).join(' · ')+' — <a href="setup.html" style="color:var(--hi)">switch target</a>'):'');
-    }
+  /* honest right-to-work note (only when it matters) */
+  if(pp && pp.rtw.level!=='ok'){
+    var rn=document.getElementById('rtwNote');
+    rn.style.display='block';
+    rn.innerHTML='<b>'+(pp.rtw.level==='warn'?'⚠️ Straight talk on right to work:':'🛂 Right to work:')+'</b> '+pp.rtw.msg+
+      (pp.rtw.matrix?(' <span style="color:var(--muted)">('+pp.rtw.matrix+')</span>'):'')+
+      (pp.rtw.alts&&pp.rtw.alts.length?('<br><b>Where your passport works today:</b> '+pp.rtw.alts.map(function(a){return a.flag+' '+a.name;}).join(' · ')+' — <a href="setup.html" style="color:var(--hi)">switch target</a>'):'');
   }
 
-  /* ---- one primary action ---- */
-  var nx;
-  if(paid && !profile){
-    nx={k:'◆ Your next step', h:'Build your exact plan',
-      p:'Tell us where you are and where you want to work — requirements change by region, and two minutes here turns your roadmap into the exact tickets, medical and agencies for that route.',
-      cta:'Start Pro setup →', href:'setup.html'};
-  } else if(pp && pp.gaps.length){
-    var g0=pp.gaps[0];
-    nx={k:'◆ Your next step', h:'Book your '+g0.name.split('(')[0].trim(),
-      p:'For '+pp.region.name+', this is the exact ticket blocking you. '+(g0.days?g0.days+', ':'')+(g0.cost?g0.cost+' — ':'')+'then you can start applying. '+(g0.provider?'We link you straight to '+g0.provider.name+'.':'Providers are linked in your roadmap.'),
-      cta:(g0.provider?'Find a course →':'Open my roadmap →'), href:(g0.provider?g0.provider.url:'roadmap.html'), ext:!!g0.provider};
-  } else if(missing.length && !pp){
-    var t0=missing[0]; var provs=HH.providers(t0.id)||[];
-    nx={k:'◆ Your next step', h:'Book your '+t0.name,
-      p:'This is the single ticket blocking the roles you already qualify for. '+(t0.days||'A few days')+', '+(t0.cost||'')+' — then you can start applying. We link you straight to accredited providers.',
-      cta:(provs.length?'Find a course →':'Open my roadmap →'), href:(provs.length?provs[0].url:'roadmap.html'), ext:!!provs.length};
-  } else if(!cvOk){
-    nx={k:'◆ Your next step', h:'Finish your offshore CV',
-      p:'You hold the required tickets — big head start. Twenty minutes with the builder formats it the way rig and vessel recruiters scan.',
-      cta:'Build my CV →', href:'cv.html'};
-  } else if(!paid){
-    nx={k:'◆ Your next step', h:'Reach the agencies that hire',
-      p:'Tickets done, CV done. The last step is applying through the crewing agencies for '+(sec.name||'your sector')+' — your shortlist unlocks with Pro.',
-      cta:'Unlock and apply →', href:'pricing.html'};
-  } else if(appliedN===0){
-    nx={k:'◆ Your next step', h:'Apply to your matched roles',
-      p:'Everything is in place. Apply to the roles you qualify for and register with your agency shortlist today.',
-      cta:'See matched jobs →', href:'jobs.html'};
-  } else {
-    nx={k:'◆ You are on track', h:'Keep the momentum',
-      p:'You have '+appliedN+' application'+(appliedN>1?'s':'')+' in motion. Follow up with agencies and keep your tickets current.',
-      cta:'Find more roles →', href:'jobs.html'};
-  }
-  document.getElementById('dNext').innerHTML=
-    '<span class="dnext-k">'+nx.k+'</span><h2>'+nx.h+'</h2><p>'+nx.p+'</p>'+
-    '<a class="btn btn-go btn-lg" href="'+nx.href+'"'+(nx.ext?' target="_blank" rel="noopener"':'')+'>'+nx.cta+'</a>';
-
-  /* ---- score + projected ---- */
+  /* ---- score ring + projection ---- */
   var n=document.getElementById('scoreN'), ring=document.getElementById('ring'), i=0;
   var t=setInterval(function(){ i+=Math.ceil(r.score/26); if(i>=r.score)i=r.score; n.textContent=i; ring.style.setProperty('--v',i); if(i>=r.score)clearInterval(t); },26);
   var proj=Math.min(97, r.score + (gapCount?18:0));
   var nextName = pp ? (pp.gaps[0]&&pp.gaps[0].name.split('(')[0].trim()) : (missing[0]&&missing[0].name.split('(')[0].trim());
   document.getElementById('scoreBlurb').textContent = (gapCount&&nextName)
-    ? 'Get '+nextName+' to reach ~'+proj+' and unlock applying.'
+    ? 'Get '+nextName+' to reach ~'+proj+'.'
     : r.blurb;
 
-  /* ---- named blockers ---- */
-  function brow(ok, label, state){
-    return '<div class="blockrow'+(ok?' ok':'')+'"><span class="bmark">'+(ok?'✓':'!')+'</span><span class="blabel">'+label+'</span><span class="bstate">'+state+'</span></div>';
-  }
-  var bl='';
-  if(pp){
-    bl+=brow(pp.rtw.level==='ok','Right to work — '+pp.region.name, pp.rtw.level==='ok'?'Confirmed':(pp.rtw.level==='sponsor'?'Contractor-sponsored':'Not automatic'));
-    bl+=brow(pp.medOk, (pp.medical||'Work medical').split(';')[0].split('(')[0].slice(0,34), pp.medOk?'Valid':'Needed');
-    if(pp.gaps.length) pp.gaps.slice(0,2).forEach(function(g){ bl+=brow(false, g.name.split('(')[0].trim(), 'Needed'); });
-    else bl+=brow(true,'Required tickets — '+pp.region.name,'All held');
-  } else {
-    bl+=brow(rtwOk,'Right to work', rtwOk?'Confirmed':'Needs visa / sponsorship');
-    bl+=brow(medOk,'Work / offshore medical', medOk?'Valid':'Needed');
-    if(missing.length) missing.slice(0,2).forEach(function(tk){ bl+=brow(false, tk.name.split('(')[0].trim(), 'Needed'); });
-    else bl+=brow(true,'Required tickets','All held');
-  }
-  bl+=brow(cvOk,'Offshore CV', cvOk?'Done':'Draft');
-  document.getElementById('blockers').innerHTML=bl;
   document.getElementById('phoneRow').innerHTML = (u.phone&&(''+u.phone).length>=6)
     ? '📱 Job alerts on · '+u.phone
     : '📱 <a href="javascript:void(0)" onclick="addPhone()" style="color:var(--hi)">Add your phone</a> for job alerts';
 
-  /* ---- path to hired: done collapsed, active loud, future dimmed ---- */
-  var steps=[
-    { h:'Confirm right to work and medical', done:(rtwOk&&medOk),
-      pDone:'Both done. You cleared the two hardest gates.',
-      pTodo:'Sort your right-to-work status and book the medical — the two hardest gates.' , meta:'' },
-    { h:'Get your required tickets', done:!missing.length,
-      pDone:'All required tickets held.',
-      pTodo:missing.length?('The only thing standing between you and live roles: '+missing.map(function(t){return t.name.split('(')[0].trim();}).join(' + ')+'.'):'',
-      meta:missing.length?((missing[0].days||'')+' · '+(missing[0].cost||'')):'' },
-    { h:'Finish your offshore CV', done:cvOk,
-      pDone:'CV done and recruiter-ready.',
-      pTodo:'Tickets and availability first, formatted the way recruiters scan.', meta:'20 minutes with the builder' },
-    { h:'Apply through the right agencies', done:false, pro:!paid,
-      pDone:'', pTodo:'Your shortlist of crewing agencies for '+(sec.name||'your sector')+'.', meta:paid?'':'Unlocks with Pro' }
+  /* ---- 3 · ONE unified path to hired (merges the old blockers + path + week plan) ---- */
+  var gaps = pp ? pp.gaps : missing;
+  var g0 = gaps[0];
+  var rtwDone = pp ? (pp.rtw.level==='ok') : rtwOk;
+  var medDone = pp ? pp.medOk : medOk;
+  var ticketsDone = !gaps.length;
+  var pathSteps=[
+    { title: pp ? ('Right to work — '+pp.region.name) : 'Confirm your right to work',
+      done: rtwDone,
+      detail: rtwDone ? 'Cleared — you can legally work your target region.'
+            : (pp ? (pp.rtw.msg||'Not automatic for your passport — see the note above.') : 'Confirm your visa / work authorisation for your target region.') },
+    { title:'Pass your work / offshore medical',
+      done: medDone,
+      detail: medDone ? 'Valid medical on file.'
+            : 'Book an offshore/OGUK-type fitness medical plus a drug & alcohol screen — the gate most people forget.' },
+    { title:'Get your required tickets',
+      done: ticketsDone,
+      detail: ticketsDone ? 'All required tickets held — you’re ready to apply.'
+            : ('You still need: '+gaps.slice(0,3).map(function(g){return g.name.split('(')[0].trim();}).join(', ')+'.'+(nextName?(' Getting '+nextName+' lifts your score to ~'+proj+'.'):'')),
+      meta: ticketsDone?'':((g0&&g0.days?g0.days:'')+(g0&&g0.days&&g0.cost?' · ':'')+(g0&&g0.cost?g0.cost:'')),
+      cta: ticketsDone?null:{ label:(g0&&g0.provider?'Find a course →':'Open my roadmap →'), href:(g0&&g0.provider?g0.provider.url:'roadmap.html'), ext:!!(g0&&g0.provider) } },
+    { title:'Build your offshore CV',
+      done: cvOk,
+      detail: cvOk ? 'Recruiter-ready CV done.'
+            : 'Format your tickets, medicals and reliability the way rig & vessel recruiters scan — about 20 minutes.',
+      cta: cvOk?null:{ label:'Build my CV →', href:'cv.html' } },
+    { title:'Apply through the right agencies',
+      done:false, locked:!paid,
+      detail: paid ? ('Apply to your matched roles and get on the books of '+(pp&&pp.agencies.length?pp.agencies.slice(0,2).map(function(a){return a.name;}).join(' & '):'the crewing agencies for '+(sec.name||'your sector'))+'.')
+            : 'The crewing agencies that actually hire for '+(sec.name||'your sector')+' — your shortlist and applying unlock with Pro.',
+      cta: paid?{ label:'See matched roles →', href:'jobs.html' }:{ label:'Unlock & apply →', href:'pricing.html' } }
   ];
-  var activeIdx=steps.findIndex(function(s){return !s.done;}); if(activeIdx<0) activeIdx=steps.length-1;
-  document.getElementById('pathWrap').innerHTML=steps.map(function(s,ix){
-    var cls=s.done?'done':(ix===activeIdx?'active':'future');
-    var body=s.done?s.pDone:s.pTodo;
+  var doneN = pathSteps.filter(function(s){return s.done;}).length;
+  var activeIdx = pathSteps.findIndex(function(s){return !s.done && !s.locked;}); if(activeIdx<0) activeIdx=pathSteps.length-1;
+  document.getElementById('pathMeta').textContent = doneN+' of '+pathSteps.length+' done';
+
+  /* ---- 2 · THE one next action — always the path's active step, so hero and path agree ---- */
+  var nx, a=pathSteps[activeIdx];
+  if(paid && !profile){
+    nx={k:'◆ Your next step', h:'Build your exact plan',
+      p:'Two minutes on where you are and where you want to work turns your roadmap into the exact tickets, medical and agencies for your route.',
+      cta:{label:'Start Pro setup →', href:'setup.html'}};
+  } else if(appliedN>0 && ticketsDone && cvOk){
+    nx={k:'◆ You’re on track', h:'Keep the momentum',
+      p:'You have '+appliedN+' application'+(appliedN>1?'s':'')+' in motion. Follow up with your agencies and keep your tickets current.',
+      cta:{label:'Find more roles →', href:'jobs.html'}};
+  } else {
+    nx={k:'◆ Your next step · step '+(activeIdx+1)+' of '+pathSteps.length, h:a.title,
+      p:a.detail, cta:a.cta||{label:'Open my roadmap →', href:'roadmap.html'}};
+  }
+  document.getElementById('dNext').innerHTML=
+    '<span class="dnext-k">'+nx.k+'</span><h2>'+nx.h+'</h2><p>'+nx.p+'</p>'+
+    '<a class="btn btn-go btn-lg" href="'+nx.cta.href+'"'+(nx.cta.ext?' target="_blank" rel="noopener"':'')+'>'+nx.cta.label+'</a>';
+  document.getElementById('pathWrap').innerHTML = pathSteps.map(function(s,ix){
+    var cls = s.done?'done':(s.locked?'locked':(ix===activeIdx?'active':'future'));
+    var num = s.done?'✓':(s.locked?'🔒':(ix+1));
+    var showCta = s.cta && (ix===activeIdx || s.locked);
+    var cta = showCta ? '<a class="btn btn-go btn-sm" href="'+s.cta.href+'"'+(s.cta.ext?' target="_blank" rel="noopener"':'')+' style="margin-top:12px">'+s.cta.label+'</a>' : '';
     return '<div class="pathstep '+cls+'">'+
-      '<span class="ps-n">'+(s.done?'✓':(ix+1))+'</span>'+
-      '<div class="ps-b"><h4>'+s.h+'</h4>'+(body?'<p>'+body+'</p>':'')+
-      (!s.done&&s.meta?'<small>'+(ix===activeIdx?'In progress · ':'Next up · ')+s.meta+'</small>':'')+
-      (s.pro&&!s.done?'<a class="btn btn-go btn-sm" href="pricing.html" style="margin-top:10px">Unlock →</a>':'')+
+      '<span class="ps-n">'+num+'</span>'+
+      '<div class="ps-b"><h4>'+s.title+'</h4><p>'+s.detail+'</p>'+
+      (!s.done&&s.meta?'<small>'+(ix===activeIdx?'You’re here · ':'Next up · ')+s.meta+'</small>':'')+
+      cta+
       '</div></div>';
   }).join('');
-
-  /* ---- hiring plan (Pro, region-exact) ---- */
-  if(pp){
-    document.getElementById('hpWrap').style.display='block';
-    document.getElementById('hpSub').textContent='Your route into '+pp.region.name+
-      (pp.estCost?(' · est. ticket outlay ~$'+pp.estCost.toLocaleString()):'')+
-      ' · agencies: '+(pp.agencies.map(function(a){return a.name;}).slice(0,3).join(', ')||'in your directory');
-    document.getElementById('hpList').innerHTML=pp.weeks.map(function(w,ix){
-      return '<div class="pathstep '+(ix===0?'active':'future')+'">'+
-        '<span class="ps-n" style="font-size:10px">'+w.w.replace('Week ','W').replace('–','–')+'</span>'+
-        '<div class="ps-b"><h4>'+w.h+'</h4><p>'+w.p+'</p></div></div>';
-    }).join('');
-  }
+  var pn=document.getElementById('pathNote'); pn.style.display='block';
+  pn.innerHTML = pp
+    ? '⏱ Realistic route into '+pp.region.name+': tickets + medical in ~2 weeks · CV + agency sign-ups · first applications week 3 · first offers ~week 3–6.'+(pp.estCost?(' Est. ticket outlay ~$'+pp.estCost.toLocaleString()+'.'):'')+' Move on each step — no job or salary is guaranteed.'
+    : '⏱ Move on each step and most members are applying within ~3 weeks, with first offers around week 3–6. No job or salary is guaranteed.';
 
   /* ---- sample matched roles with fit % ---- */
   function fit(j){
