@@ -12,7 +12,8 @@ var CONFIG = {
   SUPABASE_URL: 'https://ossyctgqycfkcdcncpgg.supabase.co',   // durable lead capture (Supabase REST)
   SUPABASE_KEY: 'sb_publishable_GQGwqejtKqPBwUXOQe0E0w_d4iHupij', // publishable key (safe in client)
   // Stripe Payment Links (fastest path). Leave '' to use /api/checkout.
-  PAY: { pro_monthly:'https://buy.stripe.com/00wbITeEv0vv5WZbeu63K0c', pro_annual:'', fasttrack:'https://buy.stripe.com/fZu14faof7XXfxz1DU63K0e', starter:'' }
+  // One-time plans (no subscription). Add a Stripe Payment Link per tier; '' = graceful signup fallback.
+  PAY: { plan48:'', pro:'', dfy:'https://buy.stripe.com/fZu14faof7XXfxz1DU63K0e' }
 };
 window.HH_CONFIG = CONFIG;
 
@@ -408,7 +409,10 @@ var Auth = {
   setPhone: function(phone){ var u=get('user')||{name:'Crew',email:'',ts:Date.now()}; u.phone=phone||''; set('user',u); return u; },
   plan: function(){ return get('plan','free'); },
   setPlan: function(p){ set('plan',p); ga('plan_set',{plan:p}); },
-  isPaid: function(){ var p=get('plan','free'); return p==='pro'||p==='pro_annual'||p==='fasttrack'; },
+  // one-time tier ladder: 0 free · 1 Rig-Ready Plan ($48) · 2 Rig-Ready Pro ($120) · 3 Done-For-You ($190)
+  tier: function(){ var m={plan48:1,pro:2,dfy:3}; return m[get('plan','free')] || 0; },
+  isPaid: function(){ return this.tier() >= 1; },
+  isPro: function(){ return this.tier() >= 2; },   // CV builder, templates, prep (Pro+)
   intake: function(){ return get('intake'); },
   setIntake: function(o){ set('intake', o); },
   tickets: function(){ return get('tickets_done', {}); },
@@ -686,12 +690,12 @@ window.HH.expandCatalog = function(d){
 /* Everything requires an account. Google is offered after the paywall.*/
 /* ------------------------------------------------------------------ */
 var GOOG_SVG = '<svg viewBox="0 0 48 48" width="18" height="18" style="flex:none"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.6l6.8-6.8C35.9 2.4 30.3 0 24 0 14.6 0 6.5 5.4 2.6 13.2l7.9 6.1C12.3 13.2 17.7 9.5 24 9.5z"/><path fill="#4285F4" d="M46.1 24.6c0-1.6-.1-3.1-.4-4.6H24v9.1h12.4c-.5 2.9-2.1 5.3-4.6 6.9l7.1 5.5c4.2-3.9 6.6-9.6 6.6-16.9z"/><path fill="#FBBC05" d="M10.5 28.3c-.5-1.5-.8-3-.8-4.6s.3-3.2.8-4.6l-7.9-6.1C.9 16.1 0 19.9 0 23.7s.9 7.6 2.6 10.8l7.9-6.2z"/><path fill="#34A853" d="M24 47.4c6.3 0 11.7-2.1 15.6-5.7l-7.1-5.5c-2 1.3-4.5 2.1-8.5 2.1-6.3 0-11.7-3.7-13.5-9.1l-7.9 6.1C6.5 42.6 14.6 47.4 24 47.4z"/></svg>';
-var _gate = { next:null, mode:'register', plan:'pro_monthly' };
+var _gate = { next:null, mode:'register', plan:'plan48' };
 function authGate(opts){
   opts = opts || {};
   _gate.next = opts.next || null;
   _gate.mode = opts.mode || 'register';
-  _gate.plan = opts.plan || 'pro_monthly';
+  _gate.plan = opts.plan || 'plan48';
   ga('auth_gate_view', { mode:_gate.mode });
   var pro = _gate.mode === 'pro';
   var m = document.getElementById('gateModal');
@@ -699,15 +703,15 @@ function authGate(opts){
   m.innerHTML =
     '<div class="mbox" style="max-width:430px">'+
       '<span class="mclose" onclick="HH.closeGate()">×</span>'+
-      '<div class="popbadge">'+(pro ? 'HardHat Pro · $48/mo' : 'Free account')+'</div>'+
-      '<h3 class="display" style="font-size:24px;margin:10px 0 6px">'+(opts.title || (pro ? 'Unlock this with HardHat Pro' : 'Create your free account'))+'</h3>'+
+      '<div class="popbadge">'+(pro ? 'Unlock · from $48 one-time' : 'Free account')+'</div>'+
+      '<h3 class="display" style="font-size:24px;margin:10px 0 6px">'+(opts.title || (pro ? 'Unlock your get-hired plan' : 'Create your free account'))+'</h3>'+
       '<p style="color:var(--muted);font-size:14.5px;margin-bottom:18px">'+(opts.reason || 'Register to continue — it takes 10 seconds and saves your progress.')+'</p>'+
-      (pro ? '<ul class="gatelist"><li>Apply to jobs + real agency contacts</li><li>Full ticket roadmap & AI offshore CV</li><li>Unlimited saved jobs & alerts</li></ul><p class="guarantee" style="text-align:left;margin:0 0 14px">🔒 Secure checkout · Cancel anytime · <span class="hi">800+ jobs found every month</span></p>' : '')+
+      (pro ? '<ul class="gatelist"><li>Apply to jobs + real agency contacts</li><li>Full ticket roadmap for your region</li><li>Unlimited saved jobs & alerts</li></ul><p class="guarantee" style="text-align:left;margin:0 0 14px">🔒 One-time payment, keep it for good · <span class="hi">800+ jobs found every month</span></p>' : '')+
       '<button class="gbtn" onclick="HH.authGoogle()">'+GOOG_SVG+' Continue with Google</button>'+
       '<div class="ordiv"><span>or</span></div>'+
       '<input class="inp" id="gateEmail" type="email" placeholder="you@email.com" style="margin-bottom:10px" onkeydown="if(event.key===\'Enter\')HH.authEmail()">'+
       '<button class="btn btn-hi btn-block btn-lg" onclick="HH.authEmail()">Continue with email →</button>'+
-      '<p style="text-align:center;margin-top:12px;font-size:12px;color:var(--faint)">Free to join.'+(pro ? ' Choose a plan after you sign in.' : ' No spam, unsubscribe anytime.')+'</p>'+
+      '<p style="text-align:center;margin-top:12px;font-size:12px;color:var(--faint)">Free to join.'+(pro ? ' Pick your plan after you sign in.' : ' No spam, unsubscribe anytime.')+'</p>'+
     '</div>';
   m.classList.add('on');
 }
@@ -716,7 +720,7 @@ function finishGate(){
   var next = _gate.next, mode = _gate.mode, plan = _gate.plan;
   _gate.next = null;
   if(typeof next === 'function'){ try{ next(); }catch(e){} }
-  else if(mode === 'pro'){ HH.checkout(plan); }
+  else if(mode === 'pro'){ window.location.href = 'pricing.html'; }   // let them pick a tier
 }
 window.HH.closeGate = function(){ var m=document.getElementById('gateModal'); if(m) m.classList.remove('on'); };
 function loadGSI(cb){
@@ -757,7 +761,7 @@ window.HH.requireAuth = function(next, reason, title){
   authGate({ mode:'register', reason:reason, title:title, next:next });
 };
 /* paywall = pro-mode auth gate (Continue with Google shown here, after the paywall) */
-function showPaywall(reason){ authGate({ mode:'pro', reason:reason, plan:'pro_monthly' }); }
+function showPaywall(reason){ authGate({ mode:'pro', reason:reason, plan:'plan48' }); }
 window.HH.closePaywall = window.HH.closeGate;
 window.HH.showPaywall = showPaywall;
 
@@ -794,7 +798,7 @@ var I18N = {
     s1_h:'Find the job', s1_p:'Take the 2-minute assessment. We match you to real roles you qualify for across 8 sectors and 10+ global hubs.',
     s2_h:'Get qualified', s2_p:'Your own ticket and medical roadmap (BOSIET, GWO, STCW, CDL) with costs, timeframes and progress you can track.',
     s3_h:'Get hired', s3_p:'Build an offshore CV, then apply through the crewing agencies and operators that hire.',
-    lbl_pricing:'Pricing', h_pricing:'One plan. Everything to get you hired.',
+    lbl_pricing:'Pricing', h_pricing:'Simple one-time pricing. No subscription.',
     rev_rated:'Rated 4.8 / 5', accred_cap:'Accredited training we guide you to',
     pop_h:'Your first offshore job in ~3–6 weeks?', pop_p:'Get the free 3-week plan: the exact tickets, the agencies that hire, and the route for your region.', pop_cta:'Get my free 3-week plan →',
     f_cont:'Continue →', f_back:'← Back', f_getplan:'Get my plan →'
@@ -813,7 +817,7 @@ var I18N = {
     s1_h:'Encuentra el trabajo', s1_p:'Haz la evaluación de 2 minutos. Te conectamos con vacantes reales para las que calificas en 8 sectores y más de 10 centros globales.',
     s2_h:'Califícate', s2_p:'Tu propia ruta de certificados y exámenes médicos (BOSIET, GWO, STCW, CDL) con costos, plazos y progreso que puedes seguir.',
     s3_h:'Consigue el empleo', s3_p:'Crea un CV offshore y postúlate a través de las agencias de tripulación y operadores que contratan.',
-    lbl_pricing:'Precios', h_pricing:'Un plan. Todo para que te contraten.',
+    lbl_pricing:'Precios', h_pricing:'Precio único y simple. Sin suscripción.',
     rev_rated:'Calificado 4.8 / 5', accred_cap:'Formación acreditada a la que te guiamos',
     pop_h:'¿Tu primer empleo offshore en ~3–6 semanas?', pop_p:'Recibe el plan gratuito de 3 semanas: los certificados exactos, las agencias que contratan y la ruta para tu región.', pop_cta:'Quiero mi plan de 3 semanas →',
     f_cont:'Continuar →', f_back:'← Atrás', f_getplan:'Ver mi plan →'

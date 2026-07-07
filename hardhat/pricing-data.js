@@ -1,39 +1,39 @@
-/* HardHat — shared pricing data + renderer */
+/* HardHat — shared pricing data + renderer
+   One-time pricing, no subscription. Good / better / best — middle is the anchor. */
 var HH_PRICING = [
   {
-    id:'starter', name:'Rig-Ready Starter Guide', price:'$24', per:'one-time', note:'Credits toward Pro if you upgrade',
-    plan:'starter', cta:'Get the Starter Guide', href:'#', feat:false,
+    id:'plan48', name:'Rig-Ready Plan', price:'$48', per:'one-time', note:'Your route — do it yourself',
+    plan:'plan48', cta:'Get my plan', href:'#', feat:false,
     features:[
-      {t:'Your region’s exact ticket roadmap (PDF)', on:true},
-      {t:'Real ticket & medical cost checklist', on:true},
-      {t:'Starter list of agencies that hire in your region', on:true},
-      {t:'The pre-access drug test nobody warns you about', on:true},
-      {t:'$24 credited toward Pro if you upgrade', on:true}
+      {t:'Your exact ticket & medical roadmap for your region', on:true},
+      {t:'Apply to every job + full crewing-agency contacts', on:true},
+      {t:'Unlimited saved jobs + job alerts', on:true},
+      {t:'Personalized job recommendations', on:true},
+      {t:'Pay & rotation explorer', on:true},
+      {t:'One payment — keep it for good, no subscription', on:true}
     ]
   },
   {
-    id:'pro', name:'HardHat Pro', price:'$48', per:'/month', note:'or $290/yr — save 50%',
-    plan:'pro_monthly', cta:'Go Pro', href:'#', feat:true,
+    id:'pro', name:'Rig-Ready Pro', price:'$120', per:'one-time', note:'Guided — the tools do the work',
+    plan:'pro', cta:'Go Pro', href:'#', feat:true,
     features:[
-      {t:'Everything in Deckhand', on:true},
-      {t:'Apply to jobs + full agency contacts', on:true},
-      {t:'Full ticket & medical roadmap tracker', on:true},
-      {t:'Personalized recommendations', on:true},
-      {t:'Unlimited saved jobs + job alerts', on:true},
+      {t:'Everything in Rig-Ready Plan', on:true},
       {t:'AI offshore CV builder', on:true},
       {t:'Application templates that get replies', on:true},
-      {t:'Done-for-you CV + agency shortlist', on:false}
+      {t:'Your week-by-week get-hired plan (region-exact)', on:true},
+      {t:'Interview & medical prep guide', on:true},
+      {t:'Priority email support', on:true}
     ]
   },
   {
-    id:'fasttrack', name:'Fast-Track', price:'$190', per:'one-time', note:'Hired-in-90-days push',
-    plan:'fasttrack', cta:'Get Fast-Track', href:'#', feat:false,
+    id:'dfy', name:'Done-For-You', price:'$190', per:'one-time', note:'We do the hard part for you',
+    plan:'dfy', cta:'Get Done-For-You', href:'#', feat:false,
     features:[
-      {t:'Done-for-you offshore CV — we write it for you', on:true},
-      {t:'Everything in Pro for 3 months', on:true},
-      {t:'Curated agency shortlist (your sector + region)', on:true},
-      {t:'Medical & interview prep guide', on:true},
-      {t:'Priority “get hired” support', on:true},
+      {t:'Everything in Rig-Ready Pro', on:true},
+      {t:'We write your offshore CV for you', on:true},
+      {t:'Hand-picked agency shortlist (your sector + region)', on:true},
+      {t:'We get you registered with the right agencies', on:true},
+      {t:'1:1 priority “get hired” support', on:true},
       {t:'Your fastest realistic route to signing on', on:true}
     ]
   }

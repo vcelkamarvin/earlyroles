@@ -1,7 +1,7 @@
 // HardHat — /api/checkout  (Vercel Serverless Function, CommonJS)
 // Creates a Stripe Checkout Session for a plan. Returns {url} to redirect to.
-// Activates when these env vars are set on Vercel:
-//   STRIPE_SECRET_KEY, STRIPE_PRICE_PRO_MONTHLY, STRIPE_PRICE_PRO_ANNUAL, STRIPE_PRICE_FASTTRACK
+// Activates when these env vars are set on Vercel (all one-time payments):
+//   STRIPE_SECRET_KEY, STRIPE_PRICE_PLAN48, STRIPE_PRICE_PRO, STRIPE_PRICE_DFY
 // Until then it returns {error:"not_configured"} and the site falls back to signup.
 
 module.exports = async (req, res) => {
@@ -15,9 +15,9 @@ module.exports = async (req, res) => {
 
   const key = process.env.STRIPE_SECRET_KEY;
   const map = {
-    'pro_monthly': { price: process.env.STRIPE_PRICE_PRO_MONTHLY, mode: 'subscription' },
-    'pro_annual':  { price: process.env.STRIPE_PRICE_PRO_ANNUAL,  mode: 'subscription' },
-    'fasttrack':   { price: process.env.STRIPE_PRICE_FASTTRACK,   mode: 'payment' }
+    'plan48': { price: process.env.STRIPE_PRICE_PLAN48, mode: 'payment' },
+    'pro':    { price: process.env.STRIPE_PRICE_PRO,    mode: 'payment' },
+    'dfy':    { price: process.env.STRIPE_PRICE_DFY,    mode: 'payment' }
   };
   const cfg = map[plan];
   if (!key || !cfg || !cfg.price) { res.status(200).json({ error: 'not_configured' }); return; }

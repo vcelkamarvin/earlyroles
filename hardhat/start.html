@@ -186,19 +186,20 @@
 
       <div class="offerbox">
         <div class="offerbox-top"></div>
-        <div class="popbadge">HardHat Pro</div>
+        <div class="popbadge">Rig-Ready Plan</div>
         <h3 class="display" style="font-size:21px;margin:8px 0 4px">Everything you need to get hired</h3>
         <ul class="valuestack">
-          <li><span>✓ Full ticket &amp; medical roadmap</span><b>$120</b></li>
-          <li><span>✓ AI offshore CV builder</span><b>$90</b></li>
-          <li><span>✓ Crewing-agency shortlist + direct contacts</span><b>$150</b></li>
+          <li><span>✓ Your exact ticket &amp; medical roadmap</span><b>$120</b></li>
           <li><span>✓ Apply to every matched job</span><b>$140</b></li>
-          <li><span>✓ Personal recommendations &amp; job alerts</span><b>incl.</b></li>
+          <li><span>✓ Crewing-agency contacts that hire</span><b>$150</b></li>
+          <li><span>✓ Personal recommendations &amp; job alerts</span><b>$90</b></li>
+          <li><span>✓ Pay &amp; rotation explorer</span><b>incl.</b></li>
         </ul>
         <div class="valuetotal"><span>Total value</span><b><s>$500+</s></b></div>
-        <div class="offerprice"><b>$48</b><span>/month</span></div>
-        <button class="btn btn-go btn-block btn-lg" onclick="offerUnlock('pro_monthly')">Get me hired →</button>
-        <p class="guarantee">🔒 Secure checkout · Cancel anytime · <span class="hi">800+ jobs found every month</span></p>
+        <div class="offerprice"><b>$48</b><span>one-time</span></div>
+        <button class="btn btn-go btn-block btn-lg" onclick="offerUnlock('plan48')">Get me hired →</button>
+        <p class="guarantee">🔒 One-time payment, keep it for good · <span class="hi">800+ jobs found every month</span></p>
+        <p class="micro" style="text-align:center;margin-top:8px"><a href="pricing.html" style="color:var(--muted)">Want us to do it for you? See all plans →</a></p>
       </div>
 
       <div class="offreviews">
@@ -228,8 +229,8 @@
         <div class="lk">🔒</div>
         <h3 class="display" style="font-size:20px;margin:8px 0 6px">Unlock your full roadmap + matched jobs</h3>
         <p style="color:var(--muted);font-size:14px;max-width:44ch;margin:0 auto 16px">See every ticket you need with costs & where to get them, the exact jobs you already qualify for, and the crewing agencies hiring right now.</p>
-        <a class="btn btn-hi btn-lg" href="pricing.html">Unlock HardHat Pro →</a>
-        <p class="micro">$48/mo · cancel anytime</p>
+        <a class="btn btn-hi btn-lg" href="pricing.html">Unlock from $48 →</a>
+        <p class="micro">One-time payment · no subscription</p>
       </div>
 
       <div class="grid2" style="margin-top:18px">
@@ -378,7 +379,7 @@ function showOffer(){
   window.scrollTo({top:0,behavior:'smooth'});
   HH.ga('offer_view',{sector:data.sector});
 }
-function offerUnlock(plan){ HH.ga('offer_unlock',{plan:plan||'pro_monthly'}); HH.checkout(plan||'pro_monthly'); }
+function offerUnlock(plan){ HH.ga('offer_unlock',{plan:plan||'plan48'}); HH.checkout(plan||'plan48'); }
 function offerSkip(){ HH.ga('offer_skip',{}); document.getElementById('offer').style.display='none'; showResult(); }
 window.offerUnlock=offerUnlock; window.offerSkip=offerSkip;
 function showResult(){

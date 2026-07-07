@@ -40,10 +40,11 @@ function verifySig(raw, header, secret) {
   });
 }
 
-function planFromAmount(amountTotal, mode) {
-  if (mode === 'payment') return 'fasttrack';
-  if (amountTotal >= 20000) return 'pro_annual';   // $290/yr
-  return 'pro';                                     // $48/mo
+function planFromAmount(amountTotal) {
+  // one-time tiers, in cents: $48 / $120 / $190
+  if (amountTotal >= 17000) return 'dfy';    // $190
+  if (amountTotal >= 9000)  return 'pro';    // $120
+  return 'plan48';                           // $48
 }
 
 async function upsert(row) {

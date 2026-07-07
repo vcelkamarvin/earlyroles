@@ -50,7 +50,7 @@ sec.innerHTML=HH_SECTORS.map(function(s){return '<option value="'+s.id+'">'+s.na
 if(intake&&intake.sector) sec.value=intake.sector;
 
 function gen(){
-  if(!HH.Auth.isPaid()){ HH.showPaywall('The AI offshore CV builder is a Pro feature. Unlock it to get a recruiter-ready CV.'); return; }
+  if(!HH.Auth.isPro()){ HH.showPaywall('The AI offshore CV builder is part of Rig-Ready Pro ($120 one-time). Unlock it to get a recruiter-ready CV.'); return; }
   var text=document.getElementById('src').value.trim();
   if(text.length<20){ HH.toast('Add a bit more about your background'); return; }
   var btn=document.getElementById('genBtn'); btn.disabled=true;

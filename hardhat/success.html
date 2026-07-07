@@ -27,15 +27,16 @@
 <script>
 HH.mountChrome('');
 var qs=new URLSearchParams(location.search);
-var plan=qs.get('plan')||'pro_monthly'; var sid=qs.get('session_id')||'';
+var plan=qs.get('plan')||'plan48'; var sid=qs.get('session_id')||'';
+var VALID={plan48:1,pro:1,dfy:1};
 fetch('/api/verify-checkout?plan='+encodeURIComponent(plan)+'&session_id='+encodeURIComponent(sid))
   .then(function(r){return r.json();})
   .then(function(j){
     if(j&&j.paid){
-      var p=plan==='fasttrack'?'fasttrack':(plan==='pro_annual'?'pro_annual':'pro');
+      var p=VALID[plan]?plan:'plan48';
       HH.Auth.setPlan(p);
-      document.getElementById('h').textContent='You’re in. Welcome to HardHat Pro.';
-      document.getElementById('p').textContent='Your full roadmap, agency directory and CV builder are unlocked.';
+      document.getElementById('h').textContent='You’re in. Your plan is unlocked.';
+      document.getElementById('p').textContent='Your roadmap, agency contacts and matched jobs are ready.';
       document.getElementById('cta').style.display='flex'; var sn=document.getElementById('setupNote'); if(sn) sn.style.display='block';
     } else {
       document.getElementById('h').textContent='Payment not confirmed';
@@ -43,7 +44,7 @@ fetch('/api/verify-checkout?plan='+encodeURIComponent(plan)+'&session_id='+encod
     }
   })
   .catch(function(){
-    HH.Auth.setPlan('pro');
+    HH.Auth.setPlan(VALID[plan]?plan:'plan48');
     document.getElementById('h').textContent='You’re in.';
     document.getElementById('cta').style.display='flex'; var sn=document.getElementById('setupNote'); if(sn) sn.style.display='block';
   });
