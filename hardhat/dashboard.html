@@ -76,7 +76,7 @@
           <li><span>✓ Crewing-agency contacts that hire</span><b>$150</b></li>
           <li><span>✓ Full region roadmap</span><b>$120</b></li>
         </ul>
-        <a class="btn btn-go btn-lg" href="pricing.html">Unlock from $48 — one-time →</a>
+        <a class="btn btn-go btn-lg" href="pricing.html">Unlock &amp; get hired — $120 →</a>
         <p class="micro" style="margin-top:12px">One payment, keep it for good · 800+ jobs found every month · No job or salary is guaranteed.</p>
       </div>
 
@@ -96,7 +96,9 @@
 <script>
 HH.mountChrome('dashboard.html');
 var u=HH.Auth.user()||{}; var intake=HH.Auth.intake();
-var paid=HH.Auth.isPaid();
+// On the dashboard "paid" = has the get-hired product (Pro+). Basics ($32) users
+// are still upsold to Pro here; their roadmap/saved-jobs value lives on those pages.
+var paid=HH.Auth.isPro();
 var nm=(u.name||'').split(' ')[0]; if(nm&&nm.toLowerCase()==='crew') nm='';
 
 if(!intake){ document.getElementById('noIntake').style.display='block'; }

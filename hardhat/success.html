@@ -27,13 +27,13 @@
 <script>
 HH.mountChrome('');
 var qs=new URLSearchParams(location.search);
-var plan=qs.get('plan')||'plan48'; var sid=qs.get('session_id')||'';
-var VALID={plan48:1,pro:1,dfy:1};
+var plan=qs.get('plan')||'basic'; var sid=qs.get('session_id')||'';
+var VALID={basic:1,pro:1,dfy:1};
 fetch('/api/verify-checkout?plan='+encodeURIComponent(plan)+'&session_id='+encodeURIComponent(sid))
   .then(function(r){return r.json();})
   .then(function(j){
     if(j&&j.paid){
-      var p=VALID[plan]?plan:'plan48';
+      var p=VALID[plan]?plan:'basic';
       HH.Auth.setPlan(p);
       document.getElementById('h').textContent='You’re in. Your plan is unlocked.';
       document.getElementById('p').textContent='Your roadmap, agency contacts and matched jobs are ready.';
@@ -44,7 +44,7 @@ fetch('/api/verify-checkout?plan='+encodeURIComponent(plan)+'&session_id='+encod
     }
   })
   .catch(function(){
-    HH.Auth.setPlan(VALID[plan]?plan:'plan48');
+    HH.Auth.setPlan(VALID[plan]?plan:'basic');
     document.getElementById('h').textContent='You’re in.';
     document.getElementById('cta').style.display='flex'; var sn=document.getElementById('setupNote'); if(sn) sn.style.display='block';
   });

@@ -19,16 +19,16 @@ All three plans are **one-time payments** (no subscription).
 | Var | Purpose |
 |-----|---------|
 | `STRIPE_SECRET_KEY` | Your Stripe secret key |
-| `STRIPE_PRICE_PLAN48` | Price ID for Rig-Ready Plan ($48, one-time) |
-| `STRIPE_PRICE_PRO` | Price ID for Rig-Ready Pro ($120, one-time) |
+| `STRIPE_PRICE_BASIC` | Price ID for Rig-Ready Basics ($32, one-time) |
+| `STRIPE_PRICE_PRO` | Price ID for Rig-Ready Pro ($120, one-time — the flagship) |
 | `STRIPE_PRICE_DFY` | Price ID for Done-For-You ($190, one-time) |
 
 ### Quick alternative: Stripe Payment Links (fastest — no secret key)
-Create three **one-time** Payment Links in the Stripe dashboard ($48, $120, $190) and paste the URLs into `app.js` → `CONFIG.PAY`:
+Create three **one-time** Payment Links in the Stripe dashboard ($32, $120, $190) and paste the URLs into `app.js` → `CONFIG.PAY`:
 ```
-PAY: { plan48:'https://buy.stripe.com/…', pro:'https://buy.stripe.com/…', dfy:'https://buy.stripe.com/…' }
+PAY: { basic:'https://buy.stripe.com/…', pro:'https://buy.stripe.com/…', dfy:'https://buy.stripe.com/…' }
 ```
-The front-end uses these first, before `/api/checkout`. This makes checkout live immediately without a secret key. (`dfy` currently reuses the previous $190 one-time link — verify or replace it.)
+The front-end uses these first, before `/api/checkout`. This makes checkout live immediately without a secret key. (`dfy` currently reuses the previous $190 one-time link — verify or replace it; `basic` and `pro` need new $32/$120 links.)
 
 ## Google sign-in ("Continue with Google")
 The "Continue with Google" buttons currently use a demo (mock) sign-in that creates a local account. To make it a real Google login, set `CONFIG.GOOGLE_CLIENT_ID` in `app.js` to your Google OAuth Web Client ID and add the Google Identity Services flow (the mock `HH.authGoogle` / `googleSignup` handlers are the swap points).

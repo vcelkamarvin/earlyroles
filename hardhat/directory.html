@@ -38,7 +38,7 @@
 <script src="app.js"></script>
 <script>
 HH.mountChrome('directory.html');
-var paid=HH.Auth.isPaid();
+var paid=HH.Auth.isPro();   // full agency contacts unlock with Rig-Ready Pro ($120)
 var sel=document.getElementById('secSel'), reg=document.getElementById('regSel');
 HH_SECTORS.forEach(function(s){ var o=document.createElement('option'); o.value=s.id; o.textContent=s.icon+' '+s.name; sel.appendChild(o); });
 var regions=[]; HH_AGENCIES.forEach(function(a){ if(a.region && regions.indexOf(a.region)<0) regions.push(a.region); });

@@ -13,7 +13,7 @@ var CONFIG = {
   SUPABASE_KEY: 'sb_publishable_GQGwqejtKqPBwUXOQe0E0w_d4iHupij', // publishable key (safe in client)
   // Stripe Payment Links (fastest path). Leave '' to use /api/checkout.
   // One-time plans (no subscription). Add a Stripe Payment Link per tier; '' = graceful signup fallback.
-  PAY: { plan48:'', pro:'', dfy:'https://buy.stripe.com/fZu14faof7XXfxz1DU63K0e' }
+  PAY: { basic:'', pro:'', dfy:'https://buy.stripe.com/fZu14faof7XXfxz1DU63K0e' }
 };
 window.HH_CONFIG = CONFIG;
 
@@ -409,10 +409,10 @@ var Auth = {
   setPhone: function(phone){ var u=get('user')||{name:'Crew',email:'',ts:Date.now()}; u.phone=phone||''; set('user',u); return u; },
   plan: function(){ return get('plan','free'); },
   setPlan: function(p){ set('plan',p); ga('plan_set',{plan:p}); },
-  // one-time tier ladder: 0 free · 1 Rig-Ready Plan ($48) · 2 Rig-Ready Pro ($120) · 3 Done-For-You ($190)
-  tier: function(){ var m={plan48:1,pro:2,dfy:3}; return m[get('plan','free')] || 0; },
-  isPaid: function(){ return this.tier() >= 1; },
-  isPro: function(){ return this.tier() >= 2; },   // CV builder, templates, prep (Pro+)
+  // one-time tier ladder: 0 free · 1 Basics ($32) · 2 Rig-Ready Pro ($120, flagship) · 3 Done-For-You ($190)
+  tier: function(){ var m={basic:1,pro:2,dfy:3}; return m[get('plan','free')] || 0; },
+  isPaid: function(){ return this.tier() >= 1; },   // roadmap, cost checklist, unlimited saved jobs
+  isPro: function(){ return this.tier() >= 2; },    // apply, agency contacts, CV builder, week-by-week plan, prep
   intake: function(){ return get('intake'); },
   setIntake: function(o){ set('intake', o); },
   tickets: function(){ return get('tickets_done', {}); },
@@ -690,12 +690,12 @@ window.HH.expandCatalog = function(d){
 /* Everything requires an account. Google is offered after the paywall.*/
 /* ------------------------------------------------------------------ */
 var GOOG_SVG = '<svg viewBox="0 0 48 48" width="18" height="18" style="flex:none"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.6l6.8-6.8C35.9 2.4 30.3 0 24 0 14.6 0 6.5 5.4 2.6 13.2l7.9 6.1C12.3 13.2 17.7 9.5 24 9.5z"/><path fill="#4285F4" d="M46.1 24.6c0-1.6-.1-3.1-.4-4.6H24v9.1h12.4c-.5 2.9-2.1 5.3-4.6 6.9l7.1 5.5c4.2-3.9 6.6-9.6 6.6-16.9z"/><path fill="#FBBC05" d="M10.5 28.3c-.5-1.5-.8-3-.8-4.6s.3-3.2.8-4.6l-7.9-6.1C.9 16.1 0 19.9 0 23.7s.9 7.6 2.6 10.8l7.9-6.2z"/><path fill="#34A853" d="M24 47.4c6.3 0 11.7-2.1 15.6-5.7l-7.1-5.5c-2 1.3-4.5 2.1-8.5 2.1-6.3 0-11.7-3.7-13.5-9.1l-7.9 6.1C6.5 42.6 14.6 47.4 24 47.4z"/></svg>';
-var _gate = { next:null, mode:'register', plan:'plan48' };
+var _gate = { next:null, mode:'register', plan:'pro' };
 function authGate(opts){
   opts = opts || {};
   _gate.next = opts.next || null;
   _gate.mode = opts.mode || 'register';
-  _gate.plan = opts.plan || 'plan48';
+  _gate.plan = opts.plan || 'pro';
   ga('auth_gate_view', { mode:_gate.mode });
   var pro = _gate.mode === 'pro';
   var m = document.getElementById('gateModal');
@@ -703,7 +703,7 @@ function authGate(opts){
   m.innerHTML =
     '<div class="mbox" style="max-width:430px">'+
       '<span class="mclose" onclick="HH.closeGate()">×</span>'+
-      '<div class="popbadge">'+(pro ? 'Unlock · from $48 one-time' : 'Free account')+'</div>'+
+      '<div class="popbadge">'+(pro ? 'Unlock · from $32 one-time' : 'Free account')+'</div>'+
       '<h3 class="display" style="font-size:24px;margin:10px 0 6px">'+(opts.title || (pro ? 'Unlock your get-hired plan' : 'Create your free account'))+'</h3>'+
       '<p style="color:var(--muted);font-size:14.5px;margin-bottom:18px">'+(opts.reason || 'Register to continue — it takes 10 seconds and saves your progress.')+'</p>'+
       (pro ? '<ul class="gatelist"><li>Apply to jobs + real agency contacts</li><li>Full ticket roadmap for your region</li><li>Unlimited saved jobs & alerts</li></ul><p class="guarantee" style="text-align:left;margin:0 0 14px">🔒 One-time payment, keep it for good · <span class="hi">800+ jobs found every month</span></p>' : '')+
@@ -761,7 +761,7 @@ window.HH.requireAuth = function(next, reason, title){
   authGate({ mode:'register', reason:reason, title:title, next:next });
 };
 /* paywall = pro-mode auth gate (Continue with Google shown here, after the paywall) */
-function showPaywall(reason){ authGate({ mode:'pro', reason:reason, plan:'plan48' }); }
+function showPaywall(reason){ authGate({ mode:'pro', reason:reason, plan:'pro' }); }
 window.HH.closePaywall = window.HH.closeGate;
 window.HH.showPaywall = showPaywall;
 

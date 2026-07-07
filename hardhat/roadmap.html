@@ -54,7 +54,7 @@ var intake=HH.Auth.intake();
 /* Region-exact requirements panel (Pro profile + Certificate Truth Engine) */
 (function(){
   var profile=HH.proProfile();
-  if(!(HH.Auth.isPaid() && profile && intake)) return;
+  if(!(HH.Auth.isPro() && profile && intake)) return;
   var pp=HH.proPlan(intake, profile); if(!pp||!pp.variant) return;
   var links=(pp.verify||[]).map(function(k){ var l=HH_CERTS.links[k]; return l?('<a class="cverify" href="'+l.url+'" target="_blank" rel="noopener">Verify: '+l.name+' ↗</a>'):''; }).join('');
   document.getElementById('regionPanel').style.display='block';

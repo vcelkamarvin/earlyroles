@@ -41,10 +41,10 @@ function verifySig(raw, header, secret) {
 }
 
 function planFromAmount(amountTotal) {
-  // one-time tiers, in cents: $48 / $120 / $190
-  if (amountTotal >= 17000) return 'dfy';    // $190
-  if (amountTotal >= 9000)  return 'pro';    // $120
-  return 'plan48';                           // $48
+  // one-time tiers, in cents: $32 / $120 / $190
+  if (amountTotal >= 15000) return 'dfy';    // $190
+  if (amountTotal >= 7000)  return 'pro';    // $120
+  return 'basic';                            // $32
 }
 
 async function upsert(row) {

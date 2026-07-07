@@ -6,7 +6,7 @@
 module.exports = async (req, res) => {
   res.setHeader('Content-Type', 'application/json');
   const sessionId = (req.query && req.query.session_id) || '';
-  const plan = ((req.query && req.query.plan) || 'plan48');
+  const plan = ((req.query && req.query.plan) || 'basic');
 
   const key = process.env.STRIPE_SECRET_KEY;
   if (!key || !sessionId || sessionId === '{CHECKOUT_SESSION_ID}') {

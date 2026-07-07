@@ -272,16 +272,23 @@ h1.hero-h1 em{font-style:normal;color:var(--hi)}
 @media(max-width:640px){.prices{grid-template-columns:1fr}}
 .plan{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius-lg);padding:28px 24px;display:flex;flex-direction:column;position:relative}
 .plan.feat{border-color:var(--hi);box-shadow:0 0 0 1px var(--hi),var(--shadow)}
-.plan .tag{position:absolute;top:-11px;left:50%;transform:translateX(-50%);background:var(--hi);color:var(--onyx);font-family:"Space Grotesk",sans-serif;font-weight:800;text-transform:uppercase;font-size:11px;letter-spacing:.08em;padding:4px 12px;border-radius:6px}
+.plan.feat{transform:scale(1.03)}
+.plan .tag{position:absolute;top:-11px;left:50%;transform:translateX(-50%);white-space:nowrap;background:var(--hi);color:var(--onyx);font-family:"Space Grotesk",sans-serif;font-weight:800;text-transform:uppercase;font-size:10px;letter-spacing:.05em;padding:4px 11px;border-radius:6px}
 .plan h3{font-family:"Space Grotesk",sans-serif;font-weight:800;font-size:20px}
 .plan .price{font-family:"Space Grotesk",sans-serif;font-weight:900;font-size:42px;margin:10px 0 2px;line-height:1}
 .plan .price span{font-size:15px;color:var(--muted);font-weight:600}
 .plan .pnote{font-size:13px;color:var(--faint);min-height:20px}
-.plan ul{list-style:none;margin:20px 0;display:flex;flex-direction:column;gap:11px;flex:1}
+.plan .pspeed{margin-top:12px;background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:8px 11px;font-size:12.5px;font-weight:600;color:var(--muted);line-height:1.35}
+.plan .pspeed.hot{background:var(--good-soft);border-color:var(--good-soft);color:var(--good)}
+.plan .pvalue{margin-top:10px;font-size:12px;color:var(--faint);line-height:1.4}
+.plan .pvalue b{color:var(--ink2);font-weight:700}
+.plan .pvalue span{font-size:10px;text-transform:uppercase;letter-spacing:.05em;opacity:.7}
+.plan ul{list-style:none;margin:16px 0 20px;display:flex;flex-direction:column;gap:11px;flex:1}
 .plan li{font-size:14px;color:var(--ink2);display:flex;gap:10px;align-items:flex-start}
 .plan li::before{content:"✓";color:var(--good);font-weight:700;flex:none}
 .plan li.off{color:var(--faint)}
-.plan li.off::before{content:"–";color:var(--faint)}
+.plan li.off::before{content:"✕";color:var(--faint);font-size:12px}
+@media(max-width:640px){.plan.feat{transform:none}.plan .tag{font-size:9px;letter-spacing:.02em}}
 
 /* funnel wizard */
 .wiz{max-width:640px;margin:0 auto}

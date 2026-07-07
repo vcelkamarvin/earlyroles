@@ -195,7 +195,7 @@ function saveJob(id){
   render();
 }
 function applyJob(id){
-  if(!HH.Auth.isPaid()){ HH.showPaywall('Applying is a HardHat Pro feature. Unlock the crewing-agency contacts and application templates for this role.'); return; }
+  if(!HH.Auth.isPro()){ HH.showPaywall('Applying is part of Rig-Ready Pro ($120 one-time). Unlock the crewing-agency contacts, CV builder and templates that get you hired.'); return; }
   HH.Auth.setApp(id,'applied'); HH.Auth.toggleSave(id); HH.toast('Marked as applied — track it on your dashboard'); closeJob();
   location.href='directory.html';
 }

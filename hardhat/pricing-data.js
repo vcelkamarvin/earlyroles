@@ -1,40 +1,47 @@
 /* HardHat — shared pricing data + renderer
-   One-time pricing, no subscription. Good / better / best — middle is the anchor. */
+   One-time pricing, no subscription. $120 Rig-Ready Pro is the flagship; the
+   entry tier is deliberately thin and the speed lines escalate to pull buyers up.
+   value/youpay are illustrative anchors (labelled), speed = realistic time-to-hired. */
 var HH_PRICING = [
   {
-    id:'plan48', name:'Rig-Ready Plan', price:'$48', per:'one-time', note:'Your route — do it yourself',
-    plan:'plan48', cta:'Get my plan', href:'#', feat:false,
+    id:'basic', name:'Rig-Ready Basics', price:'$32', per:'one-time', note:'The plan — you take it from here',
+    plan:'basic', cta:'Get the basics', href:'#', feat:false,
+    speed:'Know exactly what to get — today',
+    value:'$120', youpay:'$32',
     features:[
       {t:'Your exact ticket & medical roadmap for your region', on:true},
-      {t:'Apply to every job + full crewing-agency contacts', on:true},
-      {t:'Unlimited saved jobs + job alerts', on:true},
-      {t:'Personalized job recommendations', on:true},
-      {t:'Pay & rotation explorer', on:true},
-      {t:'One payment — keep it for good, no subscription', on:true}
+      {t:'Real ticket + medical cost checklist', on:true},
+      {t:'Unlimited saved jobs', on:true},
+      {t:'Apply through us + full agency contacts', on:false},
+      {t:'CV builder, templates & week-by-week plan', on:false}
     ]
   },
   {
-    id:'pro', name:'Rig-Ready Pro', price:'$120', per:'one-time', note:'Guided — the tools do the work',
-    plan:'pro', cta:'Go Pro', href:'#', feat:true,
+    id:'pro', name:'Rig-Ready Pro', price:'$120', per:'one-time', note:'Everything to actually get hired',
+    plan:'pro', cta:'Get hired with Pro', href:'#', feat:true,
+    speed:'Applying in ~2 weeks · first offers in ~3–6 weeks',
+    value:'$700+', youpay:'$120',
     features:[
-      {t:'Everything in Rig-Ready Plan', on:true},
-      {t:'AI offshore CV builder', on:true},
+      {t:'Everything in Basics', on:true},
+      {t:'Apply to every job + full crewing-agency contacts', on:true},
+      {t:'AI offshore CV builder that recruiters scan', on:true},
       {t:'Application templates that get replies', on:true},
       {t:'Your week-by-week get-hired plan (region-exact)', on:true},
-      {t:'Interview & medical prep guide', on:true},
-      {t:'Priority email support', on:true}
+      {t:'Personalized recommendations + job alerts', on:true},
+      {t:'Interview & medical prep + priority support', on:true}
     ]
   },
   {
     id:'dfy', name:'Done-For-You', price:'$190', per:'one-time', note:'We do the hard part for you',
     plan:'dfy', cta:'Get Done-For-You', href:'#', feat:false,
+    speed:'The fastest route — we do the legwork',
+    value:'$1,200+', youpay:'$190',
     features:[
       {t:'Everything in Rig-Ready Pro', on:true},
       {t:'We write your offshore CV for you', on:true},
       {t:'Hand-picked agency shortlist (your sector + region)', on:true},
       {t:'We get you registered with the right agencies', on:true},
-      {t:'1:1 priority “get hired” support', on:true},
-      {t:'Your fastest realistic route to signing on', on:true}
+      {t:'1:1 priority “get hired” support', on:true}
     ]
   }
 ];
@@ -44,11 +51,15 @@ function renderPlan(p){
   var btn = p.plan
     ? '<button class="btn '+(p.feat?'btn-hi':'btn-ink')+' btn-block" onclick="HH.checkout(\''+p.plan+'\')">'+p.cta+'</button>'
     : '<a class="btn btn-out btn-block" href="'+p.href+'">'+p.cta+'</a>';
+  var speed = p.speed ? '<div class="pspeed'+(p.feat?' hot':'')+'">⚡ '+p.speed+'</div>' : '';
+  var value = p.value ? '<p class="pvalue">~'+p.value+' of guidance &amp; tools — <b>you pay '+(p.youpay||p.price)+'</b> <span>illustrative</span></p>' : '';
   return '<div class="plan'+(p.feat?' feat':'')+' reveal">'+
-    (p.feat?'<span class="tag">Most popular</span>':'')+
+    (p.feat?'<span class="tag">Most popular — most get hired here</span>':'')+
     '<h3>'+p.name+'</h3>'+
     '<div class="price">'+p.price+'<span>'+p.per+'</span></div>'+
     '<p class="pnote">'+p.note+'</p>'+
+    speed+
+    value+
     '<ul>'+lis+'</ul>'+
     btn+'</div>';
 }

@@ -96,8 +96,8 @@
 <script src="cert-data.js"></script>
 <script>
 HH.mountChrome('');
-/* Pro-gated */
-if(!HH.Auth.isPaid()){ window.location.href='pricing.html'; }
+/* Pro-gated (week-by-week plan is a Rig-Ready Pro feature) */
+if(!HH.Auth.isPro()){ window.location.href='pricing.html'; }
 var intake=HH.Auth.intake()||{};
 if(!intake.sector){ window.location.href='start.html'; }
 
