@@ -18,7 +18,12 @@
     <h2 class="sec" style="max-width:22ch"><span id="jobTotal">5,000+</span> roles worldwide, no degree required</h2>
     <p class="lead">Filter by sector, country and pay. Create a free account to see each role's pay cycle, rotation and exact requirements. <span class="hi">Applying is a Pro feature.</span></p>
 
-    <div class="filters" style="margin-top:24px">
+    <div class="jobtabs" style="margin-top:20px">
+      <button class="jobtab on" id="tabCat" onclick="setMode('cat')">Representative roles</button>
+      <button class="jobtab" id="tabLive" onclick="setMode('live')">⚡ Live openings</button>
+    </div>
+
+    <div class="filters" style="margin-top:16px">
       <input id="q" placeholder="Search role, company or city…">
       <select id="secF"><option value="all">All sectors</option></select>
       <select id="ctyF"><option value="all">All countries</option></select>
@@ -124,6 +129,65 @@ function render(){
   }
 }
 
+/* ---- Live openings tab: real vacancies via /api/jobs (Adzuna+Careerjet) ---- */
+var mode='cat';
+var LIVE_KW={oil:'offshore oil rig',wind:'offshore wind technician',diving:'commercial diver',marine:'deckhand',mining:'FIFO mining',weld:'pipeline welder',wtt:'wind turbine technician',cdl:'CDL driver'};
+var CC={'United States':'us','USA':'us','United Kingdom':'gb','UK':'gb','Canada':'ca','Australia':'au','Singapore':'sg','Mexico':'mx','Spain':'es','Brazil':'br','Netherlands':'nl','Germany':'de','India':'in','New Zealand':'nz'};
+function setMode(m){
+  mode=m;
+  document.getElementById('tabCat').classList.toggle('on', m==='cat');
+  document.getElementById('tabLive').classList.toggle('on', m==='live');
+  // sort/exp filters are catalog-only; hide match note + recs in live mode
+  document.getElementById('recRow').style.display = m==='live'?'none':'';
+  document.getElementById('matchNote').style.display = m==='live'?'none':(intake?'block':'none');
+  document.getElementById('moreBtn').style.display='none';
+  if(m==='live') renderLive(); else render();
+}
+window.setMode=setMode;
+function liveRowHTML(j){
+  var pay=(typeof j.payn==='number'&&j.payn>0)?HH.money(j.payn):'See posting';
+  return '<a class="jrow" href="'+j.url+'" target="_blank" rel="noopener" onclick="HH.ga(\'live_apply\',{src:\''+(j.src||'')+'\'})">'+
+    '<div class="jlogo">'+(j.co?HH.logo('', j.co):'🛠')+'</div>'+
+    '<div class="jmain"><h3>'+(j.title||'Role')+'</h3><div class="jco">'+(j.co||'')+'</div>'+
+    '<div class="jchips"><span class="jchip good">Live</span><span class="jchip">'+(j.src||'partner')+'</span></div></div>'+
+    '<div class="jloc">'+(j.loc||'')+'</div>'+
+    '<div class="jpay"><b>'+pay+'</b><span>apply direct ↗</span></div></a>';
+}
+function liveNotice(msg){
+  return '<div class="notice" style="text-align:center;margin:8px 0">'+msg+'</div>';
+}
+function renderLive(){
+  var list=document.getElementById('jobList');
+  document.getElementById('resCount').textContent='';
+  if(!HH.Auth.signedIn()){
+    list.innerHTML='<div class="gateblur joblist">'+HH_JOBS.slice(0,3).map(rowHTML).join('')+'</div>'+
+      '<div class="notice" style="text-align:center;margin:14px 0"><b>Create a free account</b> to see live openings you can apply to right now.</div>'+
+      '<button class="btn btn-go btn-block btn-lg" onclick="HH.requireAuth(function(){setMode(\'live\');},\'See live openings from our job partners — free.\',\'Live openings\')">Show live openings — free →</button>';
+    return;
+  }
+  list.innerHTML='<p style="color:var(--muted);text-align:center;padding:30px">Loading live openings…</p>';
+  var sf=secF.value, cf=ctyF.value, q=document.getElementById('q').value.trim();
+  var kw=q||LIVE_KW[sf]||'offshore';
+  var country=CC[cf]||'us';
+  fetch('/api/jobs?q='+encodeURIComponent(kw)+'&country='+country)
+    .then(function(r){return r.json();})
+    .then(function(d){
+      if(!d||d.error||!d.jobs||!d.jobs.length){
+        list.innerHTML=liveNotice(d&&d.error==='not_configured'
+          ? 'Live feed switches on the moment our aggregator keys are set. Browse the representative catalogue meanwhile — <a href="javascript:void(0)" onclick="setMode(\'cat\')" style="color:var(--hi)">back to roles →</a>'
+          : 'No live openings matched right now — try a broader sector or country, or <a href="javascript:void(0)" onclick="setMode(\'cat\')" style="color:var(--hi)">browse the catalogue →</a>');
+        return;
+      }
+      var pf=+document.getElementById('payF').value;
+      var jobs=d.jobs.filter(function(j){ return !pf || !j.payn || j.payn>=pf; });
+      list.innerHTML='<p class="micro" style="margin:0 0 10px">Showing '+jobs.length+' live vacancies from our job partners · you apply directly on the posting.</p>'+
+        jobs.map(liveRowHTML).join('');
+    })
+    .catch(function(){
+      list.innerHTML=liveNotice('Couldn’t reach the live feed just now — <a href="javascript:void(0)" onclick="setMode(\'cat\')" style="color:var(--hi)">browse the catalogue →</a>');
+    });
+}
+
 /* ---- structured job detail (the value) — gated behind free registration ---- */
 function rotaDesc(rota){
   var r=(rota||'').toLowerCase();
@@ -164,7 +228,7 @@ function openJob(id){
   var sec=HH.sector(j.sector)||{}; var pay=HH_PAY[j.sector]||{};
   var allT=[]; Object.keys(HH_TICKETS).forEach(function(k){allT=allT.concat(HH_TICKETS[k]);});
   var tickets=(j.tickets||[]).map(function(tid){ var t=allT.filter(function(x){return x.id===tid;})[0]; return t?('<div class="ticket" style="margin-bottom:8px"><div class="tinfo"><b>'+t.name+'</b><small>'+t.cost+' · '+t.days+'</small></div></div>'):''; }).join('');
-  var paid=HH.Auth.isPaid();
+  var paid=HH.Auth.isPro();   // applying + agency contacts are Pro ($120); label must match the gate
   document.getElementById('jobBox').innerHTML=
     '<span class="mclose" onclick="closeJob()">×</span>'+
     '<div style="display:flex;gap:14px;align-items:center"><div class="jlogo" style="width:54px;height:54px">'+HH.logo(j.logo,j.co)+'</div><div><h3 class="display" style="font-size:22px;margin-bottom:2px">'+j.title+'</h3><p style="color:var(--muted)">'+j.co+(j.viaAgency?' (crewing agency)':'')+' · '+(j.fl?j.fl+' ':'')+j.loc+'</p></div></div>'+
@@ -200,7 +264,7 @@ function applyJob(id){
   location.href='directory.html';
 }
 window.openJob=openJob; window.closeJob=closeJob; window.saveJob=saveJob; window.applyJob=applyJob;
-['q','secF','ctyF','expF','payF','sortF'].forEach(function(id){ document.getElementById(id).addEventListener('input',function(){shown=12;render();}); });
+['q','secF','ctyF','expF','payF','sortF'].forEach(function(id){ document.getElementById(id).addEventListener('input',function(){shown=12; if(mode==='live') renderLive(); else render();}); });
 document.getElementById('moreBtn').onclick=function(){ shown+=20; render(); };
 render();
 </script>

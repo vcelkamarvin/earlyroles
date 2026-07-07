@@ -8,8 +8,10 @@ The worker-subscription platform for high-paying, no-degree offshore & trades jo
 
 ## 1 · WHAT'S WORKING RIGHT NOW (all verified live)
 
-### Money
-- **Stripe checkout charges for real** — Payment Links wired: Pro $48/mo (`buy.stripe.com/00wbIT…`) and Fast-Track $190 one-time (`buy.stripe.com/fZu14f…`). Every Pro/Fast-Track button on the site routes to live Stripe checkout. (Also fixed the silent `window.location` shadowing bug that had made checkout a no-op.)
+### Money — three one-time plans (no subscription)
+- **Pricing:** **Rig-Ready Basics $32** (region roadmap + cost checklist + unlimited saved jobs — no applying) · **Rig-Ready Pro $120** (the flagship — apply to jobs, full agency contacts, CV builder, week-by-week plan, prep, support) · **Done-For-You $190** (we write the CV, hand-pick agencies, register you). Middle tier is badged "Most popular"; cards show a speed-to-hired pill + illustrative value anchor.
+- **Checkout:** `CONFIG.PAY` uses Stripe Payment Links. `dfy` reuses the prior $190 link; **`basic` ($32) and `pro` ($120) links still need creating** (see §4) — until then those buttons gracefully fall back to signup. (The `window.location` shadow bug that once no-op'd checkout is fixed.)
+- **Entitlement is server-verifiable:** Stripe webhook → Supabase `hardhat_subscriptions` → `/api/entitlement` + `/api/directory`; `HH.syncEntitlement()`/`verifyPro()` make the server authoritative and the agency contacts are served only to a verified-paid email. Dormant-safe until keys are set (§4).
 - Post-payment: `success.html` verifies (or gracefully falls back), unlocks the plan, routes into Pro setup.
 
 ### Conversion funnel
@@ -78,22 +80,25 @@ v1 full platform scaffold → v2 global SaaS upgrade (real companies/logos, loca
 
 ---
 
-## 4 · BEFORE LAUNCH (in order — ☐ = needs you, ◐ = I can build on request)
+## 4 · BEFORE LAUNCH
 
-1. ☐ **Rotate the Vercel token** (it appeared in chat) — Vercel → Settings → Tokens. *2 min.*
-2. ☐ **Custom domain** hardhatjobs.co on the Vercel project + `hello@` email. `.vercel.app` hurts trust and SEO. *15 min.*
-3. ☐ **Google Search Console + Bing**: verify domain, submit `sitemap.xml` (71 URLs). Nothing ranks until this. *10 min.*
-4. ◐☐ **Server-verified entitlement** — THE technical blocker: `hh_plan` is localStorage, so a savvy user can self-unlock Pro. Fix: Stripe webhook → Supabase `subscriptions` table → gate by verified email. I build it; you add `STRIPE_SECRET_KEY` + webhook secret. **Do before spending on ads.**
-5. ☐ **Google OAuth Client ID** → `CONFIG.GOOGLE_CLIENT_ID` (login is demo-mode until then). *10 min in Google Cloud Console.*
-6. ◐☐ **Analytics + pixels**: `GA_MEASUREMENT_ID` + Meta/TikTok pixels. All events already fire (`funnel_step`, `offer_view`, `begin_checkout`, `variant`, `job_gate_view`…) — they just need a destination. You're flying blind until this.
-7. ☐ **Test purchase + refund** end-to-end on both Stripe links (live mode).
-8. ◐ **Legal/GDPR**: cookie-consent banner (you capture EU leads), refund policy, Terms/Privacy review, trademark pass on logo usage.
-9. ☐ **Live job feed keys** (free): `ADZUNA_APP_ID/KEY` + `CAREERJET_KEY` in Vercel env → real vacancies merge in automatically; also makes the JobPosting schema policy-safe (until then consider flipping `EMIT_JOBPOSTING` off in build-seo.js).
-10. ◐☐ **Lead ops**: welcome email + new-lead notification to you (Supabase → Resend). Leads currently land in a table nobody emails.
-11. ◐ **Perf**: compress the 3 hero photos (350–440KB each → WebP ~60KB) — the mobile LCP bottleneck.
-12. ☐ **Real-device QA** + a Sentry/uptime check.
+### Already done in code (shipped)
+- ✅ Three one-time plans ($32 / $120 / $190) with $120 as the flagship; value + speed-to-hired framing on the cards.
+- ✅ **Applying** clarified & fixed: for a Pro user it marks the job applied + routes to the agency contacts (honest, agency-routed model); the label/gate mismatch is fixed (Basics correctly sees the locked state).
+- ✅ **Live-jobs tab** on the board (Representative | ⚡ Live openings) — reuses `/api/jobs` (Adzuna+Careerjet); register-gated; honest fallback notice when the aggregator keys aren't set.
+- ✅ **Server-verified, anti-spoof entitlement**: `syncEntitlement`/`verifyPro` make the server authoritative; `/api/directory` serves the crewing-agency contacts only to a verified-paid email. Dormant-safe until keys are added.
 
-**Minimum viable launch = items 1–7.** Roughly a focused day of your dashboard work + one build session from me for #4 and #6.
+### You must do before charging money / running ads (☐ = your dashboards)
+1. ☐ **Create the two missing one-time Stripe Payment Links** — $32 Basics + $120 Pro — and paste into `CONFIG.PAY` (`basic`, `pro`); verify the $190 `dfy` link. Run a real **test purchase + refund** on each. *Without this, nobody can pay → applying stays locked.*
+2. ☐ **Activate entitlement** — add `STRIPE_SECRET_KEY`, the Stripe **webhook secret** (endpoint → `/api/stripe-webhook`, event `checkout.session.completed`), and `SUPABASE_SERVICE_KEY` to Vercel env; create the `hardhat_subscriptions` table (SQL in `SETUP_KEYS.md`). *THE anti-spoof blocker — do before ads.*
+3. ☐ **Rotate the Vercel token** (it appeared in chat) — Vercel → Settings → Tokens. *2 min.*
+4. ☐ **Custom domain** hardhatjobs.co + `hello@` email + update Stripe success/cancel origins. *15 min.*
+5. ☐ **Google OAuth Client ID** → `CONFIG.GOOGLE_CLIENT_ID` (login is demo-mode until then).
+6. ☐ **Analytics + pixels**: `GA_MEASUREMENT_ID` + Meta/TikTok pixels (events already fire); submit `sitemap.xml` to Search Console.
+7. ☐ **Live jobs (optional)**: `ADZUNA_APP_ID/KEY` + `CAREERJET_KEY` in Vercel env → flips the ⚡ Live openings tab on.
+8. ◐ **Legal/ops**: cookie-consent banner (EU leads), refund policy, new-lead email notification, Sentry/uptime, hero-photo compression (WebP), real-device QA.
+
+**Minimum to take money safely = items 1 + 2.** Everything else is graceful-degradation and can follow launch.
 
 ---
 

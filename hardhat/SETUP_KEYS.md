@@ -45,10 +45,12 @@ Set `CONFIG.GA_MEASUREMENT_ID` in `app.js` and add the GA4 gtag snippet to enabl
 Until set, the jobs page uses the built-in 5,000+ role catalog (jobs-data.json,
 regenerate with `node build-jobs.js`).
 
-## Server-verified Pro entitlement (activates /api/stripe-webhook + /api/entitlement)
+## Server-verified Pro entitlement (activates /api/stripe-webhook + /api/entitlement + /api/directory)
 Until these are set, entitlement stays demo-grade (localStorage). Once set, the
-server is the truth: paid users sync automatically, self-unlocked "Pro" gets
-downgraded on next page load.
+server is the truth: paid users sync automatically, a self-unlocked "Pro" gets
+downgraded on the next page load, and the crewing-agency contacts (`/api/directory`)
+are served **only to a verified-paid email** — a console-spoofed `hh_plan` can flip
+the UI but never receives the contact list.
 
 Env vars (Vercel → Settings → Environment Variables):
 - `STRIPE_SECRET_KEY` — Stripe dashboard → Developers → API keys (sk_live_…)
@@ -58,7 +60,10 @@ Env vars (Vercel → Settings → Environment Variables):
 
 Stripe webhook (dashboard → Developers → Webhooks → Add endpoint):
 - URL: `https://<your-domain>/api/stripe-webhook`
-- Events: `checkout.session.completed`, `customer.subscription.deleted`, `customer.subscription.updated`
+- Events: `checkout.session.completed` (the one that matters for one-time plans).
+  `customer.subscription.deleted/updated` are still handled but won't fire for
+  one-time payments. Note: refunds aren't auto-revoked yet — add a
+  `charge.refunded` handler later if you want refunded buyers downgraded.
 
 Supabase table (SQL editor — run once):
 ```sql
@@ -75,8 +80,10 @@ alter table hardhat_subscriptions enable row level security;
 ```
 
 Flow: Stripe payment → webhook verifies signature → upserts plan by email →
-client `HH.syncEntitlement()` (runs on every page load, 10-min throttle) asks
-`/api/entitlement?email=` and syncs `hh_plan` — server wins in both directions.
-Cancellations in Stripe downgrade automatically.
+client `HH.syncEntitlement()` (runs on every page load, ~2-min throttle; forced
+un-throttled by `HH.verifyPro()`) asks `/api/entitlement?email=` and syncs
+`hh_plan` — server wins in both directions. `directory.html` additionally calls
+`/api/directory?email=` and only renders real contacts when the server confirms a
+paid plan (pro/dfy).
 Note: the entitlement endpoint answers plan status for any email (no auth) —
 acceptable at this stage; add a signed token if that ever matters.

@@ -894,22 +894,36 @@ function footHTML(){
 /* Server-verified entitlement sync (activates once /api/entitlement is
  * configured with the Supabase service key — until then it's a silent
  * no-op and the demo-grade localStorage plan stays authoritative). */
-function syncEntitlement(){
-  try{
-    var u = get('user'); if(!u || !u.email) return;
-    var last = get('ent_ts', 0); if(Date.now() - last < 10*60*1000) return;   // 10 min throttle
-    set('ent_ts', Date.now());
-    fetch('/api/entitlement?email='+encodeURIComponent(u.email))
-      .then(function(r){ return r.json(); })
-      .then(function(j){
-        if(!j || !j.configured) return;                    // not wired yet — keep local behavior
-        var local = get('plan','free');
-        if(j.plan && j.plan !== 'free' && j.plan !== local){ set('plan', j.plan); }
-        else if(j.plan === 'free' && local !== 'free'){ set('plan','free'); }   // server is the truth
-      }).catch(function(){});
-  }catch(e){}
+/* Server-verified entitlement. When /api/entitlement is configured (Supabase
+ * service key set), the SERVER is authoritative: it upgrades a real paid plan
+ * and downgrades a spoofed localStorage plan back to free. Returns a promise so
+ * callers can force a fresh check before granting a premium action. */
+function syncEntitlement(force){
+  return new Promise(function(resolve){
+    try{
+      var u = get('user'); if(!u || !u.email){ resolve(get('plan','free')); return; }
+      var last = get('ent_ts', 0);
+      if(!force && Date.now() - last < 2*60*1000){ resolve(get('plan','free')); return; }   // 2 min passive throttle
+      set('ent_ts', Date.now());
+      fetch('/api/entitlement?email='+encodeURIComponent(u.email))
+        .then(function(r){ return r.json(); })
+        .then(function(j){
+          if(j && j.configured){
+            var local = get('plan','free');
+            if(j.plan && j.plan !== 'free' && j.plan !== local){ set('plan', j.plan); }
+            else if(j.plan === 'free' && local !== 'free'){ set('plan','free'); }   // server is the truth
+          }
+          resolve(get('plan','free'));
+        }).catch(function(){ resolve(get('plan','free')); });
+    }catch(e){ resolve(get('plan','free')); }
+  });
 }
 window.HH.syncEntitlement = syncEntitlement;
+/* Force a fresh server check, then run cb with the authoritative isPro boolean.
+ * Falls back to the current local value when entitlement isn't wired yet. */
+window.HH.verifyPro = function(cb){
+  syncEntitlement(true).then(function(){ try{ cb(Auth.isPro()); }catch(e){} });
+};
 
 window.HH.mountChrome = function(active){
   var n=document.getElementById('nav'); if(n) n.innerHTML=navHTML(active);

@@ -39,6 +39,21 @@
 <script>
 HH.mountChrome('directory.html');
 var paid=HH.Auth.isPro();   // full agency contacts unlock with Rig-Ready Pro ($120)
+var serverList=null;        // set from /api/directory when server-verified paid
+/* Server-verified reveal: when /api/directory is configured it is authoritative —
+ * contacts arrive only for a verified-paid email, so a localStorage spoof can't
+ * force the reveal. Falls back to the client list when not wired yet. */
+(function(){
+  var u=HH.Auth.user&&HH.Auth.user(); if(!u||!u.email) return;
+  fetch('/api/directory?email='+encodeURIComponent(u.email))
+    .then(function(r){return r.json();})
+    .then(function(j){
+      if(!j||!j.configured) return;         // not wired — keep client-side behavior
+      paid = !!j.paid;                       // SERVER is the truth
+      serverList = j.paid ? (j.agencies||[]) : [];
+      render();
+    }).catch(function(){});
+})();
 var sel=document.getElementById('secSel'), reg=document.getElementById('regSel');
 HH_SECTORS.forEach(function(s){ var o=document.createElement('option'); o.value=s.id; o.textContent=s.icon+' '+s.name; sel.appendChild(o); });
 var regions=[]; HH_AGENCIES.forEach(function(a){ if(a.region && regions.indexOf(a.region)<0) regions.push(a.region); });
@@ -46,7 +61,9 @@ regions.sort().forEach(function(r){ var o=document.createElement('option'); o.va
 var intake=HH.Auth.intake(); if(intake&&intake.sector) sel.value=intake.sector;
 function render(){
   var f=sel.value, rf=reg.value;
-  var rows=HH_AGENCIES.filter(function(a){ return (f==='all'||a.sector===f) && (rf==='all'||a.region===rf); });
+  // full contacts come from the server list when verified-paid; else the client list (names only for preview / local fallback)
+  var source=(paid && serverList) ? serverList : HH_AGENCIES;
+  var rows=source.filter(function(a){ return (f==='all'||a.sector===f) && (rf==='all'||a.region===rf); });
   var shown=paid?rows:rows.slice(0,3);
   document.getElementById('dirList').innerHTML=shown.map(function(a){
     var s=HH.sector(a.sector);

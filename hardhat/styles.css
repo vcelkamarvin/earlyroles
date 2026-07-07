@@ -711,3 +711,9 @@ footer{border-top:1px solid var(--line);padding:48px 0 40px;color:var(--muted);f
 .worldline{font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:clamp(16px,2.4vw,21px);color:var(--muted);max-width:34ch;margin:0 auto 26px;line-height:1.4}
 .wedge{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:34px 28px;max-width:760px;margin:0 auto}
 @media(max-width:560px){.wedgeband{padding:40px 0}.wedge{padding:26px 18px}}
+
+/* v17 — jobs board tabs (representative | live) */
+.jobtabs{display:inline-flex;gap:4px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:4px}
+.jobtab{background:transparent;border:none;border-radius:9px;padding:8px 16px;font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:13.5px;color:var(--muted);cursor:pointer;white-space:nowrap}
+.jobtab.on{background:var(--hi);color:#fff}
+@media(max-width:480px){.jobtab{padding:7px 12px;font-size:12.5px}}
