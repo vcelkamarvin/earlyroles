@@ -114,7 +114,7 @@ ${o.body}
   <div class="wrap center">
     <h2 class="sec" style="max-width:22ch">${esc(o.ctaH || 'See the jobs you already qualify for')}</h2>
     <p class="lead">Take the free 2-minute Rig-Ready assessment — get your matched roles, exact ticket roadmap, and who to apply to.</p>
-    <div class="cta-row"><a class="btn btn-hi btn-lg" href="start.html">Get my Rig-Ready plan →</a><a class="btn btn-out btn-lg" href="jobs.html">Browse all jobs</a></div>
+    <div class="cta-row"><a class="btn btn-hi btn-lg" href="start.html">Find my job →</a><a class="btn btn-out btn-lg" href="jobs.html">See the jobs →</a></div>
   </div>
 </section>
 <div id="foot"></div>
@@ -180,7 +180,7 @@ function buildJob(j) {
           <tr><td>Rotation</td><td style="text-align:right">${esc(j.rota)}</td></tr>
           <tr><td>Sector demand</td><td style="text-align:right">${esc((D.DEMAND[j.sector] || {}).growth || '')} est.</td></tr>
         </tbody></table>
-        <a class="btn btn-go btn-block btn-lg" style="margin-top:16px" href="start.html">Check if I qualify →</a>
+        <a class="btn btn-go btn-block btn-lg" style="margin-top:16px" href="start.html">Find my job →</a>
         <p style="font-size:12px;color:var(--faint);text-align:center;margin-top:8px">Applying & agency contacts unlock with Pro.</p>
       </div>
     </div>
@@ -237,7 +237,7 @@ function buildLocation(loc) {
       <div class="panel">
         <div class="eyebrow" style="text-align:left">Break in here</div>
         <p style="font-size:14px;margin-top:8px">Pick a sector → get the accredited tickets → pass the medical → build your offshore CV → apply through the crewing agencies that staff ${esc(loc.name)}.</p>
-        <a class="btn btn-go btn-block btn-lg" style="margin-top:12px" href="start.html">Get my Rig-Ready plan →</a>
+        <a class="btn btn-go btn-block btn-lg" style="margin-top:12px" href="start.html">Find my job →</a>
       </div>
     </div>
     <h2 style="font-size:19px;margin-top:30px">FAQ — working in ${esc(loc.name)}</h2>
@@ -354,7 +354,7 @@ function buildVariant(v) {
       <div class="lblrow"><span class="hl">${esc(v.hl || 'No degree · No experience')}</span></div>
       <h1 style="color:#fff;font-family:'Space Grotesk',sans-serif;font-weight:900;font-size:clamp(30px,6vw,54px);line-height:1;letter-spacing:-.02em;max-width:16ch;margin:10px auto 0">${esc(v.h1)}</h1>
       <p style="color:rgba(255,255,255,.88);font-size:clamp(15px,2vw,18px);max-width:52ch;margin:16px auto 0">${esc(v.sub)}</p>
-      <div class="cta-row"><a class="btn btn-go btn-lg" href="${go}" onclick="HH.ga&&HH.ga('variant',{v:'${v.term}'})">Get me hired →</a></div>
+      <div class="cta-row"><a class="btn btn-go btn-lg" href="${go}" onclick="HH.ga&&HH.ga('variant',{v:'${v.term}'})">Find my job →</a></div>
       <p style="color:rgba(255,255,255,.75);font-size:12.5px;margin-top:12px">Free · 2 minutes · no card · 800+ jobs found every month</p>
     </div>
   </div>

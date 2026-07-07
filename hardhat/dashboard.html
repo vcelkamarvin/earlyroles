@@ -15,7 +15,7 @@
   <div class="wrap" style="max-width:860px">
 
     <div id="noIntake" class="notice" style="max-width:640px;margin:22px auto;display:none;text-align:center">
-      You haven’t taken the Rig-Ready assessment yet. <a href="start.html" style="color:var(--hi)">Take it now →</a>
+      You haven’t taken the Rig-Ready assessment yet. <a href="start.html" style="color:var(--hi)">Find my job →</a>
     </div>
 
     <div id="board" style="display:none">
@@ -60,7 +60,7 @@
           <li><span>✓ Crewing-agency contacts that hire</span><b>$150</b></li>
           <li><span>✓ Full region roadmap</span><b>$120</b></li>
         </ul>
-        <a class="btn btn-go btn-lg" href="pricing.html">Unlock &amp; get hired — $120 →</a>
+        <a class="btn btn-go btn-lg" href="pricing.html">Get a job — unlock →</a>
         <p class="micro" style="margin-top:12px">One payment, keep it for good · 800+ jobs found every month · No job or salary is guaranteed.</p>
       </div>
 
@@ -117,20 +117,20 @@ else {
     { title:'Pass your medical', done:medDone,
       doneText:'Done — your medical is valid.',
       detail:'Book a simple offshore health check plus a drug &amp; alcohol test. It’s the step most people forget — do it early.',
-      cta:{ label:'What’s involved →', href:'roadmap.html' } },
+      cta:{ label:'Sort my medical →', href:'roadmap.html' } },
     { title:'Get your safety tickets', done:ticketsDone,
       doneText:'All your required tickets are done.',
       detail:'You still need: <b>'+(needList||'a couple of short courses')+'</b>. These are short safety courses — book them from an accredited provider and you’re ready to apply.',
       meta: ticketMeta,
-      cta:{ label:(g0&&g0.provider?'Find a course →':'See my tickets →'), href:(g0&&g0.provider?g0.provider.url:'roadmap.html'), ext:!!(g0&&g0.provider) } },
+      cta:{ label:(g0&&g0.provider?'Find a course →':'Get job-ready →'), href:(g0&&g0.provider?g0.provider.url:'roadmap.html'), ext:!!(g0&&g0.provider) } },
     { title:'Make your offshore CV', done:cvOk,
       doneText:'Your offshore CV is ready.',
       detail:'We build it in the format rig and vessel recruiters actually read — about 20 minutes.',
-      cta:{ label:'Build my CV →', href:'cv.html' } },
+      cta:{ label:'Make my CV →', href:'cv.html' } },
     { title:'Apply to jobs', done:false, locked:!paid,
       detail: paid ? ('Apply to the jobs below and send your CV to '+agencyNames+' — that’s how these jobs are really filled.')
              : 'These jobs are filled through crewing agencies, not job boards. Applying + your agency shortlist unlock with Pro.',
-      cta: paid?{ label:'See your jobs →', href:'jobs.html' }:{ label:'Unlock applying — $120 →', href:'pricing.html' } }
+      cta: paid?{ label:'See my jobs →', href:'jobs.html' }:{ label:'Get a job — unlock →', href:'pricing.html' } }
   ];
   var total=steps.length;
   var doneN=steps.filter(function(s){return s.done;}).length;
@@ -204,7 +204,7 @@ else {
     }
     // sticky mobile CTA
     var sc=document.createElement('div'); sc.className='stickycta';
-    sc.innerHTML='<b>Ready to apply? →</b><a class="btn btn-hi btn-sm" href="pricing.html">Unlock Pro</a>';
+    sc.innerHTML='<b>Get hired for real →</b><a class="btn btn-hi btn-sm" href="pricing.html">Get a job →</a>';
     document.body.appendChild(sc);
   }
 

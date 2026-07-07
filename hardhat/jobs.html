@@ -239,7 +239,7 @@ function openJob(id){
     '<div class="jdet"><h5>What you need</h5><div style="margin:8px 0">'+(tickets||'<p style="color:var(--muted);font-size:14px">See the requirements matrix for this sector.</p>')+'</div>'+certLinkFor(j)+'</div>'+
     '<div class="jdet"><h5>How hiring works here</h5><p>Roles like this are filled '+(j.viaAgency?('through <b>'+j.co+'</b> and similar crewing agencies'):'through crewing agencies and the operator\'s own talent pool')+' — not by applying on general job boards. Get the tickets above, build an offshore-format CV, then get on the agencies\' books.</p></div>'+
     '<p class="micro" style="margin:12px 0">Representative role — the kind of opening filled continuously in this sector and region. Confirm specifics on the posting when you apply.</p>'+
-    '<button class="btn btn-hi btn-block btn-lg" onclick="applyJob(\''+j.id+'\')">'+(paid?'Apply through agency →':'🔒 Apply — unlock with Pro')+'</button>'+
+    '<button class="btn btn-hi btn-block btn-lg" onclick="applyJob(\''+j.id+'\')">'+(paid?'Apply through agency →':'🔒 Get a job — unlock Pro')+'</button>'+
     '<button class="btn btn-out btn-block" style="margin-top:10px" onclick="saveJob(\''+j.id+'\')">'+(sv?'★ Saved':'☆ Save job')+'</button>';
   document.getElementById('jobModal').classList.add('on');
   HH.ga('job_view',{sector:j.sector});

@@ -5,7 +5,7 @@
 var HH_PRICING = [
   {
     id:'basic', name:'Rig-Ready Basics', price:'$32', per:'one-time', note:'The plan — you take it from here',
-    plan:'basic', cta:'Get the basics', href:'#', feat:false,
+    plan:'basic', cta:'Get my plan', href:'#', feat:false,
     speed:'Know exactly what to get — today',
     value:'$120', youpay:'$32',
     features:[
@@ -18,7 +18,7 @@ var HH_PRICING = [
   },
   {
     id:'pro', name:'Rig-Ready Pro', price:'$120', per:'one-time', note:'Everything to actually get hired',
-    plan:'pro', cta:'Get hired with Pro', href:'#', feat:true,
+    plan:'pro', cta:'Get me a job', href:'#', feat:true,
     speed:'Applying in ~2 weeks · first offers in ~3–6 weeks',
     value:'$700+', youpay:'$120',
     features:[
@@ -33,7 +33,7 @@ var HH_PRICING = [
   },
   {
     id:'dfy', name:'Done-For-You', price:'$190', per:'one-time', note:'We do the hard part for you',
-    plan:'dfy', cta:'Get Done-For-You', href:'#', feat:false,
+    plan:'dfy', cta:'Do it for me', href:'#', feat:false,
     speed:'The fastest route — we do the legwork',
     value:'$1,200+', youpay:'$190',
     features:[
