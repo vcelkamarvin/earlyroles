@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FIFO Mining Jobs: Canada, US &amp; Australia — No Degree | HardHat</title>
+<meta name="description" content="Fly-in fly-out mining & oil-sands jobs across Canada, the US and Australia — the exact tickets, medicals, rotations, right-to-work and pay for each. No degree.">
+<link rel="canonical" href="https://hardhatjobs.co/fifo-mining-jobs.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="FIFO Mining Jobs: Canada, US & Australia — No Degree">
+<meta property="og:description" content="Compare FIFO mining & oil-sands entry across Canada, the US and Australia: tickets, medicals, rotations, pay.">
+<meta property="og:url" content="https://hardhatjobs.co/fifo-mining-jobs.html">
+<meta property="og:site_name" content="HardHat">
+<link rel="icon" href="favicon.svg">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="hazbar"></div>
+<div id="nav"></div>
+
+<section>
+  <div class="wrap" style="max-width:900px">
+    <div class="lblrow"><span class="hl">FIFO mining</span></div>
+    <h1 class="sec" style="max-width:24ch">FIFO Mining Jobs: Canada, the US &amp; Australia</h1>
+    <p class="lead">Fly-in fly-out mining and oil-sands work pays well with no degree — but the tickets, rotations and who can work there change by country. Here's the honest side-by-side, then the exact route for your situation.</p>
+
+    <div class="dstats" style="margin:24px 0">
+      <div class="dstat"><b>$60k–$180k</b><span>pay range (illustrative)</span></div>
+      <div class="dstat"><b>14/7 · 6/6 · 2/1</b><span>camp rotations</span></div>
+      <div class="dstat"><b>No degree</b><span>tickets + medical instead</span></div>
+    </div>
+
+    <div id="regionCards"></div>
+
+    <div class="notice" style="margin:22px 0"><b>The deciding factor is your passport.</b> Each of these markets hires citizens/PRs first — sponsorship for entry roles is rare. Take the assessment and we'll show you the market you can actually work in.</div>
+    <p style="font-size:13px;color:var(--muted)">Deep dives: <a href="fifo-mining-jobs-canada.html" style="color:var(--hi)">Canada / oil sands →</a> · <a href="oil-sands-jobs-fort-mcmurray.html" style="color:var(--hi)">Fort McMurray →</a> · <a href="work-in-canada-fifo-foreigners.html" style="color:var(--hi)">Working Canada FIFO as a foreigner →</a></p>
+  </div>
+</section>
+
+<section class="alt">
+  <div class="wrap center">
+    <h2 class="sec" style="max-width:24ch">Get your exact FIFO ticket roadmap</h2>
+    <p class="lead">Free 2-minute assessment → the exact tickets, medical, agencies and pay for your target country.</p>
+    <div class="cta-row"><a class="btn btn-go btn-lg" href="start.html?sector=mining">Get my Rig-Ready plan →</a><a class="btn btn-out btn-lg" href="certs.html">See all requirements</a></div>
+  </div>
+</section>
+
+<div id="foot"></div>
+<script src="app.js"></script>
+<script src="cert-data.js"></script>
+<script>
+HH.mountChrome('');
+// render the mining haul-truck role's three regional cards straight from the Truth Engine
+var role=HH_CERTS.roles.filter(function(x){return x.id==='haultruck';})[0];
+var want=['canada','us','au'];
+function linksFor(keys){ return (keys||[]).map(function(k){var l=HH_CERTS.links[k];return l?('<a class="cverify" href="'+l.url+'" target="_blank" rel="noopener">Verify: '+l.name+' ↗</a>'):'';}).join(''); }
+document.getElementById('regionCards').innerHTML = want.map(function(rk){
+  var v=role.regions.filter(function(g){return g.r===rk;})[0]; if(!v) return '';
+  var meta=HH_CERTS.regions[rk]||{};
+  return '<div class="certcard"><div class="cc-head"><div><h3>'+(meta.flag||'')+' '+(meta.name||rk)+'</h3>'+
+    '<div class="cc-meta"><span class="jchip hi">FIFO / camp</span><span class="jchip">Entry · '+role.pay+'</span></div></div></div>'+
+    '<div class="creq"><h5>Mandatory tickets</h5><ul>'+v.mandatory.map(function(m){return '<li>'+m+'</li>';}).join('')+'</ul></div>'+
+    '<div class="creq"><h5>Medical / screen</h5><p>'+v.medical+'</p></div>'+
+    '<div class="creq"><h5>Right to work</h5><p>'+v.rtw+'</p></div>'+
+    '<div class="cverifyrow">'+linksFor(v.verify)+'</div></div>';
+}).join('');
+</script>
+</body>
+</html>

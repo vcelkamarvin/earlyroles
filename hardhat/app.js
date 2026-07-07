@@ -51,7 +51,7 @@ var SECTORS = [
   { id:'wind',   icon:'🌬️', name:'Offshore Wind',       blurb:'GWO-certified turbine techs building & maintaining wind farms.',      pay:'$65k–$140k', rota:'2 on / 2 off', noexp:true },
   { id:'diving', icon:'🤿', name:'Commercial Diving',    blurb:'Air & saturation divers, tenders — underwater welding & inspection.', pay:'$65k–$250k', rota:'project',     noexp:false },
   { id:'marine', icon:'⚓', name:'Merchant Marine',      blurb:'Deckhand, OS/AB, wiper — cargo ships, tugs, supply vessels.',        pay:'$58k–$130k', rota:'28 on / 28 off', noexp:true },
-  { id:'mining', icon:'⛏️', name:'FIFO Mining',          blurb:'Fly-in fly-out remote mine operators, trades & haul-truck drivers.', pay:'$88k–$180k', rota:'2 on / 1 off', noexp:true },
+  { id:'mining', icon:'⛏️', name:'FIFO Mining',          blurb:'Fly-in fly-out to Canadian oil-sands camps, US mines or Australian sites — flights, meals and camp usually covered. Operators, labourers & haul-truck drivers.', pay:'$70k–$180k', rota:'14/7 · 6/6 · 2/1 (camp/FIFO)', noexp:true },
   { id:'weld',   icon:'🔥', name:'Pipeline / Welding',   blurb:'Structural & pipeline welders, riggers, fabricators.',               pay:'$68k–$160k', rota:'project',     noexp:false },
   { id:'wtt',    icon:'⚡', name:'Wind Turbine Tech',    blurb:'Onshore turbine service techs — climb, service, fault-find.',        pay:'$58k–$105k',  rota:'rota',       noexp:true },
   { id:'cdl',    icon:'🚛', name:'Hazmat / CDL Haul',    blurb:'Long-haul, tanker & hazmat drivers — oilfield & heavy freight.',     pay:'$72k–$135k', rota:'weeks out',  noexp:true }
@@ -122,7 +122,7 @@ var PAY = {
   wind:  { entry:'$65k', exp:'$140k', day:'$300–$550/day', rota:'2 on / 2 off',       tax:false, note:'GWO tickets open EU + US offshore wind.' },
   diving:{ entry:'$65k', exp:'$250k', day:'$450–$1,600/day', rota:'project-based',    tax:false, note:'Saturation diving is the top of the pay scale.' },
   marine:{ entry:'$58k', exp:'$130k', day:'$220–$480/day',  rota:'28 on / 28 off',   tax:true,  note:'US mariners may qualify for foreign-earned income exclusion.' },
-  mining:{ entry:'$88k', exp:'$180k', day:'$320–$700/day',  rota:'2 on / 1 off (FIFO)', tax:false, note:'Camp, flights & meals usually covered on top.' },
+  mining:{ entry:'$70k', exp:'$180k', day:'$28–$58/hr',  rota:'14/7 · 6/6 · 2/1 (camp/FIFO)', tax:false, note:'Canada (oil sands), US & Australia. Camp, flights & meals usually covered on top.' },
   weld:  { entry:'$68k', exp:'$160k', day:'$32–$78/hr',     rota:'project / shutdown', tax:false, note:'Certified 6G pipe welders earn the most.' },
   wtt:   { entry:'$58k', exp:'$105k', day:'$30–$55/hr',     rota:'rota + travel',      tax:false, note:'Traveling techs get per-diem on top.' },
   cdl:   { entry:'$72k', exp:'$135k', day:'$0.65–$0.95/mi', rota:'weeks out',          tax:false, note:'Oilfield & hazmat pays a premium over dry van.' }
@@ -451,6 +451,7 @@ var REGIONS = [
   { id:'us',     name:'US Gulf of Mexico',         flag:'🇺🇸', cert:'us',     locIds:['gom'],      cty:'US',        pass:['US'] },
   { id:'useast', name:'US East Coast (wind)',      flag:'🇺🇸', cert:'us',     locIds:['useast'],   cty:'US',        pass:['US'] },
   { id:'au',     name:'Australia (FIFO & offshore)',flag:'🇦🇺', cert:'au',    locIds:['ausfifo'],  cty:'Australia', pass:['AU','NZ'] },
+  { id:'canada', name:'Canada (oil sands & FIFO)',  flag:'🇨🇦', cert:'canada', locIds:[],          cty:'Canada',    pass:['CA'] },
   { id:'me',     name:'Middle East',               flag:'🇦🇪', cert:'global', locIds:['me'],       cty:'UAE',       pass:'sponsor' },
   { id:'wafrica',name:'West Africa',               flag:'🌍', cert:'global', locIds:['wafrica'],  cty:'Nigeria',   pass:'sponsor' },
   { id:'brazil', name:'Brazil (Santos Basin)',     flag:'🇧🇷', cert:'global', locIds:['brazil'],   cty:'Brazil',    pass:['BR'] },
@@ -470,7 +471,8 @@ var TK_KEYWORDS = { bosiet:/bosiet/i, ogukmed:/oeuk|oguk/i, mist:/mist/i, gwobst
   induction:/standard 11|induction|white card/i, medm:/coal board|pre-employment medical/i, hr:/heavy vehicle|hr \/ hc/i,
   weldcert:/coding test|6g|asme|aws d1/i, osha:/osha/i, rigging:/rigg/i, dmt:/diver qualification|dive school|imca|adci/i,
   divemed:/diving medical/i, gwoheights:/heights|gwo/i, wttmed:/climb medical/i, elec:/high.?voltage|electrical/i,
-  cdla:/cdl class a|cdl/i, hazmat:/hazmat/i, dotmed:/dot medical/i, rigpass:/rigpass|safegulf|safeland/i };
+  cdla:/cdl class a|cdl/i, hazmat:/hazmat/i, dotmed:/dot medical/i, rigpass:/rigpass|safegulf|safeland/i,
+  h2salive:/h2s alive/i, cso:/common safety orientation|cso|csts/i, class1:/class 1|class 3/i, sfa:/standard first aid/i, msha:/msha|part 46|part 48/i };
 
 function rtwCheck(regionChoice, passportCc, sectorRtwText){
   var lvl, msg;
@@ -766,7 +768,7 @@ function footHTML(){
   return '<footer><div class="wrap foot">'+
     '<div style="max-width:280px"><div class="brand" style="margin-bottom:10px"><span class="mk">⛏</span>HardHat</div>'+
     '<p>Find the job, get qualified, and get hired. The no-degree route into high-paying offshore and trades work, worldwide.</p></div>'+
-    '<div class="fcol"><h5>Explore</h5><a href="jobs.html">Job board</a><a href="browse.html">Browse all</a><a href="locations.html">Locations</a><a href="certs.html">Ticket requirements</a><a href="roadmap.html">Ticket roadmap</a><a href="pay.html">Pay explorer</a><a href="directory.html">Agencies</a></div>'+
+    '<div class="fcol"><h5>Explore</h5><a href="jobs.html">Job board</a><a href="fifo-mining-jobs.html">FIFO mining jobs</a><a href="browse.html">Browse all</a><a href="locations.html">Locations</a><a href="certs.html">Ticket requirements</a><a href="pay.html">Pay explorer</a><a href="directory.html">Agencies</a></div>'+
     '<div class="fcol"><h5>Product</h5><a href="start.html">Rig-Ready assessment</a><a href="cv.html">Offshore CV builder</a><a href="blog.html">Blog</a><a href="pricing.html">Pricing</a><a href="dashboard.html">Dashboard</a></div>'+
     '<div class="fcol"><h5>Company</h5><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="mailto:hello@hardhatjobs.co">Contact</a></div>'+
     '</div><div class="wrap" style="margin-top:28px;font-size:12px;color:var(--faint);line-height:1.7">© 2026 HardHat. <b style="color:var(--muted)">Independent platform — not affiliated with, endorsed by, or partnered with any company named on this site.</b> Company names and logos are the trademarks of their respective owners, shown only to indicate sectors and employers that hire for these roles. Job listings, pay ranges and demand figures are illustrative industry estimates, not live vacancies or guarantees. Work offshore and in the trades carries real physical risk; always complete accredited safety training. Photos: Wikimedia Commons &amp; Unsplash.</div></footer>';

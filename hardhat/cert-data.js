@@ -12,6 +12,7 @@ var HH_CERTS = {
     uk:     { name:'North Sea (UK)', flag:'🇬🇧', locIds:['northsea'] },
     us:     { name:'US Gulf of Mexico', flag:'🇺🇸', locIds:['gom','useast'] },
     au:     { name:'Australia', flag:'🇦🇺', locIds:['ausfifo'] },
+    canada: { name:'Canada (oil sands & mining)', flag:'🇨🇦', locIds:[] },
     global: { name:'Global / Middle East / W. Africa', flag:'🌍', locIds:['me','wafrica','brazil','seasia','guyana','caspian'] },
     eu:     { name:'Europe (offshore wind)', flag:'🇪🇺', locIds:['northsea'] }
   },
@@ -25,7 +26,12 @@ var HH_CERTS = {
     rshq:   { name:'QLD RSHQ / Standard 11', url:'https://www.rshq.qld.gov.au' },
     imca:   { name:'IMCA', url:'https://www.imca-int.com' },
     dot:    { name:'DOT medical', url:'https://nationalregistry.fmcsa.dot.gov' },
-    cswip:  { name:'CSWIP / TWI', url:'https://www.cswip.com' }
+    cswip:  { name:'CSWIP / TWI', url:'https://www.cswip.com' },
+    esc:     { name:'Energy Safety Canada', url:'https://www.energysafetycanada.com' },
+    abclass1:{ name:'Alberta Class 1', url:'https://www.alberta.ca/class-1-learning-pathway' },
+    dac:     { name:'Pre-access D&A (DriverCheck)', url:'https://www.drivercheck.ca' },
+    msha:    { name:'MSHA Part 46/48', url:'https://www.msha.gov/training-education' },
+    norcat:  { name:'NORCAT Common Core', url:'https://www.norcat.org' }
   },
   roles: [
     { id:'roustabout', sec:'oil', title:'Roughneck / Roustabout', lvl:'Entry', pay:'$80k–$180k',
@@ -54,12 +60,35 @@ var HH_CERTS = {
           rtw:'US work authorization required.',
           helps:['CTV / offshore transfer briefings'], verify:['gwo','twic'] }
       ]},
-    { id:'haultruck', sec:'mining', title:'Haul Truck Operator (FIFO)', lvl:'Entry', pay:'$75k–$160k',
+    { id:'haultruck', sec:'mining', title:'Haul Truck Operator (FIFO)', lvl:'Entry', pay:'$70k–$180k',
       regions:[
+        { r:'canada', mandatory:['H2S Alive (Energy Safety Canada)','CSO (Common Safety Orientation) or CSTS','Class 1 or Class 3 licence (on-road haul)'],
+          medical:'Pre-access drug & alcohol test + site fit-for-duty',
+          rtw:'Citizen or PR in practice; LMIA needed for foreign workers and hard for entry roles.',
+          helps:['Standard First Aid & CPR-C','Fatigue management','Ground Disturbance (some sites)'], verify:['esc','abclass1','dac'] },
+        { r:'us', mandatory:['MSHA Part 46 (surface) new-miner training','Site-specific orientation','CDL-A for on-road haul'],
+          medical:'Pre-employment physical + drug screen',
+          rtw:'US work authorization required. No sponsorship for entry.',
+          helps:['MSHA Part 48 (underground)','Haul-truck simulator / site training'], verify:['msha','dot'] },
         { r:'au', mandatory:['Standard 11 (QLD coal) or state induction','Construction White Card','RIIMPO321 Haul truck (or site training)'],
           medical:'Coal Board medical (QLD) or pre-employment medical + D&A',
           rtw:'Right to work in Australia (PR, 482, or working-holiday). This is the main gate for foreigners.',
           helps:['HR / HC heavy vehicle licence','Fatigue management','4WD / Working at heights (some sites)'], verify:['rshq'] }
+      ]},
+    { id:'minelabourer', sec:'mining', title:'Mine / Oil-Sands Labourer & Safety Watch', lvl:'Entry', pay:'$60k–$130k',
+      regions:[
+        { r:'canada', mandatory:['H2S Alive','CSO (Common Safety Orientation) or CSTS','Standard First Aid & CPR-C'],
+          medical:'Pre-access drug & alcohol test + fit-for-duty',
+          rtw:'Citizen or PR in practice; LMIA needed for foreign workers and hard for entry roles.',
+          helps:['Ground Disturbance','Confined Space / Fall Protection (some sites)','Class 5 licence + reliable transport'], verify:['esc','dac'] },
+        { r:'us', mandatory:['MSHA Part 46 new-miner training (surface)','Site-specific orientation'],
+          medical:'Pre-employment physical + drug screen',
+          rtw:'US work authorization required.',
+          helps:['OSHA 10','First Aid / CPR','Driver’s licence + own transport'], verify:['msha'] },
+        { r:'au', mandatory:['Standard 11 / site induction','Construction White Card'],
+          medical:'Pre-employment medical + D&A',
+          rtw:'Right to work in Australia (PR, 482, or working-holiday).',
+          helps:['Working at Heights / Confined Space','First Aid'], verify:['rshq'] }
       ]},
     { id:'deckhand', sec:'marine', title:'Deckhand / Able Seafarer', lvl:'Entry', pay:'$55k–$130k',
       regions:[
