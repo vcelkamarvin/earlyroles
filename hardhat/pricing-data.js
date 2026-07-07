@@ -49,17 +49,24 @@ var HH_PRICING = [
 function renderPlan(p){
   var lis = p.features.map(function(f){ return '<li'+(f.on?'':' class="off"')+'>'+f.t+'</li>'; }).join('');
   var btn = p.plan
-    ? '<button class="btn '+(p.feat?'btn-hi':'btn-ink')+' btn-block" onclick="HH.checkout(\''+p.plan+'\')">'+p.cta+'</button>'
+    ? '<button class="btn '+(p.feat?'btn-go':'btn-out')+' btn-block" onclick="HH.checkout(\''+p.plan+'\')">'+p.cta+'</button>'
     : '<a class="btn btn-out btn-block" href="'+p.href+'">'+p.cta+'</a>';
   var speed = p.speed ? '<div class="pspeed'+(p.feat?' hot':'')+'">⚡ '+p.speed+'</div>' : '';
   var value = p.value ? '<p class="pvalue">~'+p.value+' of guidance &amp; tools — <b>you pay '+(p.youpay||p.price)+'</b> <span>illustrative</span></p>' : '';
-  return '<div class="plan'+(p.feat?' feat':'')+' reveal">'+
-    (p.feat?'<span class="tag">Most popular — most get hired here</span>':'')+
-    '<h3>'+p.name+'</h3>'+
+  // the body (price → features → CTA) is shared; the featured card nests it in a white inner panel
+  var body =
     '<div class="price">'+p.price+'<span>'+p.per+'</span></div>'+
-    '<p class="pnote">'+p.note+'</p>'+
-    speed+
     value+
+    speed+
     '<ul>'+lis+'</ul>'+
-    btn+'</div>';
+    btn;
+  if(p.feat){
+    return '<div class="plan feat reveal">'+
+      '<div class="plan-head"><div class="ph-top"><h3>'+p.name+'</h3><span class="tag">Most popular</span></div>'+
+      '<p class="pnote">'+p.note+'</p></div>'+
+      '<div class="plan-inner">'+body+'</div></div>';
+  }
+  return '<div class="plan reveal">'+
+    '<div class="plan-head"><h3>'+p.name+'</h3><p class="pnote">'+p.note+'</p></div>'+
+    body+'</div>';
 }
