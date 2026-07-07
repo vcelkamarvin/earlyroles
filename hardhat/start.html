@@ -139,6 +139,7 @@
 
     <!-- OFFER (paywall before the plan) -->
     <div id="offer" class="result" style="display:none">
+      <div class="offphoto"><img id="offImg" src="img/rig.jpg" alt="Your matched sector" loading="lazy"><span class="offphoto-cap">Roles up to $210k/yr · no degree</span></div>
       <div class="offtop">
         <div class="okpill">✓ Assessment complete</div>
         <h2 class="qh" style="margin-top:12px;font-size:clamp(24px,4vw,32px)">You’re a strong fit for <span id="offSector">offshore</span> work<span id="offName"></span>.</h2>
@@ -370,6 +371,7 @@ function showOffer(){
   var sec=HH.sector(data.sector);
   var u=HH.Auth.user()||{}; var nm=(u.name||'').split(' ')[0];
   document.getElementById('offSector').textContent = sec ? sec.name : 'offshore';
+  var oi=document.getElementById('offImg'); if(oi && window.HH_SECTOR_IMG && HH_SECTOR_IMG[data.sector]) oi.src=HH_SECTOR_IMG[data.sector];
   // only greet with a real first name — never the "Crew" placeholder
   document.getElementById('offName').textContent = (nm && nm.toLowerCase()!=='crew') ? (', '+nm) : '';
   // dynamic pay stat for the chosen sector

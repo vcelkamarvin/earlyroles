@@ -104,8 +104,18 @@
     <div class="steps">
       <div class="step reveal"><img class="cardimg" src="img/rig-sea.jpg" alt="Offshore rig at sea" loading="lazy"><div class="k">01</div><h3 data-i18n="s1_h">Find the job</h3><p data-i18n="s1_p">Take the 2-minute assessment. We match you to real roles you qualify for across 8 sectors and 10+ global hubs.</p></div>
       <div class="step reveal card-dark"><img class="cardimg" src="img/welder.jpg" alt="Certified welder" loading="lazy"><div class="k">02</div><h3 data-i18n="s2_h">Get qualified</h3><p data-i18n="s2_p">Your own ticket and medical roadmap (BOSIET, GWO, STCW, CDL) with costs, timeframes and progress you can track.</p></div>
-      <div class="step reveal"><img class="cardimg" src="img/rig.jpg" alt="Offshore platform" loading="lazy"><div class="k">03</div><h3 data-i18n="s3_h">Get hired</h3><p data-i18n="s3_p">Build an offshore CV, then apply through the crewing agencies and operators that hire. <span class="hi">Applying is a Pro feature.</span></p></div>
+      <div class="step reveal"><img class="cardimg" src="img/wind.jpg" alt="Offshore wind farm" loading="lazy"><div class="k">03</div><h3 data-i18n="s3_h">Get hired</h3><p data-i18n="s3_p">Build an offshore CV, then apply through the crewing agencies and operators that hire. <span class="hi">Applying is a Pro feature.</span></p></div>
     </div>
+  </div>
+</section>
+
+<!-- SECTOR EXPLORER — photo tiles into the funnel -->
+<section class="alt">
+  <div class="wrap">
+    <div class="lblrow"><span class="hl">Pick your trade</span></div>
+    <h2 class="sec">Eight ways in — no degree, most need no experience</h2>
+    <p class="lead">Tap a trade to see the pay, the tickets and the roles you'd qualify for.</p>
+    <div class="sectiles" id="sectiles"></div>
   </div>
 </section>
 
@@ -130,7 +140,7 @@
 
 <!-- FIELD PHOTO BAND 2 -->
 <section class="photoband" style="padding:0">
-  <img src="img/welder.jpg" alt="Certified welder at work">
+  <img src="img/mining.jpg" alt="FIFO mining site">
   <div class="pb">
     <h2>Get certified. Get paid.</h2>
     <p>We show you the exact tickets for your trade, where to get them, and what they cost.</p>
@@ -319,6 +329,15 @@
   // populate hero sector picker
   document.getElementById('heroSector').innerHTML = '<option value="" data-i18n="hero_sector">What work interests you?</option>' +
     HH_SECTORS.map(function(s){ return '<option value="'+s.id+'">'+s.icon+' '+s.name+' — '+HH.payLoc(s.pay)+'</option>'; }).join('');
+
+  // photo sector tiles → funnel
+  var st=document.getElementById('sectiles');
+  if(st){ st.innerHTML=HH_SECTORS.map(function(s){
+    var img=(window.HH_SECTOR_IMG&&HH_SECTOR_IMG[s.id])||'img/rig.jpg';
+    return '<a class="stile" href="start.html?sector='+s.id+'" style="background-image:linear-gradient(180deg,rgba(10,12,15,.15),rgba(10,12,15,.82)),url('+img+')">'+
+      (s.noexp?'<span class="stbadge">No exp OK</span>':'')+
+      '<div class="stbody"><span class="sticon">'+s.icon+'</span><h3>'+s.name+'</h3><p>'+HH.payLoc(s.pay)+' · '+s.rota+'</p></div></a>';
+  }).join(''); }
   HH.applyLang(HH.lang());
 
   function heroRegister(e){

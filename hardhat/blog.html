@@ -26,8 +26,17 @@
 <script src="app.js"></script>
 <script>
 HH.mountChrome('blog.html');
+function blogImg(b){
+  var s=(b.slug+' '+b.title).toLowerCase();
+  if(/wind/.test(s)) return 'img/wind.jpg';
+  if(/div(er|ing)/.test(s)) return 'img/diving.jpg';
+  if(/weld/.test(s)) return 'img/welder.jpg';
+  if(/mining|oil-sands|fifo|h2s|cso|csts|rotation/.test(s)) return 'img/mining.jpg';
+  if(/newfoundland|marine|deckhand|sea/.test(s)) return 'img/rig-sea.jpg';
+  return 'img/rig.jpg';
+}
 document.getElementById('grid').innerHTML = HH_BLOG.map(function(b){
-  return '<a class="blogcard" href="post.html?slug='+b.slug+'"><div class="bt"><span class="tg">'+b.tag+'</span> '+b.date+' · '+b.read+'</div>'+
+  return '<a class="blogcard" href="post.html?slug='+b.slug+'"><div class="bthumb" style="background-image:url('+blogImg(b)+')"></div><div class="bt"><span class="tg">'+b.tag+'</span> '+b.date+' · '+b.read+'</div>'+
     '<h3>'+b.title+'</h3><p>'+b.excerpt+'</p><span class="rd">Read article →</span></a>';
 }).join('');
 </script>

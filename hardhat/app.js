@@ -59,6 +59,11 @@ var SECTORS = [
 ];
 window.HH_SECTORS = SECTORS;
 function sector(id){ for(var i=0;i<SECTORS.length;i++) if(SECTORS[i].id===id) return SECTORS[i]; return null; }
+/* sector → representative photo (reused across the site for photo tiles/bands) */
+window.HH_SECTOR_IMG = {
+  oil:'img/rig.jpg', wind:'img/wind.jpg', diving:'img/diving.jpg', marine:'img/rig-sea.jpg',
+  mining:'img/mining.jpg', weld:'img/welder.jpg', wtt:'img/wind.jpg', cdl:'img/rig.jpg'
+};
 
 /* ------------------------------------------------------------------ */
 /* TICKETS / MEDICALS per sector — the roadmap engine                  */
