@@ -17,9 +17,12 @@ var CONFIG = {
 };
 window.HH_CONFIG = CONFIG;
 
-/* GA4 (only if configured) */
+/* GA4 (only if configured AND the visitor accepted analytics cookies) */
 function ga(ev, params){
-  try{ if(window.gtag) window.gtag('event', ev, params||{}); }catch(e){}
+  try{
+    if(get('consent') !== 'all') return;     // GDPR: no analytics before opt-in
+    if(window.gtag) window.gtag('event', ev, params||{});
+  }catch(e){}
 }
 window.hhTrack = ga;
 
@@ -962,7 +965,31 @@ window.HH.mountChrome = function(active){
   applyLang(currentLang());
   syncEntitlement();
   initReveal();
+  mountConsent();
 };
+/* GDPR cookie-consent banner — analytics/marketing cookies fire only after
+ * "Accept" (see the guard in ga()). Essential first-party storage (your saved
+ * plan, intake, applications) always works. Bilingual EN/ES; shown once. */
+function consent(){ return get('consent'); }
+window.HH.consent = consent;
+function mountConsent(){
+  if(get('consent')) return;                         // already chose
+  if(document.getElementById('hhConsent')) return;   // already mounted this load
+  var es = currentLang()==='es';
+  var t = es
+    ? { msg:'Usamos cookies esenciales para que el sitio funcione y, con tu permiso, cookies de análisis para mejorarlo.', acc:'Aceptar', rej:'Solo esenciales', more:'Privacidad' }
+    : { msg:'We use essential cookies to run the site and, with your consent, analytics cookies to improve it.', acc:'Accept', rej:'Essential only', more:'Privacy' };
+  var bar=document.createElement('div'); bar.className='consentbar'; bar.id='hhConsent';
+  bar.innerHTML='<p>'+t.msg+' <a href="privacy.html">'+t.more+' →</a></p>'+
+    '<div class="cbtns"><button class="btn btn-out btn-sm" id="cRej">'+t.rej+'</button>'+
+    '<button class="btn btn-go btn-sm" id="cAcc">'+t.acc+'</button></div>';
+  document.body.appendChild(bar);
+  function done(v){ set('consent',v); bar.classList.remove('on'); setTimeout(function(){ if(bar.parentNode) bar.parentNode.removeChild(bar); },300); }
+  document.getElementById('cAcc').onclick=function(){ done('all'); ga('consent_accept',{}); };
+  document.getElementById('cRej').onclick=function(){ done('essential'); };
+  requestAnimationFrame(function(){ bar.classList.add('on'); });
+}
+window.HH.mountConsent = mountConsent;
 window.HH.toast = function(msg){
   var t=document.getElementById('hhToast');
   if(!t){ t=document.createElement('div'); t.id='hhToast'; t.className='toast'; document.body.appendChild(t); }

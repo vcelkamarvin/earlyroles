@@ -99,7 +99,7 @@ v1 full platform scaffold → v2 global SaaS upgrade (real companies/logos, loca
 5. ☐ **Google OAuth Client ID** → `CONFIG.GOOGLE_CLIENT_ID` (login is demo-mode until then).
 6. ☐ **Analytics + pixels**: `GA_MEASUREMENT_ID` + Meta/TikTok pixels (events already fire); submit `sitemap.xml` to Search Console.
 7. ☐ **Live jobs (optional)**: `ADZUNA_APP_ID/KEY` + `CAREERJET_KEY` in Vercel env → flips the ⚡ Live openings tab on.
-8. ◐ **Legal/ops**: cookie-consent banner (EU leads), refund policy, new-lead email notification, Sentry/uptime, hero-photo compression (WebP), real-device QA.
+8. ◐ **Legal/ops**: ✅ cookie-consent banner shipped (GDPR — analytics fire only after opt-in; bilingual EN/ES). Still to do: refund policy, new-lead email notification, Sentry/uptime, hero-photo compression (WebP), real-device QA.
 
 **Minimum to take money safely = items 1 + 2.** Everything else is graceful-degradation and can follow launch.
 
