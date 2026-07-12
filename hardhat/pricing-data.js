@@ -30,19 +30,6 @@ var HH_PRICING = [
       {t:'Personalized recommendations + job alerts', on:true},
       {t:'Interview & medical prep + priority support', on:true}
     ]
-  },
-  {
-    id:'dfy', name:'Done-For-You', price:'$190', per:'one-time', note:'We do the hard part for you',
-    plan:'dfy', cta:'Do it for me', href:'#', feat:false,
-    speed:'The fastest route — we do the legwork',
-    value:'$1,200+', youpay:'$190',
-    features:[
-      {t:'Everything in Rig-Ready Pro', on:true},
-      {t:'We write your offshore CV for you', on:true},
-      {t:'Hand-picked agency shortlist (your sector + region)', on:true},
-      {t:'We get you registered with the right agencies', on:true},
-      {t:'1:1 priority “get hired” support', on:true}
-    ]
   }
 ];
 

@@ -49,8 +49,8 @@ module.exports = async (req, res) => {
     });
     const rows = await r.json();
     const row = Array.isArray(rows) && rows[0];
-    // Pro ($120) or Done-For-You ($190) unlock the contacts; Basics ($32) does not.
-    const paid = row && row.status === 'active' && (row.plan === 'pro' || row.plan === 'dfy');
+    // Pro ($120) unlocks the contacts; Basics ($32) does not.
+    const paid = row && row.status === 'active' && row.plan === 'pro';
     if (!paid) { res.status(200).json({ configured: true, paid: false, agencies: [] }); return; }
     const list = sector ? AGENCIES.filter(a => a.sector === sector) : AGENCIES;
     res.status(200).json({ configured: true, paid: true, plan: row.plan, agencies: list });

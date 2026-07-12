@@ -28,7 +28,7 @@
 HH.mountChrome('');
 var qs=new URLSearchParams(location.search);
 var plan=qs.get('plan')||'basic'; var sid=qs.get('session_id')||'';
-var VALID={basic:1,pro:1,dfy:1};
+var VALID={basic:1,pro:1};
 fetch('/api/verify-checkout?plan='+encodeURIComponent(plan)+'&session_id='+encodeURIComponent(sid))
   .then(function(r){return r.json();})
   .then(function(j){

@@ -8,9 +8,9 @@ The worker-subscription platform for high-paying, no-degree offshore & trades jo
 
 ## 1 · WHAT'S WORKING RIGHT NOW (all verified live)
 
-### Money — three one-time plans (no subscription)
-- **Pricing:** **Rig-Ready Basics $32** (region roadmap + cost checklist + unlimited saved jobs — no applying) · **Rig-Ready Pro $120** (the flagship — apply to jobs, full agency contacts, CV builder, week-by-week plan, prep, support) · **Done-For-You $190** (we write the CV, hand-pick agencies, register you). Middle tier is badged "Most popular"; cards show a speed-to-hired pill + illustrative value anchor.
-- **Checkout:** `CONFIG.PAY` uses Stripe Payment Links. `dfy` reuses the prior $190 link; **`basic` ($32) and `pro` ($120) links still need creating** (see §4) — until then those buttons gracefully fall back to signup. (The `window.location` shadow bug that once no-op'd checkout is fixed.)
+### Money — two one-time plans (no subscription)
+- **Pricing:** **Rig-Ready Basics $32** (region roadmap + cost checklist + unlimited saved jobs — no applying) · **Rig-Ready Pro $120** (the flagship — apply to jobs, full agency contacts, CV builder, week-by-week plan, prep, support). Pro is badged "Most popular"; cards show a speed-to-hired pill + illustrative value anchor. *(The $190 Done-For-You tier is parked for now — removed from the UI and checkout; the `dfy` id lingers only as a harmless tier-map entry.)*
+- **Checkout:** `CONFIG.PAY` uses Stripe Payment Links. **Both `basic` ($32) and `pro` ($120) links still need creating** (see §4) — until then those buttons gracefully fall back to signup. (The `window.location` shadow bug that once no-op'd checkout is fixed.)
 - **Entitlement is server-verifiable:** Stripe webhook → Supabase `hardhat_subscriptions` → `/api/entitlement` + `/api/directory`; `HH.syncEntitlement()`/`verifyPro()` make the server authoritative and the agency contacts are served only to a verified-paid email. Dormant-safe until keys are set (§4).
 - Post-payment: `success.html` verifies (or gracefully falls back), unlocks the plan, routes into Pro setup.
 
@@ -26,11 +26,12 @@ The worker-subscription platform for high-paying, no-degree offshore & trades jo
 - **Certificate Truth Engine** (`certs.html`, "Tickets" in nav): role × region matrix — mandatory tickets, medicals, right-to-work reality, official verify links (OPITO, GWO, IMO STCW, OEUK, TWIC, QLD RSHQ, IMCA, DOT). Versioned in `cert-data.js` with lastVerified date.
 - **Post-payment Pro onboarding** (`setup.html`): where you live + passport, target region (with **live honest right-to-work check** + feasible alternatives), English level, ticket confirm → `hh_pro_profile`.
 - **Region-exact recommendation engine** (`HH.proPlan`): the same oil worker gets "Book BOSIET + CA-EBS" for a UK target and "Book SafeGulf/SafeLandUSA" for a US target — with region medical, estimated ticket outlay, named agencies, and a **week-by-week "how we get you hired" plan** (Wk1 ticket+medical → Wk2 CV+agency registrations → Wk3–4 apply+follow-ups → Wk5–6 interviews/first offer).
-- **Dashboard** (taste-redesigned): "You are N tickets from applying, {name}" → one ◆ next-step hero with provider link → score ring with named blockers → path-to-hired (done/active/future) → sample matched roles with fit % → honest Pro unlock ("No job or salary is guaranteed") → applications tracker.
+- **Dashboard** (order-tracker, distinct free vs client views): greeting + goal + progress bar → connected 5-step plan (only the current step expands) → sample matched roles with fit %. **Free users** see locked teaser rows + the honest Pro unlock ("No job or salary is guaranteed") + sticky mobile CTA. **Paying clients** get a different layout centred on *apply → track → agencies*: their applications tracker and an agency-shortlist card are pulled to the top, and each matched role has an inline **Apply →** that records the application; no upsell.
+- **Applying actually records**: a Pro user's apply (from the job modal or the dashboard fit rows) sets the local tracker AND best-effort POSTs to Supabase `hardhat_applications`, then shows a confirmation modal with the next move (get on the agency's books). Dormant-safe — no table set = local-only, no error. Table SQL in `SETUP_KEYS.md`.
 - **Roadmap** (`roadmap.html`): per-sector ticket tracker with free accredited-provider links + Pro "Requirements for {region}" panel. **Pay explorer**, **agency directory** (Pro-gated contacts), **AI CV builder** (Claude→OpenAI→template fallback), blog (6 posts).
 
 ### Reach
-- **SEO**: 49 generated pages (24 job pages with JobPosting JSON-LD, 10 location hubs with FAQ schema, 8 "how to become" guides with Article+FAQ schema, browse hub, 6 ad variants) + 71-URL sitemap + canonical/OG tags everywhere. Regenerate: `node build-seo.js`.
+- **SEO**: 51 generated pages (24 job pages with JobPosting JSON-LD, 12 location hubs with FAQ schema, 8 "how to become" guides with Article+FAQ schema, browse hub, 6 ad variants) + 81-URL sitemap + canonical/OG tags everywhere. Regenerate: `node build-seo.js`.
 - **Bilingual EN/ES** on the conversion path (nav toggle, auto-detects Spanish browsers, persists).
 - **Lead capture**: every signup/popup/funnel email → Supabase `hardhat_leads` (verified working).
 - Mobile-verified at 390px throughout (no horizontal scroll, no console errors).
@@ -64,7 +65,7 @@ index.html (hero form) ──► start.html (6-step assessment)
 | `cert-data.js` | Certificate Truth Engine source of truth (versioned, verify links) |
 | `jobs-data.json` | 5,226-role catalog (compact columnar; expanded client-side in jobs.html) |
 | `build-jobs.js` / `build-seo.js` | Generators (deterministic) — rerun after editing data in app.js |
-| `pricing-data.js` | Plans + renderer (Pro $48/mo, Fast-Track $190) |
+| `pricing-data.js` | Plans + renderer (Basics $32, Pro $120 flagship — one-time) |
 | `api/` | `checkout.js` + `verify-checkout.js` (Stripe session alt-path), `cv.js` + `ticket-check.js` (AI w/ heuristic fallback), **`jobs.js`** (Adzuna+Careerjet live feed — dormant until keys) |
 | `SETUP_KEYS.md` | Every env var and where to get it |
 
@@ -83,14 +84,16 @@ v1 full platform scaffold → v2 global SaaS upgrade (real companies/logos, loca
 ## 4 · BEFORE LAUNCH
 
 ### Already done in code (shipped)
-- ✅ Three one-time plans ($32 / $120 / $190) with $120 as the flagship; value + speed-to-hired framing on the cards.
-- ✅ **Applying** clarified & fixed: for a Pro user it marks the job applied + routes to the agency contacts (honest, agency-routed model); the label/gate mismatch is fixed (Basics correctly sees the locked state).
+- ✅ Two one-time plans ($32 / $120) with $120 as the flagship; value + speed-to-hired framing. **$190 Done-For-You removed** from pricing, offer down-sell, checkout, webhook, directory gate and docs (parked for later).
+- ✅ **Applying actually works & records**: a Pro apply (job modal or dashboard fit row) marks the tracker, best-effort writes a row to Supabase `hardhat_applications`, and shows a confirmation modal with the next move. Free/Basics correctly hit the Pro paywall. The label/gate mismatch is fixed.
+- ✅ **Better client dashboard**: paying clients get an apply → track → agencies layout (apps tracker + agency shortlist pulled up, inline Apply on matched rows); free view unchanged.
+- ✅ **Info-accuracy audit**: fixed hubs that claimed the wrong country's rules — Mexico/Colombia/Chile now map to a **Latin America** region and Spain to **Iberia & Canary Islands**, both resolving to *global/international* requirements instead of false US-Gulf (TWIC/SafeGulf), Australian (Standard 11) or North-Sea rules. The job detail now asserts a region's exact tickets **only when a verified variant exists for that role+region**, else links to the role's typical requirements + a "pay & tickets vary by country — illustrative" line. Cert ticket *content* spot-checked correct.
 - ✅ **Live-jobs tab** on the board (Representative | ⚡ Live openings) — reuses `/api/jobs` (Adzuna+Careerjet); register-gated; honest fallback notice when the aggregator keys aren't set.
 - ✅ **Server-verified, anti-spoof entitlement**: `syncEntitlement`/`verifyPro` make the server authoritative; `/api/directory` serves the crewing-agency contacts only to a verified-paid email. Dormant-safe until keys are added.
 
 ### You must do before charging money / running ads (☐ = your dashboards)
-1. ☐ **Create the two missing one-time Stripe Payment Links** — $32 Basics + $120 Pro — and paste into `CONFIG.PAY` (`basic`, `pro`); verify the $190 `dfy` link. Run a real **test purchase + refund** on each. *Without this, nobody can pay → applying stays locked.*
-2. ☐ **Activate entitlement** — add `STRIPE_SECRET_KEY`, the Stripe **webhook secret** (endpoint → `/api/stripe-webhook`, event `checkout.session.completed`), and `SUPABASE_SERVICE_KEY` to Vercel env; create the `hardhat_subscriptions` table (SQL in `SETUP_KEYS.md`). *THE anti-spoof blocker — do before ads.*
+1. ☐ **Create the two one-time Stripe Payment Links** — $32 Basics + $120 Pro — and paste into `CONFIG.PAY` (`basic`, `pro`). Run a real **test purchase + refund** on each. *Without this, nobody can pay → applying stays locked.*
+2. ☐ **Activate entitlement + application records** — add `STRIPE_SECRET_KEY`, the Stripe **webhook secret** (endpoint → `/api/stripe-webhook`, event `checkout.session.completed`), and `SUPABASE_SERVICE_KEY` to Vercel env; create the `hardhat_subscriptions` **and** `hardhat_applications` tables (SQL in `SETUP_KEYS.md`). *THE anti-spoof blocker + durable apply records — do before ads.*
 3. ☐ **Rotate the Vercel token** (it appeared in chat) — Vercel → Settings → Tokens. *2 min.*
 4. ☐ **Custom domain** hardhatjobs.co + `hello@` email + update Stripe success/cancel origins. *15 min.*
 5. ☐ **Google OAuth Client ID** → `CONFIG.GOOGLE_CLIENT_ID` (login is demo-mode until then).

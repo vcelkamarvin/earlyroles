@@ -13,7 +13,7 @@ var CONFIG = {
   SUPABASE_KEY: 'sb_publishable_GQGwqejtKqPBwUXOQe0E0w_d4iHupij', // publishable key (safe in client)
   // Stripe Payment Links (fastest path). Leave '' to use /api/checkout.
   // One-time plans (no subscription). Add a Stripe Payment Link per tier; '' = graceful signup fallback.
-  PAY: { basic:'', pro:'', dfy:'https://buy.stripe.com/fZu14faof7XXfxz1DU63K0e' }
+  PAY: { basic:'', pro:'' }
 };
 window.HH_CONFIG = CONFIG;
 
@@ -43,6 +43,29 @@ function saveLead(){
   }catch(e){}
 }
 window.HH_saveLead = saveLead;
+
+/* Durable application capture -> Supabase (best-effort, never blocks the UI).
+   Fired when a Pro user registers for a job so there is a real record to follow up. */
+function saveApplication(job){
+  try{
+    var url = CONFIG.SUPABASE_URL, key = CONFIG.SUPABASE_KEY;
+    if(!url || !key || !job) return;
+    var u = get('user') || {};
+    if(!u.email) return;
+    fetch(url.replace(/\/$/,'') + '/rest/v1/hardhat_applications', {
+      method:'POST',
+      headers:{ 'Content-Type':'application/json', 'apikey':key, 'Authorization':'Bearer '+key, 'Prefer':'return=minimal' },
+      body: JSON.stringify({
+        email: u.email, name: u.name || '',
+        job_id: job.id || null, title: job.t || job.title || '', company: job.co || job.company || '',
+        sector: job.sec || null, location: job.loc || job.location || '',
+        agency: job.ag || null, plan: get('plan','free'),
+        source: (typeof window!=='undefined' && window.location ? window.location.pathname : '')
+      })
+    }).catch(function(){});
+  }catch(e){}
+}
+window.HH_saveApplication = saveApplication;
 
 /* ------------------------------------------------------------------ */
 /* SECTORS — the 8 verticals                                           */
@@ -164,7 +187,9 @@ var LOCATIONS = [
   { id:'seasia',   name:'Southeast Asia', flag:'🇸🇬🇲🇾', hub:'Singapore · Batam', sectors:['marine','oil','weld'], open:3300 },
   { id:'guyana',   name:'Guyana', flag:'🇬🇾', hub:'Georgetown', sectors:['oil','marine'], open:1200 },
   { id:'useast',   name:'US East Coast Wind', flag:'🇺🇸', hub:'NJ · MA · VA', sectors:['wind','wtt','marine'], open:2800 },
-  { id:'caspian',  name:'Caspian', flag:'🇰🇿🇦🇿', hub:'Baku · Atyrau', sectors:['oil','weld'], open:1100 }
+  { id:'caspian',  name:'Caspian', flag:'🇰🇿🇦🇿', hub:'Baku · Atyrau', sectors:['oil','weld'], open:1100 },
+  { id:'latam',    name:'Latin America', flag:'🇲🇽🇨🇴🇨🇱', hub:'Ciudad del Carmen · Antofagasta', sectors:['oil','marine','mining','weld'], open:1600 },
+  { id:'iberia',   name:'Iberia & Canary Islands', flag:'🇪🇸', hub:'Las Palmas · Tarragona', sectors:['marine','oil','wind','weld'], open:900 }
 ];
 window.HH_LOCATIONS = LOCATIONS;
 function location(id){ for(var i=0;i<LOCATIONS.length;i++) if(LOCATIONS[i].id===id) return LOCATIONS[i]; return null; }
@@ -489,6 +514,7 @@ function payLoc(str, o){
 window.HH.currency = currency;
 window.HH.setCurrency = setCurrency;
 window.HH.money = money;
+window.HH.saveApplication = saveApplication;
 window.HH.usdNum = usdNum;
 window.HH.payLoc = payLoc;
 window.HH.FX = FX; window.HH.SYM = SYM;

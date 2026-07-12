@@ -41,8 +41,7 @@ function verifySig(raw, header, secret) {
 }
 
 function planFromAmount(amountTotal) {
-  // one-time tiers, in cents: $32 / $120 / $190
-  if (amountTotal >= 15000) return 'dfy';    // $190
+  // one-time tiers, in cents: $32 / $120
   if (amountTotal >= 7000)  return 'pro';    // $120
   return 'basic';                            // $32
 }

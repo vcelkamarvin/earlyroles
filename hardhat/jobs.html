@@ -203,10 +203,26 @@ function rotaDesc(rota){
   if(m) return 'You work '+m[1]+' '+(parseInt(m[1],10)>6?'days':'weeks')+' on site, then get '+m[2]+' off — fully off, no calls. Travel to the site is typically covered, and many crews earn a full year’s pay working half the year’s days.';
   return 'Rotational cycle: blocks of time on site followed by blocks fully off. Travel and accommodation on rotation are typically covered.';
 }
+function certRegionKeys(locId){
+  if(!window.HH_CERTS||!HH_CERTS.regions) return [];
+  var regs=HH_CERTS.regions, keys=[];
+  Object.keys(regs).forEach(function(k){ if((regs[k].locIds||[]).indexOf(locId)>=0) keys.push(k); });
+  return keys;
+}
 function certLinkFor(j){
   var map={oil:'roustabout',wind:'windtech',wtt:'windtech',mining:'haultruck',marine:'deckhand',weld:'welder6g',diving:'diver',cdl:'driver'};
-  var rid=map[j.sector]; if(!rid||!window.HH_CERTS) return '';
-  return '<a href="certs.html#'+rid+'" style="color:var(--hi);font-size:13px;font-weight:600">See the full requirements for your region →</a>';
+  var rid=map[j.sector]; if(!rid||!window.HH_CERTS||!HH_CERTS.roles) return '';
+  var role=HH_CERTS.roles.filter(function(x){return x.id===rid;})[0]; if(!role) return '';
+  // A hub can sit in more than one cert region (e.g. North Sea = UK + EU wind).
+  // Assert the requirements only for a region this role has a VERIFIED variant for —
+  // never claim a country's rules we don't hold for that role.
+  var keys=certRegionKeys(j.locId);
+  var regKey=keys.filter(function(k){ return (role.regions||[]).some(function(v){return v.r===k;}); })[0];
+  if(regKey){
+    var rn=HH_CERTS.regions[regKey];
+    return '<a href="certs.html#'+rid+'" style="color:var(--hi);font-size:13px;font-weight:600">See the exact '+rn.flag+' '+rn.name+' requirements →</a>';
+  }
+  return '<a href="certs.html#'+rid+'" style="color:var(--hi);font-size:13px;font-weight:600">See typical requirements for this role →</a>';
 }
 function openJob(id){
   var j=JOBS_ALL.filter(function(x){return x.id===id;})[0]; if(!j) return;
@@ -236,7 +252,7 @@ function openJob(id){
     '<div class="jdet"><h5>About the role</h5><p>'+(sec.blurb||'')+' This is '+(j.level==='Entry'?'an entry-level opening — employers here hire on safety tickets, medical fitness and reliability, not a degree.':'an experienced role — you\'ll need proven time in the field plus current tickets.')+'</p></div>'+
     '<div class="jdet"><h5>Rotation &amp; lifestyle</h5><p><b>'+j.rota+'</b> — '+rotaDesc(j.rota)+'</p></div>'+
     '<div class="jdet"><h5>The money</h5><p>Around <b>'+j.pay+'/yr</b> for this role and level. Sector day rates run <b>'+HH.payLoc(pay.day||'—')+'</b>, and experienced '+ (sec.name||'') +' workers reach <b>'+HH.payLoc(pay.exp||'—')+'</b>. '+(pay.note||'')+'</p></div>'+
-    '<div class="jdet"><h5>What you need</h5><div style="margin:8px 0">'+(tickets||'<p style="color:var(--muted);font-size:14px">See the requirements matrix for this sector.</p>')+'</div>'+certLinkFor(j)+'</div>'+
+    '<div class="jdet"><h5>What you need</h5><div style="margin:8px 0">'+(tickets||'<p style="color:var(--muted);font-size:14px">See the requirements matrix for this sector.</p>')+'</div>'+certLinkFor(j)+'<p class="micro" style="margin-top:8px">Pay &amp; exact tickets vary by country and experience — figures are illustrative. Confirm the requirements for this location before you book anything.</p></div>'+
     '<div class="jdet"><h5>How hiring works here</h5><p>Roles like this are filled '+(j.viaAgency?('through <b>'+j.co+'</b> and similar crewing agencies'):'through crewing agencies and the operator\'s own talent pool')+' — not by applying on general job boards. Get the tickets above, build an offshore-format CV, then get on the agencies\' books.</p></div>'+
     '<p class="micro" style="margin:12px 0">Representative role — the kind of opening filled continuously in this sector and region. Confirm specifics on the posting when you apply.</p>'+
     '<button class="btn btn-hi btn-block btn-lg" onclick="applyJob(\''+j.id+'\')">'+(paid?'Apply through agency →':'🔒 Get a job — unlock Pro')+'</button>'+
@@ -260,8 +276,33 @@ function saveJob(id){
 }
 function applyJob(id){
   if(!HH.Auth.isPro()){ HH.showPaywall('Applying is part of Rig-Ready Pro ($120 one-time). Unlock the crewing-agency contacts, CV builder and templates that get you hired.'); return; }
-  HH.Auth.setApp(id,'applied'); HH.Auth.toggleSave(id); HH.toast('Marked as applied — track it on your dashboard'); closeJob();
-  location.href='directory.html';
+  var j=JOBS_ALL.filter(function(x){return x.id===id;})[0]; if(!j) return;
+  var already=HH.Auth.apps()[id]==='applied';
+  HH.Auth.setApp(id,'applied');
+  if(HH.Auth.saved().indexOf(id)<0) HH.Auth.toggleSave(id);
+  HH.saveApplication(j);                       // durable record (Supabase when configured)
+  HH.ga('apply',{sector:j.sector});
+  var routedVia=j.viaAgency?j.co:'a specialist crewing agency';
+  var n=HH.Auth.apps? Object.keys(HH.Auth.apps()).filter(function(k){return HH.Auth.apps()[k]==='applied';}).length : 1;
+  document.getElementById('jobBox').innerHTML=
+    '<span class="mclose" onclick="closeJob()">×</span>'+
+    '<div class="center" style="padding:6px 4px 2px">'+
+      '<div style="font-size:44px">✅</div>'+
+      '<h3 class="display" style="font-size:22px;margin:8px 0 4px">You’re registered for this role</h3>'+
+      '<p style="color:var(--muted);font-size:14px;max-width:40ch;margin:0 auto">'+
+        (already?'Already on your tracker — ':'We’ve logged your interest in ')+
+        '<b>'+j.title+'</b>'+(j.co?' · '+j.co:'')+'. These roles are filled through '+routedVia+' — here’s your next move.</p>'+
+    '</div>'+
+    '<div class="jdet" style="margin-top:14px"><h5>What happens next</h5>'+
+      '<ol style="margin:8px 0 0;padding-left:18px;color:var(--ink2);font-size:14px;line-height:1.7">'+
+        '<li>Get on '+(j.viaAgency?('<b>'+j.co+'</b>'):'the right crewing agencies')+'’ books — open the directory below.</li>'+
+        '<li>Send your offshore-format CV with your tickets and medical listed up top.</li>'+
+        '<li>Follow up in ~5 days — persistence is how these placements happen.</li>'+
+      '</ol></div>'+
+    '<a class="btn btn-hi btn-block btn-lg" style="margin-top:14px" href="directory.html">See how to reach '+(j.viaAgency?j.co.split(' ')[0]:'the agencies')+' →</a>'+
+    '<a class="btn btn-out btn-block" style="margin-top:10px" href="dashboard.html">Track my '+n+' application'+(n===1?'':'s')+' →</a>';
+  document.getElementById('jobModal').classList.add('on');
+  render();
 }
 window.openJob=openJob; window.closeJob=closeJob; window.saveJob=saveJob; window.applyJob=applyJob;
 ['q','secF','ctyF','expF','payF','sortF'].forEach(function(id){ document.getElementById(id).addEventListener('input',function(){shown=12; if(mode==='live') renderLive(); else render();}); });

@@ -185,6 +185,16 @@ h1.hero-h1 em{font-style:normal;color:var(--hi)}
 .fitrow .fr-main b{font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:15px;display:block}
 .fitrow .fr-main span{font-size:12.5px;color:var(--muted)}
 .fitrow .fr-fit{flex:none;font-family:"JetBrains Mono",monospace;font-size:12px;font-weight:700;color:var(--good);background:var(--good-soft);padding:5px 11px;border-radius:99px}
+/* v23 — Pro clients apply inline from matched rows */
+.fitrow-pro{cursor:default}
+.fitrow-pro:hover{transform:none;border-color:var(--line)}
+.fitrow .fr-apply{flex:none;white-space:nowrap}
+.fitrow .fr-applied{flex:none;font-size:12.5px;font-weight:700;color:var(--good);background:var(--good-soft);padding:7px 13px;border-radius:99px}
+/* v23 — agency shortlist card (paid) */
+.agrow{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px solid var(--line)}
+.agrow:last-child{border-bottom:0}
+.agrow b{font-family:"Space Grotesk",sans-serif;font-size:14.5px;display:block}
+.agrow span{font-size:12px;color:var(--muted)}
 .prounlock{text-align:center;border:1.5px dashed var(--line2);border-radius:20px;padding:32px 24px;margin-top:30px;background:var(--bg2)}
 .prounlock .pu-lock{font-size:26px}
 @media(max-width:640px){.dnext{padding:22px 18px}.dgreet{margin-top:14px}}

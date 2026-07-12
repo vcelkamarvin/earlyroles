@@ -13,7 +13,7 @@ var HH_CERTS = {
     us:     { name:'US Gulf of Mexico', flag:'🇺🇸', locIds:['gom','useast'] },
     au:     { name:'Australia', flag:'🇦🇺', locIds:['ausfifo'] },
     canada: { name:'Canada (oil sands & mining)', flag:'🇨🇦', locIds:[] },
-    global: { name:'Global / Middle East / W. Africa', flag:'🌍', locIds:['me','wafrica','brazil','seasia','guyana','caspian'] },
+    global: { name:'Global / Middle East / W. Africa / LatAm', flag:'🌍', locIds:['me','wafrica','brazil','seasia','guyana','caspian','latam','iberia'] },
     eu:     { name:'Europe (offshore wind)', flag:'🇪🇺', locIds:['northsea'] }
   },
   links: {

@@ -14,21 +14,20 @@ Provider-agnostic: Claude is preferred, OpenAI is the fallback, and a determinis
 ## Payments (Stripe)
 Until these are set, `/api/checkout` returns `not_configured` and the site routes users to signup instead.
 
-All three plans are **one-time payments** (no subscription).
+Both plans are **one-time payments** (no subscription). *(The $190 Done-For-You tier is parked for now.)*
 
 | Var | Purpose |
 |-----|---------|
 | `STRIPE_SECRET_KEY` | Your Stripe secret key |
 | `STRIPE_PRICE_BASIC` | Price ID for Rig-Ready Basics ($32, one-time) |
 | `STRIPE_PRICE_PRO` | Price ID for Rig-Ready Pro ($120, one-time — the flagship) |
-| `STRIPE_PRICE_DFY` | Price ID for Done-For-You ($190, one-time) |
 
 ### Quick alternative: Stripe Payment Links (fastest — no secret key)
-Create three **one-time** Payment Links in the Stripe dashboard ($32, $120, $190) and paste the URLs into `app.js` → `CONFIG.PAY`:
+Create two **one-time** Payment Links in the Stripe dashboard ($32, $120) and paste the URLs into `app.js` → `CONFIG.PAY`:
 ```
-PAY: { basic:'https://buy.stripe.com/…', pro:'https://buy.stripe.com/…', dfy:'https://buy.stripe.com/…' }
+PAY: { basic:'https://buy.stripe.com/…', pro:'https://buy.stripe.com/…' }
 ```
-The front-end uses these first, before `/api/checkout`. This makes checkout live immediately without a secret key. (`dfy` currently reuses the previous $190 one-time link — verify or replace it; `basic` and `pro` need new $32/$120 links.)
+The front-end uses these first, before `/api/checkout`. This makes checkout live immediately without a secret key. (`basic` and `pro` need new $32/$120 links.)
 
 ## Google sign-in ("Continue with Google")
 The "Continue with Google" buttons currently use a demo (mock) sign-in that creates a local account. To make it a real Google login, set `CONFIG.GOOGLE_CLIENT_ID` in `app.js` to your Google OAuth Web Client ID and add the Google Identity Services flow (the mock `HH.authGoogle` / `googleSignup` handlers are the swap points).
@@ -79,11 +78,38 @@ alter table hardhat_subscriptions enable row level security;
 -- no anon policies on purpose: only the service key (serverless fns) reads/writes
 ```
 
+## Job applications table (activates durable apply records)
+When a Pro user registers for a job, `HH.saveApplication()` best-effort POSTs a
+row to `hardhat_applications` using the same public Supabase key as the leads
+table. Until the table exists the apply flow still works locally (dashboard
+tracker) — the POST just no-ops. Run once in the Supabase SQL editor:
+```sql
+create table if not exists hardhat_applications (
+  id bigint generated always as identity primary key,
+  email text not null,
+  name text,
+  job_id text,
+  title text,
+  company text,
+  sector text,
+  location text,
+  agency text,
+  plan text default 'free',
+  source text,
+  created_at timestamptz default now()
+);
+alter table hardhat_applications enable row level security;
+create policy "insert applications" on hardhat_applications
+  for insert to anon with check (true);
+```
+(Mirrors the `hardhat_leads` insert-only anon policy — the client can write a
+row but not read others’ applications.)
+
 Flow: Stripe payment → webhook verifies signature → upserts plan by email →
 client `HH.syncEntitlement()` (runs on every page load, ~2-min throttle; forced
 un-throttled by `HH.verifyPro()`) asks `/api/entitlement?email=` and syncs
 `hh_plan` — server wins in both directions. `directory.html` additionally calls
 `/api/directory?email=` and only renders real contacts when the server confirms a
-paid plan (pro/dfy).
+paid plan (pro).
 Note: the entitlement endpoint answers plan status for any email (no auth) —
 acceptable at this stage; add a signed token if that ever matters.

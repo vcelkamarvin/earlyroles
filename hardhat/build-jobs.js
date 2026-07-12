@@ -134,12 +134,12 @@ const CITIES = [
   {n:'Atlantic City, NJ, US',cc:'US',fl:'🇺🇸',locId:'useast',secs:['wind','wtt']},
   {n:'Baku, Azerbaijan',cc:'AZ',fl:'🇦🇿',locId:'caspian',secs:['oil','weld','marine']},
   {n:'Atyrau, Kazakhstan',cc:'KZ',fl:'🇰🇿',locId:'caspian',secs:['oil','weld','cdl']},
-  {n:'Ciudad del Carmen, Mexico',cc:'MX',fl:'🇲🇽',locId:'gom',secs:['oil','marine','diving']},
-  {n:'Veracruz, Mexico',cc:'MX',fl:'🇲🇽',locId:'gom',secs:['marine','weld','oil']},
-  {n:'Barranquilla, Colombia',cc:'CO',fl:'🇨🇴',locId:'gom',secs:['oil','marine','weld']},
-  {n:'Antofagasta, Chile',cc:'CL',fl:'🇨🇱',locId:'ausfifo',secs:['mining','cdl','weld']},
-  {n:'Las Palmas, Spain',cc:'ES',fl:'🇪🇸',locId:'wafrica',secs:['marine','oil','wind']},
-  {n:'Tarragona, Spain',cc:'ES',fl:'🇪🇸',locId:'northsea',secs:['weld','wind','marine']}
+  {n:'Ciudad del Carmen, Mexico',cc:'MX',fl:'🇲🇽',locId:'latam',secs:['oil','marine','diving']},
+  {n:'Veracruz, Mexico',cc:'MX',fl:'🇲🇽',locId:'latam',secs:['marine','weld','oil']},
+  {n:'Barranquilla, Colombia',cc:'CO',fl:'🇨🇴',locId:'latam',secs:['oil','marine','weld']},
+  {n:'Antofagasta, Chile',cc:'CL',fl:'🇨🇱',locId:'latam',secs:['mining','cdl','weld']},
+  {n:'Las Palmas, Spain',cc:'ES',fl:'🇪🇸',locId:'iberia',secs:['marine','oil','wind']},
+  {n:'Tarragona, Spain',cc:'ES',fl:'🇪🇸',locId:'iberia',secs:['weld','wind','marine']}
 ];
 
 /* rotation patterns per sector */

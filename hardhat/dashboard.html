@@ -47,8 +47,14 @@
 
       <!-- applications (only when they exist) -->
       <div class="dsec" id="appsWrap" style="display:none">
-        <div class="dsec-head"><h3>Your applications</h3></div>
+        <div class="dsec-head"><h3>Your applications</h3><a href="jobs.html" class="dsec-link">Apply to more →</a></div>
         <div class="panel" style="padding:8px 18px" id="appsBox"></div>
+      </div>
+
+      <!-- agency shortlist (paid clients) -->
+      <div class="dsec" id="agencyCard" style="display:none">
+        <div class="dsec-head"><h3>🤝 Agencies that hire for you</h3><a href="directory.html" class="dsec-link">Full directory →</a></div>
+        <div class="panel" style="padding:16px 18px" id="agencyBox"></div>
       </div>
 
       <!-- upgrade (free users only) -->
@@ -188,9 +194,17 @@ else {
   var basePool=(pp&&pp.jobs.length)?pp.jobs:HH_JOBS;
   var pool=basePool.map(function(j){ j._f=fit(j); return j; }).sort(function(a,b){return b._f-a._f;}).slice(0,3);
   document.getElementById('fitList').innerHTML=pool.map(function(j){
-    return '<a class="fitrow" href="jobs.html">'+
-      '<div class="fr-main"><b>'+j.title+'</b><span>'+j.loc+' · '+j.co+' · '+j.pay+'</span></div>'+
-      '<span class="fr-fit">'+j._f+'% fit</span></a>';
+    var meta='<div class="fr-main"><b>'+j.title+'</b><span>'+j.loc+' · '+j.co+' · '+j.pay+'</span></div>'+
+             '<span class="fr-fit">'+j._f+'% fit</span>';
+    if(paid){
+      // Pro clients apply right here — records + tracks it, no dead-ends
+      var applied=['applied','responded','interview','offer'].indexOf(apps[j.id])>=0;
+      var act=applied
+        ? '<span class="fr-applied">✓ Applied</span>'
+        : '<button class="btn btn-hi btn-sm fr-apply" onclick="dashApply(\''+j.id+'\')">Apply →</button>';
+      return '<div class="fitrow fitrow-pro">'+meta+act+'</div>';
+    }
+    return '<a class="fitrow" href="jobs.html">'+meta+'</a>';
   }).join('');
 
   /* ---- locked teaser rows (free users): the roles they can't see yet ---- */
@@ -213,18 +227,52 @@ else {
   var labels={saved:'Saved',applied:'Applied',responded:'Responded',interview:'Interviewing',offer:'Offer',rejected:'Closed'};
   var order={offer:0,interview:1,responded:2,applied:3,saved:4,rejected:5};
   var appIds=Object.keys(apps).sort(function(a,b){return (order[apps[a]]||9)-(order[apps[b]]||9);});
+  // look up applied jobs across the seed set AND the matched pool (pp.jobs may not be in HH_JOBS)
+  var jobById={}; basePool.concat(HH_JOBS).forEach(function(j){ if(j&&j.id&&!jobById[j.id]) jobById[j.id]=j; });
   if(appIds.length){
     document.getElementById('appsWrap').style.display='block';
     var rows=appIds.map(function(id){
-      var j=HH_JOBS.filter(function(x){return x.id===id;})[0]; if(!j) return '';
+      var j=jobById[id]; if(!j) return '';
       var st=apps[id];
-      return '<tr><td><b>'+j.icon+' '+j.title+'</b><div class="at-co">'+j.co+' · '+j.loc+'</div></td>'+
+      return '<tr><td><b>'+(j.icon?j.icon+' ':'')+j.title+'</b><div class="at-co">'+j.co+' · '+j.loc+'</div></td>'+
         '<td class="at-pay">'+j.pay+'</td>'+
         '<td style="text-align:right"><span class="stchip st-'+st+'">'+(labels[st]||st)+'</span></td></tr>';
     }).join('');
     document.getElementById('appsBox').innerHTML='<table class="apptable"><tbody>'+rows+'</tbody></table>';
   }
+
+  /* ---- paid client view: apps + agencies up front, centred on apply → track → agencies ---- */
+  if(paid){
+    var board=document.getElementById('board'), anchor=document.getElementById('rtwNote');
+    // pull the applications tracker to the top for clients who've started applying
+    if(appIds.length){ board.insertBefore(document.getElementById('appsWrap'), anchor); }
+    // agency shortlist — the thing they paid for
+    var agList=(pp&&pp.agencies&&pp.agencies.length)
+      ? pp.agencies
+      : (window.HH_AGENCIES||[]).filter(function(a){return a.sector===intake.sector;});
+    if(agList.length){
+      var ac=document.getElementById('agencyCard'); ac.style.display='block';
+      board.insertBefore(ac, anchor);
+      document.getElementById('agencyBox').innerHTML=
+        '<p style="color:var(--muted);font-size:13.5px;margin:0 0 12px">Register with these to get put forward for '+(sec.name||'your sector')+' roles'+(pp?' in '+pp.region.name:'')+'. Get on their books, then apply above.</p>'+
+        agList.slice(0,5).map(function(a){
+          return '<div class="agrow"><div><b>'+a.name+'</b><span>'+(a.type||a.region||'crewing agency')+'</span></div>'+
+            (a.url&&a.url!=='#'?'<a class="btn btn-out btn-sm" href="'+a.url+'" target="_blank" rel="noopener">Visit →</a>':'<a class="btn btn-out btn-sm" href="directory.html">Details →</a>')+'</div>';
+        }).join('');
+    }
+  }
 }
+function dashApply(id){
+  var j=(window.HH_JOBS||[]).filter(function(x){return x.id===id;})[0];
+  if(!j){ var pp2=HH.proProfile&&HH.proProfile(); var plan=(pp2&&HH.Auth.intake())?HH.proPlan(HH.Auth.intake(),pp2):null; if(plan) j=(plan.jobs||[]).filter(function(x){return x.id===id;})[0]; }
+  if(!j) return;
+  HH.Auth.setApp(id,'applied');
+  if(HH.Auth.saved().indexOf(id)<0) HH.Auth.toggleSave(id);
+  HH.saveApplication(j); HH.ga('apply',{sector:j.sector});
+  HH.toast&&HH.toast('Registered — tracking it below');
+  location.reload();
+}
+window.dashApply=dashApply;
 function addPhone(){
   var v=prompt('Enter your mobile number for job alerts (with country code):','');
   if(v&&v.replace(/\D/g,'').length>=6){ HH.Auth.setPhone(v.trim()); HH.toast&&HH.toast('Phone saved'); location.reload(); }
